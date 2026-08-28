@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap">
+<script src="./image-slot.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'Outfit',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+input{font-family:inherit}
+::selection{background:rgba(255,92,168,0.35)}
+@keyframes riseIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.94)}to{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+
+<div style="--bg:#14131a;--surface:#1e1d26;--surface-raised:#292733;--border:#2d2b37;--border-strong:#3a3846;--text:#f5f3f7;--text-secondary:#ada9b8;--text-tertiary:#7c7889;--accent:#ff5ca8;--accent-hover:#ff7fbb;--accent-soft:#3d1c2c;--accent-soft-text:#ffb4d3;--on-accent:#26101b;--success:#2fd1a0;--success-on:#06231a;--error:#ff6b6b;--cat:#7c8bff;--trivia:#ffc24d;--pokemon:#bd8dff;--japan:#ff7a68;--fun:#2fd1a0;background:#0d0c11;min-height:100vh;padding:28px 16px 60px;display:flex;flex-direction:column;align-items:center;gap:16px">
+
+  <div style="display:flex;align-items:center;gap:14px">
+    <span style="font-size:10px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-tertiary)">Preview</span>
+    <div style="display:inline-flex;border:1.5px solid var(--border-strong);border-radius:10px;overflow:hidden">
+      <button onClick="{{ setMobile }}" style="{{ mobileBtnStyle }}">Mobile</button>
+      <button onClick="{{ setDesktop }}" style="{{ desktopBtnStyle }}">Desktop</button>
+    </div>
+  </div>
+
+  <div style="{{ frameStyle }}">
+
+    <sc-if value="{{ showToday }}" hint-placeholder-val="{{ true }}">
+      <div style="{{ todayWrapStyle }}">
+
+        <div style="{{ todayColStyle }}">
+          <div style="display:flex;flex-direction:column;gap:14px;padding:24px 20px 18px;animation:riseIn 0.5s ease both">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between">
+              <div>
+                <div style="font-size:11px;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-tertiary)">Wednesday</div>
+                <div style="font-size:15px;font-weight:800;letter-spacing:0.02em;color:var(--accent)">August 26</div>
+              </div>
+              <div style="width:34px;height:34px;border:1.5px solid var(--border-strong);display:flex;align-items:center;justify-content:center;color:var(--text-secondary)">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 1112 0c0 4 1.5 5.5 2 6H4c.5-.5 2-2 2-6z"></path><path d="M10 20a2 2 0 004 0"></path></svg>
+              </div>
+            </div>
+            <div>
+              <h1 style="margin:0;font-size:30px;font-weight:800;letter-spacing:-0.015em;line-height:1.08;color:var(--text)">Good morning, {{ userName }}.</h1>
+              <p style="margin:6px 0 0;font-size:14px;color:var(--text-secondary)">Your daily ritual is ready.</p>
+            </div>
+          </div>
+
+          <div style="height:2px;background:var(--border-strong)"></div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
+            <div>
+              <div style="font-size:26px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums">4 / 7</div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary);margin-top:2px">Completed today</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-1 3-5 5-5 10a5 5 0 0010 0c0-2-1-3-2-4 0 1-1 2-2 1-1-1 0-3-1-7z"></path></svg>
+              <span style="font-size:20px;font-weight:800;color:var(--text)">12</span>
+              <span style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-tertiary)">day streak</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:3px;padding:0 20px 20px">
+            <sc-for list="{{ progressCells }}" as="cell" hint-placeholder-count="7">
+              <div style="height:5px;flex:1;background:{{ cell.color }}"></div>
+            </sc-for>
+          </div>
+
+          <div style="height:2px;background:var(--border-strong)"></div>
+
+          <div style="display:flex;flex-direction:column;gap:14px;padding:20px">
+
+            <div style="background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:12px;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent)">Wordle</span>
+                <span style="font-size:11px;color:var(--text-tertiary)">#412</span>
+              </div>
+              <div style="display:flex;gap:5px">
+                <sc-for list="{{ wordlePreviewRow }}" as="tile" hint-placeholder-count="5">
+                  <div style="width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;background:{{ tile.bg }};color:{{ tile.color }};border:{{ tile.border }}">{{ tile.ch }}</div>
+                </sc-for>
+              </div>
+              <p style="margin:0;font-size:13px;color:var(--text-secondary)">Today's puzzle is waiting.</p>
+              <button onClick="{{ openWordle }}" style="display:flex;align-items:center;justify-content:space-between;background:var(--accent);color:var(--on-accent);border:none;border-radius:10px;padding:12px 14px;font-weight:800;font-size:13px;letter-spacing:0.03em;text-transform:uppercase;cursor:pointer;width:100%;text-align:left">
+                <span>Play Wordle</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline></svg>
+              </button>
+              <div style="display:flex;gap:20px">
+                <div><div style="font-size:18px;font-weight:800;color:var(--text)">12</div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em">Streak</div></div>
+                <div><div style="font-size:18px;font-weight:800;color:var(--text)">4.1</div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em">Average</div></div>
+              </div>
+            </div>
+
+            <div onClick="{{ openCat }}" style="background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--cat)">Cat Quant</span>
+                <span style="display:inline-flex;padding:2px 8px;border:1.5px solid var(--cat);color:var(--cat);font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;border-radius:6px">Medium · Arithmetic</span>
+              </div>
+              <p style="margin:0;font-size:14px;line-height:1.4;color:var(--text-secondary)">A shopkeeper marks an item 40% above cost, then offers a 20% discount. Find his overall profit percentage.</p>
+              <span style="display:inline-flex;align-items:center;gap:6px;color:var(--cat);font-size:12px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase">Solve <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline></svg></span>
+            </div>
+
+            <div onClick="{{ openTrivia }}" style="background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:10px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--trivia)">Daily Trivia</span>
+                <span style="display:inline-flex;padding:2px 8px;border:1.5px solid var(--trivia);color:var(--trivia);font-size:10px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;border-radius:6px">Science · Easy</span>
+              </div>
+              <p style="margin:0;font-size:14px;line-height:1.4;color:var(--text-secondary)">Which planet in our solar system has the most known moons?</p>
+              <span style="display:inline-flex;align-items:center;gap:6px;color:var(--trivia);font-size:12px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase">Answer <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline></svg></span>
+            </div>
+
+            <div onClick="{{ goExploreTab }}" style="background:var(--surface);padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+              <div style="display:flex;gap:6px;flex:none">
+                <div style="width:14px;height:38px;background:var(--pokemon);border-radius:4px"></div>
+                <div style="width:14px;height:38px;background:var(--japan);border-radius:4px"></div>
+                <div style="width:14px;height:38px;background:var(--fun);border-radius:4px"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px;flex:1">
+                <span style="font-size:14px;font-weight:700;color:var(--text)">More to explore today</span>
+                <span style="font-size:12px;color:var(--text-tertiary)">Pokémon · Japan · Animal fact</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline></svg>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border:1.5px solid var(--border-strong)">
+              <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="5"></circle><circle cx="12" cy="12" r="1" fill="var(--accent)" stroke="none"></circle></svg>
+                <span style="font-size:13px;color:var(--text-secondary)">Learn one new Japanese word: <b style="color:var(--text)">arigatou</b></span>
+              </div>
+              <button onClick="{{ toggleChallenge }}" style="{{ challengeBtnStyle }}">{{ challengeBtnLabel }}</button>
+            </div>
+
+            <div style="background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text)">Todos</span>
+                <button onClick="{{ goTodosTab }}" style="background:none;border:none;color:var(--accent);font-size:11px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;cursor:pointer;padding:0">See all</button>
+              </div>
+              <sc-for list="{{ dashboardTodos }}" as="t" hint-placeholder-count="3">
+                <div onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:10px;cursor:pointer">
+                  <div style="{{ t.boxStyle }}">
+                    <sc-if value="{{ t.done }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"></polyline></svg></sc-if>
+                  </div>
+                  <span style="{{ t.textStyle }}">{{ t.text }}</span>
+                </div>
+              </sc-for>
+            </div>
+
+            <div onClick="{{ openSurprise }}" style="background:var(--accent);padding:26px 20px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;cursor:pointer;position:relative;overflow:hidden;border-radius:20px">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="var(--on-accent)" stroke="none"><path d="M12 1l2.2 8.8L23 12l-8.8 2.2L12 23l-2.2-8.8L1 12l8.8-2.2z"></path></svg>
+              <div style="font-size:22px;font-weight:800;letter-spacing:0.01em;color:var(--on-accent)">Surprise Me</div>
+              <p style="margin:0;font-size:13px;color:var(--on-accent);opacity:0.85">Give me something unexpected.</p>
+              <span style="display:flex;align-items:center;gap:8px;border:1.5px solid var(--on-accent);color:var(--on-accent);padding:9px 16px;font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-top:6px;border-radius:20px">Surprise <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline></svg></span>
+            </div>
+
+          </div>
+        </div>
+
+        <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ false }}">
+          <div style="{{ todayColStyle }}">
+            <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+              <div onClick="{{ openJapan }}" style="background:var(--surface);display:flex;flex-direction:column;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+                <image-slot id="japan-desktop" shape="rect" placeholder="Kanazawa — Kenroku-en garden" style="width:100%;height:180px;filter:grayscale(1) contrast(1.08)"></image-slot>
+                <div style="padding:16px 18px;display:flex;flex-direction:column;gap:4px">
+                  <span style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Japan Of The Day</span>
+                  <span style="font-size:19px;font-weight:800;color:var(--text)">Kanazawa</span>
+                  <p style="margin:0;font-size:13px;color:var(--text-secondary);line-height:1.5">Kanazawa escaped WWII bombing, leaving its Edo-era districts intact. Wander the Higashi Chaya geisha quarter, then Kenroku-en, ranked among Japan's three great gardens.</p>
+                </div>
+              </div>
+              <div style="display:flex;gap:14px">
+                <div style="flex:1;background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:8px;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+                  <span style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text)">Todos</span>
+                  <sc-for list="{{ dashboardTodos }}" as="t2" hint-placeholder-count="3">
+                    <div onClick="{{ t2.toggle }}" style="display:flex;align-items:center;gap:10px;cursor:pointer">
+                      <div style="{{ t2.boxStyle }}"><sc-if value="{{ t2.done }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"></polyline></svg></sc-if></div>
+                      <span style="{{ t2.textStyle }}">{{ t2.text }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="flex:1;background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+                  <span style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text)">Today's Challenge</span>
+                  <span style="font-size:13px;color:var(--text-secondary)">Learn one new Japanese word: <b style="color:var(--text)">arigatou</b></span>
+                  <button onClick="{{ toggleChallenge }}" style="{{ challengeBtnStyle }};width:fit-content">{{ challengeBtnLabel }}</button>
+                </div>
+              </div>
+              <div onClick="{{ openSurprise }}" style="background:var(--accent);padding:22px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border-radius:20px">
+                <div>
+                  <div style="font-size:20px;font-weight:800;color:var(--on-accent)">Surprise Me</div>
+                  <p style="margin:2px 0 0;font-size:13px;color:var(--on-accent);opacity:0.85">Give me something unexpected.</p>
+                </div>
+                <span style="display:flex;align-items:center;gap:8px;border:1.5px solid var(--on-accent);color:var(--on-accent);padding:9px 16px;font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;border-radius:20px">Surprise</span>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showExplore }}">
+      <div style="display:flex;flex-direction:column;gap:14px;padding:20px 20px 90px;animation:riseIn 0.4s ease both">
+        <h2 style="margin:0;font-size:22px;font-weight:800;color:var(--text)">Explore</h2>
+        <div style="height:2px;background:var(--border-strong);margin-bottom:6px"></div>
+
+        <div onClick="{{ openSurprise }}" style="background:var(--accent);padding:22px 18px;display:flex;flex-direction:column;gap:8px;cursor:pointer;border-radius:20px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--on-accent)" stroke="none"><path d="M12 1l2.2 8.8L23 12l-8.8 2.2L12 23l-2.2-8.8L1 12l8.8-2.2z"></path></svg>
+          <div style="font-size:19px;font-weight:800;color:var(--on-accent)">Surprise Me</div>
+          <p style="margin:0;font-size:13px;color:var(--on-accent);opacity:0.85">A random internet pack, assembled just for you.</p>
+        </div>
+
+        <div onClick="{{ openJapan }}" style="background:var(--surface);display:flex;flex-direction:column;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+          <image-slot id="japan-explore" shape="rect" placeholder="Kanazawa — Kenroku-en garden" style="width:100%;height:160px;filter:grayscale(1) contrast(1.08)"></image-slot>
+          <div style="padding:14px 16px;display:flex;flex-direction:column;gap:4px">
+            <span style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--japan)">Japan Of The Day</span>
+            <span style="font-size:17px;font-weight:800;color:var(--text)">Kanazawa</span>
+          </div>
+        </div>
+
+        <div onClick="{{ openPokemon }}" style="background:var(--surface);padding:16px;display:flex;gap:14px;align-items:center;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+          <image-slot id="poke-explore" shape="rect" placeholder="Pokémon artwork" style="width:76px;height:76px;flex:none;filter:grayscale(1) contrast(1.08)"></image-slot>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <span style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--pokemon)">POKÉMON OF THE DAY</span>
+            <span style="font-size:18px;font-weight:800;color:var(--text)">Eevee</span>
+          </div>
+        </div>
+
+        <div style="background:var(--surface);padding:16px;display:flex;gap:14px;box-shadow:0 1px 2px rgba(0,0,0,0.4);border-radius:16px;overflow:hidden">
+          <image-slot id="fun-explore" shape="rect" placeholder="animal photo" style="width:84px;height:84px;flex:none;filter:grayscale(1) contrast(1.08)"></image-slot>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--fun)">Animal Fact</span>
+            <p style="margin:0;font-size:13px;line-height:1.4;color:var(--text-secondary)">Octopuses have three hearts — two pump blood to the gills, one to the rest of the body.</p>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showTodos }}">
+      <div style="display:flex;flex-direction:column;gap:0;padding-bottom:90px;animation:riseIn 0.4s ease both">
+        <div style="padding:20px 20px 14px">
+          <h2 style="margin:0;font-size:22px;font-weight:800;color:var(--text)">Todos</h2>
+        </div>
+        <sc-for list="{{ todoSections }}" as="sec" hint-placeholder-count="4">
+          <div>
+            <div style="padding:16px 20px 8px;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:{{ sec.color }}">{{ sec.label }}</div>
+            <sc-for list="{{ sec.items }}" as="t" hint-placeholder-count="2">
+              <div onClick="{{ t.toggle }}" style="display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;border-bottom:1px solid var(--border)">
+                <div style="{{ t.boxStyle }}"><sc-if value="{{ t.done }}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"></polyline></svg></sc-if></div>
+                <span style="{{ t.textStyle }};flex:1">{{ t.text }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+        <div style="display:flex;gap:8px;padding:16px 20px">
+          <input value="{{ newTodo }}" onChange="{{ onNewTodoChange }}" placeholder="Add a todo…" style="flex:1;background:var(--surface);border:1.5px solid var(--border-strong);border-radius:8px;color:var(--text);padding:10px 12px;font-size:13px"/>
+          <button onClick="{{ addTodo }}" style="background:var(--accent);color:var(--on-accent);border:none;border-radius:8px;padding:0 14px;cursor:pointer;display:flex;align-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="4" x2="12" y2="20"></line><line x1="4" y1="12" x2="20" y2="12"></line></svg></button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showHistory }}">
+      <div style="display:flex;flex-direction:column;gap:14px;padding:20px 20px 90px;animation:riseIn 0.4s ease both">
+        <h2 style="margin:0;font-size:22px;font-weight:800;color:var(--text)">History</h2>
+        <div style="display:inline-flex;border:1.5px solid var(--border-strong);width:fit-content;border-radius:10px;overflow:hidden">
+          <button onClick="{{ setHistoryWordle }}" style="{{ histWordleBtnStyle }}">Wordle</button>
+          <button onClick="{{ setHistoryTimeline }}" style="{{ histTimelineBtnStyle }}">Timeline</button>
+        </div>
+
+        <sc-if value="{{ showHistWordle }}">
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;gap:22px">
+              <div><div style="font-size:28px;font-weight:800;color:var(--text)">12</div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em">Streak</div></div>
+              <div><div style="font-size:28px;font-weight:800;color:var(--text)">19</div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em">Longest</div></div>
+              <div><div style="font-size:28px;font-weight:800;color:var(--text)">4.1</div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em">Average</div></div>
+              <div><div style="font-size:28px;font-weight:800;color:var(--text)">87</div><div style="font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.06em">Games</div></div>
+            </div>
+            <div style="height:2px;background:var(--border-strong)"></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ wordleDist }}" as="row" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="width:12px;font-size:12px;color:var(--text-tertiary);font-weight:700">{{ row.n }}</span>
+                  <div style="flex:1;height:16px;background:var(--surface);border-radius:5px;overflow:hidden"><div style="height:100%;background:{{ row.barColor }};width:{{ row.pct }};border-radius:5px"></div></div>
+                  <span style="width:26px;text-align:right;font-size:12px;color:var(--text-secondary);font-weight:700">{{ row.count }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ showHistTimeline }}">
+          <div style="display:flex;flex-direction:column;gap:0">
+            <sc-for list="{{ dailyHistory }}" as="day" hint-placeholder-count="5">
+              <div style="padding:14px 0;border-bottom:1px solid var(--border)">
+                <div style="font-size:12px;font-weight:800;letter-spacing:0.08em;color:var(--text-tertiary);margin-bottom:8px">{{ day.date }}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <sc-for list="{{ day.items }}" as="it" hint-placeholder-count="4">
+                    <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:{{ it.color }}">
+                      <sc-if value="{{ it.done }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"></polyline></svg></sc-if>
+                      <sc-if value="{{ !it.done }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="3" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></sc-if>
+                      {{ it.label }}
+                    </span>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showSettings }}">
+      <div style="display:flex;flex-direction:column;gap:0;padding-bottom:90px;animation:riseIn 0.4s ease both">
+        <div style="padding:20px 20px 14px"><h2 style="margin:0;font-size:22px;font-weight:800;color:var(--text)">Settings</h2></div>
+
+        <div style="padding:14px 20px 6px;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary)">Notifications</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--border)"><span style="font-size:14px;color:var(--text)">Midnight new-day alert</span><div style="width:38px;height:20px;background:var(--accent);position:relative;border-radius:10px"><div style="width:16px;height:16px;background:var(--on-accent);position:absolute;top:2px;right:2px;border-radius:50%"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--border)"><span style="font-size:14px;color:var(--text)">Wordle reminder</span><div style="width:38px;height:20px;background:var(--accent);position:relative;border-radius:10px"><div style="width:16px;height:16px;background:var(--on-accent);position:absolute;top:2px;right:2px;border-radius:50%"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--border)"><span style="font-size:14px;color:var(--text)">Todo reminders</span><div style="width:38px;height:20px;background:var(--surface-raised);border:1.5px solid var(--border-strong);position:relative;border-radius:10px"><div style="width:16px;height:16px;background:var(--text-tertiary);position:absolute;top:1px;left:1px;border-radius:50%"></div></div></div>
+
+        <div style="padding:20px 20px 6px;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary)">Appearance</div>
+        <div style="display:flex;gap:8px;padding:6px 20px 14px">
+          <span style="padding:8px 14px;border:1.5px solid var(--border-strong);color:var(--text-tertiary);font-size:12px;font-weight:700;border-radius:8px">Light</span>
+          <span style="padding:8px 14px;background:var(--accent);color:var(--on-accent);font-size:12px;font-weight:700;border-radius:8px">Dark</span>
+          <span style="padding:8px 14px;border:1.5px solid var(--border-strong);color:var(--text-tertiary);font-size:12px;font-weight:700;border-radius:8px">System</span>
+        </div>
+
+        <div style="padding:6px 20px 6px;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary)">Daily Content</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--border)"><span style="font-size:14px;color:var(--text)">Fun content: animals</span><div style="width:38px;height:20px;background:var(--accent);position:relative;border-radius:10px"><div style="width:16px;height:16px;background:var(--on-accent);position:absolute;top:2px;right:2px;border-radius:50%"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 20px;border-bottom:1px solid var(--border)"><span style="font-size:14px;color:var(--text)">Joke difficulty: mild</span><div style="width:38px;height:20px;background:var(--accent);position:relative;border-radius:10px"><div style="width:16px;height:16px;background:var(--on-accent);position:absolute;top:2px;right:2px;border-radius:50%"></div></div></div>
+
+        <div style="padding:20px 20px 6px;font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary)">About</div>
+        <div style="padding:6px 20px 20px;font-size:12px;color:var(--text-tertiary);line-height:1.6">API sources: NYT-style word list, OpenTDB trivia, PokéAPI, custom CAT question bank.<br/>Daily Ritual v1.0.0</div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-top:2px solid var(--border-strong)">
+        <button onClick="{{ goToday }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 8px;background:none;border:none;cursor:pointer;position:relative">
+          <div style="{{ navBar.today }}"></div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ navColor.today }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"></path><path d="M5 10v10h14V10"></path><path d="M10 20v-6h4v6"></path></svg>
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.03em;color:{{ navColor.today }}">Today</span>
+        </button>
+        <button onClick="{{ goExplore }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 8px;background:none;border:none;cursor:pointer;position:relative">
+          <div style="{{ navBar.explore }}"></div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ navColor.explore }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polygon points="15 9 13 13 9 15 11 11"></polygon></svg>
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.03em;color:{{ navColor.explore }}">Explore</span>
+        </button>
+        <button onClick="{{ goTodos }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 8px;background:none;border:none;cursor:pointer;position:relative">
+          <div style="{{ navBar.todos }}"></div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ navColor.todos }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 4.5 7.5 7 5"></polyline><line x1="10" y1="6" x2="21" y2="6"></line><polyline points="3 13 4.5 14.5 7 12"></polyline><line x1="10" y1="13" x2="21" y2="13"></line><line x1="3" y1="19" x2="21" y2="19"></line></svg>
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.03em;color:{{ navColor.todos }}">Todos</span>
+        </button>
+        <button onClick="{{ goHistory }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 8px;background:none;border:none;cursor:pointer;position:relative">
+          <div style="{{ navBar.history }}"></div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ navColor.history }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 16 14"></polyline></svg>
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.03em;color:{{ navColor.history }}">History</span>
+        </button>
+        <button onClick="{{ goSettings }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0 8px;background:none;border:none;cursor:pointer;position:relative">
+          <div style="{{ navBar.settings }}"></div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ navColor.settings }}" stroke-width="2" stroke-linecap="round"><line x1="6" y1="4" x2="6" y2="20"></line><circle cx="6" cy="9" r="2" fill="{{ navColor.settings }}" stroke="none"></circle><line x1="12" y1="4" x2="12" y2="20"></line><circle cx="12" cy="16" r="2" fill="{{ navColor.settings }}" stroke="none"></circle><line x1="18" y1="4" x2="18" y2="20"></line><circle cx="18" cy="7" r="2" fill="{{ navColor.settings }}" stroke="none"></circle></svg>
+          <span style="font-size:10px;font-weight:700;letter-spacing:0.03em;color:{{ navColor.settings }}">Settings</span>
+        </button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ screen }}">
+      <div style="position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;animation:riseIn 0.35s ease both">
+        <div style="display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:2px solid var(--border-strong)">
+          <button onClick="{{ closeScreen }}" style="background:none;border:none;color:var(--text);cursor:pointer;display:flex;padding:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 4 7 12 15 20"></polyline></svg></button>
+          <span style="font-size:15px;font-weight:800;letter-spacing:0.02em;color:var(--text)">{{ screenTitle }}</span>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:20px">
+
+          <sc-if value="{{ isWordleScreen }}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <sc-for list="{{ wordleBoard }}" as="row" hint-placeholder-count="6">
+                  <div style="display:flex;gap:5px">
+                    <sc-for list="{{ row }}" as="tile" hint-placeholder-count="5">
+                      <div style="width:52px;height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;background:{{ tile.bg }};color:{{ tile.color }};border:{{ tile.border }}">{{ tile.ch }}</div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+              <p style="margin:14px 0 0;font-size:13px;color:var(--text-secondary)">Today's puzzle is waiting.</p>
+              <div style="display:flex;flex-direction:column;gap:6px;width:100%;margin-top:22px">
+                <sc-for list="{{ keyboardRows }}" as="krow" hint-placeholder-count="3">
+                  <div style="display:flex;gap:5px;justify-content:center">
+                    <sc-for list="{{ krow }}" as="key" hint-placeholder-count="9">
+                      <div style="{{ key.style }}">{{ key.label }}</div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isCatScreen }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;gap:8px"><span style="padding:4px 10px;border:1.5px solid var(--cat);color:var(--cat);font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;border-radius:6px">Medium</span><span style="padding:4px 10px;border:1.5px solid var(--border-strong);color:var(--text-secondary);font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;border-radius:6px">Arithmetic</span></div>
+              <p style="margin:0;font-size:17px;line-height:1.5;color:var(--text);font-weight:600">A shopkeeper marks the price of an item 40% above cost price and then offers a 20% discount on the marked price. What is his overall profit percentage?</p>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ catOptions }}" as="opt" hint-placeholder-count="4">
+                  <div onClick="{{ opt.select }}" style="{{ opt.style }}">
+                    <span style="{{ opt.letterStyle }}">{{ opt.id }}</span>
+                    <span style="flex:1;font-size:14px">{{ opt.text }}</span>
+                    <sc-if value="{{ opt.iconType }}" hint-placeholder-val="{{ false }}">
+                      <sc-if value="{{ opt.isCheck }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ opt.iconColor }}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"></polyline></svg></sc-if>
+                      <sc-if value="{{ opt.isX }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ opt.iconColor }}" stroke-width="3" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></sc-if>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ !catSubmitted }}"><button onClick="{{ submitCat }}" disabled="{{ catSubmitDisabled }}" style="{{ catSubmitStyle }}">Submit</button></sc-if>
+              <sc-if value="{{ catSubmitted }}">
+                <div style="background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:10px;animation:popIn 0.3s ease both">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:16px;font-weight:800;color:{{ catResultColor }}">{{ catResultLabel }}</span>
+                    <span style="font-size:13px;color:var(--text-tertiary)">26% solved this correctly</span>
+                  </div>
+                  <div style="height:1px;background:var(--border)"></div>
+                  <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary)">Quick Solution</span>
+                  <p style="margin:0;font-size:13px;line-height:1.6;color:var(--text-secondary)">Let cost price = 100. Marked price = 140. Selling price after 20% discount = 140 × 0.8 = 112. Profit = 12, so profit percentage = 12%.</p>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isTriviaScreen }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;gap:8px"><span style="padding:4px 10px;border:1.5px solid var(--trivia);color:var(--trivia);font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;border-radius:6px">Science</span><span style="padding:4px 10px;border:1.5px solid var(--border-strong);color:var(--text-secondary);font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;border-radius:6px">Easy</span></div>
+              <p style="margin:0;font-size:19px;line-height:1.4;color:var(--text);font-weight:800">Which planet in our solar system has the most known moons?</p>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ triviaOptions }}" as="opt" hint-placeholder-count="4">
+                  <div onClick="{{ opt.select }}" style="{{ opt.style }}">
+                    <span style="flex:1;font-size:14px">{{ opt.text }}</span>
+                    <sc-if value="{{ opt.iconType }}" hint-placeholder-val="{{ false }}">
+                      <sc-if value="{{ opt.isCheck }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ opt.iconColor }}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"></polyline></svg></sc-if>
+                      <sc-if value="{{ opt.isX }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{ opt.iconColor }}" stroke-width="3" stroke-linecap="round"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg></sc-if>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ !triviaSubmitted }}"><button onClick="{{ submitTrivia }}" disabled="{{ triviaSubmitDisabled }}" style="{{ triviaSubmitStyle }}">Submit</button></sc-if>
+              <sc-if value="{{ triviaSubmitted }}">
+                <div style="background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:8px;animation:popIn 0.3s ease both">
+                  <span style="font-size:16px;font-weight:800;color:{{ triviaResultColor }}">{{ triviaResultLabel }}</span>
+                  <p style="margin:0;font-size:13px;line-height:1.6;color:var(--text-secondary)">Saturn currently has 274 confirmed moons — more than any other planet in the solar system.</p>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isPokemonScreen }}">
+            <div style="display:flex;flex-direction:column;gap:16px;align-items:center;text-align:center">
+              <image-slot id="poke-detail" shape="rect" placeholder="Pokémon artwork" style="width:220px;height:220px;filter:grayscale(1) contrast(1.08)"></image-slot>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--text-tertiary)">No. 133</div>
+                <div style="font-size:26px;font-weight:800;color:var(--text)">Eevee</div>
+                <span style="display:inline-flex;margin-top:4px;padding:3px 10px;border:1.5px solid var(--pokemon);color:var(--pokemon);font-size:11px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;border-radius:6px">Normal</span>
+              </div>
+              <div style="width:100%;text-align:left;display:flex;flex-direction:column;gap:10px">
+                <p style="margin:0;font-size:14px;line-height:1.5;color:var(--text-secondary)">Has the most possible evolutions of any Pokémon — eight, depending on friendship, time of day and location.</p>
+                <div style="height:1px;background:var(--border)"></div>
+                <sc-for list="{{ pokeStats }}" as="st" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="width:36px;font-size:11px;font-weight:800;color:var(--text-tertiary)">{{ st.label }}</span>
+                    <div style="flex:1;height:8px;background:var(--surface);border-radius:4px;overflow:hidden"><div style="height:100%;background:var(--pokemon);width:{{ st.pct }};border-radius:4px"></div></div>
+                    <span style="width:24px;text-align:right;font-size:12px;color:var(--text-secondary)">{{ st.val }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isJapanScreen }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <image-slot id="japan-detail" shape="rect" placeholder="Kanazawa — Kenroku-en garden" style="width:100%;height:200px;filter:grayscale(1) contrast(1.08)"></image-slot>
+              <div>
+                <span style="font-size:11px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--japan)">Japan Of The Day</span>
+                <h3 style="margin:4px 0 8px;font-size:24px;font-weight:800;color:var(--text)">Kanazawa</h3>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+                  <span style="padding:3px 9px;border:1.5px solid var(--border-strong);color:var(--text-secondary);font-size:11px">Traditional crafts</span>
+                  <span style="padding:3px 9px;border:1.5px solid var(--border-strong);color:var(--text-secondary);font-size:11px">Historic districts</span>
+                  <span style="padding:3px 9px;border:1.5px solid var(--border-strong);color:var(--text-secondary);font-size:11px">Kenroku-en</span>
+                </div>
+                <p style="margin:0;font-size:14px;line-height:1.65;color:var(--text-secondary)">Kanazawa escaped WWII bombing, leaving its Edo-era districts intact. Wander the Higashi Chaya geisha quarter, then walk through Kenroku-en, ranked among Japan's three great gardens.</p>
+              </div>
+              <div style="height:1px;background:var(--border)"></div>
+              <div>
+                <span style="font-size:11px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary)">Did You Know?</span>
+                <p style="margin:6px 0 0;font-size:14px;line-height:1.6;color:var(--text-secondary)">Kanazawa produces almost all of Japan's gold leaf — even the local ice cream comes wrapped in it.</p>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isSurpriseScreen }}">
+            <div style="display:flex;flex-direction:column;gap:14px;animation:popIn 0.35s ease both" key="{{ surpriseIdx }}">
+              <div style="display:flex;align-items:center;gap:8px">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)" stroke="none"><path d="M12 1l2.2 8.8L23 12l-8.8 2.2L12 23l-2.2-8.8L1 12l8.8-2.2z"></path></svg>
+                <span style="font-size:12px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary)">Your Random Internet Pack</span>
+              </div>
+              <div style="background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Japan</span>
+                <span style="font-size:20px;font-weight:800;color:var(--text)">{{ surprisePack.japan }}</span>
+              </div>
+              <div style="background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Today's Animal</span>
+                <span style="font-size:20px;font-weight:800;color:var(--text)">{{ surprisePack.animal }}</span>
+              </div>
+              <div style="background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Pokémon</span>
+                <span style="font-size:20px;font-weight:800;color:var(--text)">{{ surprisePack.pokemon }}</span>
+              </div>
+              <div style="background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">Did You Know?</span>
+                <span style="font-size:14px;line-height:1.5;color:var(--text)">{{ surprisePack.fact }}</span>
+              </div>
+              <div style="background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent)">A Joke</span>
+                <span style="font-size:14px;line-height:1.5;color:var(--text)">{{ surprisePack.joke }}</span>
+              </div>
+              <div style="background:var(--accent);padding:16px;display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--on-accent)">Your Challenge</span>
+                <span style="font-size:14px;line-height:1.5;color:var(--on-accent)">{{ surprisePack.challenge }}</span>
+              </div>
+              <button onClick="{{ nextSurprise }}" style="display:flex;align-items:center;justify-content:space-between;background:var(--accent);color:var(--on-accent);border:none;padding:13px 16px;font-weight:800;font-size:13px;letter-spacing:0.03em;text-transform:uppercase;cursor:pointer;margin-top:6px">
+                <span>Another Surprise</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"></line><polyline points="14 6 20 12 14 18"></polyline></svg>
+              </button>
+            </div>
+          </sc-if>
+
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SURPRISE_PACKS = [
+  {japan:'Kyoto', animal:'Cat', pokemon:'Gengar', fact:'Honey never spoils — archaeologists have found 3,000-year-old honey in Egyptian tombs that was still edible.', joke:"Why don't scientists trust atoms? Because they make up everything.", challenge:'Learn how to say "thank you" in Japanese: arigatou.'},
+  {japan:'Osaka', animal:'Dog', pokemon:'Snorlax', fact:'A group of flamingos is called a "flamboyance."', joke:'I told my computer I needed a break — it froze immediately.', challenge:'Learn how to say "good morning" in Japanese: ohayou.'},
+  {japan:'Nara', animal:'Deer', pokemon:'Pikachu', fact:'Nara Park is home to over 1,000 wild sika deer, considered sacred messengers of the gods.', joke:'Why did the scarecrow get promoted? He was outstanding in his field.', challenge:'Learn how to say "delicious" in Japanese: oishii.'}
+];
+const TODO_SEED = [
+  {id:1,text:'Finish Flutter API layer',done:false,section:'today'},
+  {id:2,text:'Do Wordle',done:false,section:'today'},
+  {id:3,text:'CAT question',done:true,section:'today'},
+  {id:4,text:'Plan weekend trip',done:false,section:'upcoming'},
+  {id:5,text:'Read chapter 4',done:false,section:'upcoming'},
+  {id:6,text:"Reply to Meera's email",done:false,section:'overdue'},
+  {id:7,text:'Renew gym membership',done:true,section:'completed'},
+  {id:8,text:'Water the plants',done:true,section:'completed'}
+];
+const DAILY_HISTORY = [
+  {date:'AUG 26', items:[{label:'Wordle',done:true},{label:'Trivia',done:true},{label:'CAT',done:true},{label:'Challenge',done:false}]},
+  {date:'AUG 25', items:[{label:'Wordle',done:true},{label:'Trivia',done:true},{label:'CAT',done:true},{label:'Challenge',done:false}]},
+  {date:'AUG 24', items:[{label:'Wordle',done:true},{label:'Trivia',done:true},{label:'CAT',done:true},{label:'Challenge',done:true}]},
+  {date:'AUG 23', items:[{label:'Wordle',done:true},{label:'Trivia',done:false},{label:'CAT',done:true},{label:'Challenge',done:true}]},
+  {date:'AUG 22', items:[{label:'Wordle',done:true},{label:'Trivia',done:true},{label:'CAT',done:true},{label:'Challenge',done:true}]}
+];
+const WORDLE_DIST = [2,6,16,30,23,10];
+const CAT_CORRECT = 'C';
+const TRIVIA_CORRECT = 'B';
+class Component extends DCLogic {
+  state = {
+    tab: 'today',
+    screen: null,
+    desktop: false,
+    historyView: 'wordle',
+    challengeDone: false,
+    todos: TODO_SEED,
+    cat: {selected:null, submitted:false},
+    trivia: {selected:null, submitted:false},
+    surpriseIdx: 0,
+    newTodo: ''
+  };
+
+  goTab = (t) => this.setState({tab: t, screen: null});
+  openScreen = (s) => this.setState({screen: s});
+  closeScreen = () => this.setState({screen: null});
+  setMobile = () => this.setState({desktop: false});
+  setDesktop = () => this.setState({desktop: true});
+  toggleChallenge = () => this.setState(s => ({challengeDone: !s.challengeDone}));
+  toggleTodo = (id) => this.setState(s => ({todos: s.todos.map(t => t.id === id ? {...t, done: !t.done} : t)}));
+  onNewTodoChange = (e) => this.setState({newTodo: e.target.value});
+  addTodo = () => {
+    const v = this.state.newTodo.trim();
+    if (!v) return;
+    this.setState(s => ({todos: [...s.todos, {id: Date.now(), text: v, done: false, section: 'today'}], newTodo: ''}));
+  };
+  selectCat = (id) => this.setState(s => s.cat.submitted ? s : {cat: {...s.cat, selected: id}});
+  submitCat = () => this.setState(s => ({cat: {...s.cat, submitted: true}}));
+  selectTrivia = (id) => this.setState(s => s.trivia.submitted ? s : {trivia: {...s.trivia, selected: id}});
+  submitTrivia = () => this.setState(s => ({trivia: {...s.trivia, submitted: true}}));
+  nextSurprise = () => this.setState(s => ({surpriseIdx: (s.surpriseIdx + 1) % SURPRISE_PACKS.length}));
+  setHistoryWordle = () => this.setState({historyView: 'wordle'});
+  setHistoryTimeline = () => this.setState({historyView: 'timeline'});
+
+  todoView(t) {
+    return {
+      ...t,
+      toggle: () => this.toggleTodo(t.id),
+      boxStyle: {width:'18px',height:'18px',flex:'none',borderRadius:'5px',border: t.done ? 'none' : '1.5px solid var(--border-strong)', background: t.done ? 'var(--accent)' : 'transparent', display:'flex', alignItems:'center', justifyContent:'center'},
+      textStyle: {fontSize:'13px', color: t.done ? 'var(--text-tertiary)' : 'var(--text)', textDecoration: t.done ? 'line-through' : 'none'}
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const isDesktop = s.desktop;
+
+    const catOpts = [
+      {id:'A', text:'8%'}, {id:'B', text:'10%'}, {id:'C', text:'12%'}, {id:'D', text:'15%'}
+    ];
+    const triviaOpts = [
+      {id:'A', text:'Jupiter'}, {id:'B', text:'Saturn'}, {id:'C', text:'Uranus'}, {id:'D', text:'Neptune'}
+    ];
+
+    const optionView = (opt, sel, submitted, correctId, select) => {
+      let bg = 'var(--surface)', border = '1.5px solid transparent', color = 'var(--text)', iconType = null, iconColor = 'currentColor';
+      if (!submitted) {
+        if (sel === opt.id) { border = '1.5px solid var(--accent)'; }
+      } else {
+        if (opt.id === correctId) { bg = 'var(--success)'; color = 'var(--success-on)'; iconType = 'check'; iconColor = 'var(--success-on)'; }
+        else if (opt.id === sel) { border = '1.5px solid var(--error)'; color = 'var(--error)'; iconType = 'x'; iconColor = 'var(--error)'; }
+        else { color = 'var(--text-tertiary)'; }
+      }
+      return {
+        id: opt.id, text: opt.text, select: () => select(opt.id), iconType, iconColor,
+        isCheck: iconType === 'check', isX: iconType === 'x',
+        style: {display:'flex', alignItems:'center', gap:'12px', padding:'13px 14px', background: bg, border, borderRadius:'10px', color, cursor: submitted ? 'default' : 'pointer'},
+        letterStyle: {width:'22px',height:'22px',flex:'none',borderRadius:'6px',border:'1.5px solid ' + (submitted ? 'transparent' : 'var(--border-strong)'), display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', fontWeight:'800', color: 'inherit'}
+      };
+    };
+
+    const catOptions = catOpts.map(o => optionView(o, s.cat.selected, s.cat.submitted, CAT_CORRECT, this.selectCat));
+    const triviaOptions = triviaOpts.map(o => optionView(o, s.trivia.selected, s.trivia.submitted, TRIVIA_CORRECT, this.selectTrivia));
+
+    const catCorrect = s.cat.selected === CAT_CORRECT;
+    const triviaCorrect = s.trivia.selected === TRIVIA_CORRECT;
+
+    const btnBase = {display:'flex', alignItems:'center', justifyContent:'center', border:'none', borderRadius:'10px', padding:'13px 16px', fontWeight:800, fontSize:'13px', letterSpacing:'0.05em', textTransform:'uppercase', cursor:'pointer', width:'100%'};
+
+    const wordleTile = (ch, state) => {
+      const map = {
+        correct: {bg:'var(--success)', color:'var(--success-on)', border:'none'},
+        present: {bg:'var(--surface-raised)', color:'var(--accent-soft-text)', border:'1.5px solid var(--accent)'},
+        absent: {bg:'transparent', color:'var(--text-tertiary)', border:'1.5px solid var(--border)'},
+        empty: {bg:'transparent', color:'var(--text)', border:'1.5px solid var(--border-strong)'}
+      };
+      const m = map[state];
+      return {ch, bg:m.bg, color:m.color, border:m.border};
+    };
+    const wordlePreviewRow = [
+      wordleTile('S','absent'), wordleTile('T','absent'), wordleTile('A','present'), wordleTile('R','correct'), wordleTile('E','correct')
+    ];
+    const emptyRow = () => [0,1,2,3,4].map(() => wordleTile('', 'empty'));
+    const wordleBoard = [
+      ['S','T','A','R','E'].map((c,i) => wordleTile(c, ['absent','absent','present','correct','correct'][i])),
+      emptyRow(), emptyRow(), emptyRow(), emptyRow(), emptyRow()
+    ];
+    const kbRows = [['Q','W','E','R','T','Y','U','I','O','P'], ['A','S','D','F','G','H','J','K','L'], ['ENTER','Z','X','C','V','B','N','M','DEL']];
+    const keyboardRows = kbRows.map(row => row.map(k => ({
+      label: k,
+      style: {minWidth: (k.length > 1 ? '52px' : '30px'), padding:'12px 4px', background:'var(--surface)', borderRadius:'6px', color:'var(--text)', fontSize: k.length>1?'10px':'13px', fontWeight:800, display:'flex', alignItems:'center', justifyContent:'center', flex: k.length>1?'none':'1', cursor:'default'}
+    })));
+
+    const progressCells = [1,1,1,1,0,0,0].map(v => ({color: v ? 'var(--accent)' : 'var(--border-strong)'}));
+
+    const tabs = ['today','explore','todos','history','settings'];
+    const navColor = {}, navBar = {};
+    tabs.forEach(t => {
+      navColor[t] = s.tab === t ? 'var(--accent)' : 'var(--text-tertiary)';
+      navBar[t] = {position:'absolute', top:0, left:'20%', right:'20%', height:'2px', background: s.tab === t ? 'var(--accent)' : 'transparent'};
+    });
+
+    const todosBySection = (sec) => s.todos.filter(t => t.section === sec).map(t => this.todoView(t));
+    const dashboardTodos = s.todos.filter(t => t.section === 'today').slice(0,3).map(t => this.todoView(t));
+    const todoSections = [
+      {label:'Today', color:'var(--text)', items: todosBySection('today')},
+      {label:'Upcoming', color:'var(--text-tertiary)', items: todosBySection('upcoming')},
+      {label:'Overdue', color:'var(--accent)', items: todosBySection('overdue')},
+      {label:'Completed', color:'var(--text-tertiary)', items: todosBySection('completed')}
+    ];
+
+    const wordleDist = WORDLE_DIST.map((count, i) => ({
+      n: i + 1, count,
+      pct: Math.round(count / Math.max(...WORDLE_DIST) * 100) + '%',
+      barColor: i === 3 ? 'var(--accent)' : 'var(--surface-raised)'
+    }));
+
+    const dailyHistory = DAILY_HISTORY.map(d => ({
+      date: d.date,
+      items: d.items.map(it => ({
+        label: it.label, done: it.done,
+        color: it.done ? 'var(--text-secondary)' : 'var(--text-tertiary)'
+      }))
+    }));
+
+    const segBtn = (active) => ({padding:'8px 16px', background: active ? 'var(--accent)' : 'transparent', color: active ? 'var(--on-accent)' : 'var(--text-secondary)', border:'none', fontSize:'12px', fontWeight:800, letterSpacing:'0.04em', textTransform:'uppercase', cursor:'pointer'});
+    const barRadius = {borderRadius:'10px'};
+
+    const screenTitles = {wordle:'Wordle', catQuant:'CAT Quant', trivia:'Daily Trivia', pokemon:'Pokémon Of The Day', japan:'Japan Of The Day', surprise:'Surprise Me'};
+
+    return {
+      userName: 'Atharva',
+      isDesktop, isMobile: !isDesktop,
+      frameStyle: isDesktop
+        ? {width:'1180px', maxWidth:'100%', minHeight:'760px', background:'var(--bg)', color:'var(--text)', position:'relative', boxShadow:'0 8px 32px rgba(0,0,0,0.5)', overflow:'hidden', borderRadius:'20px'}
+        : {width:'390px', maxWidth:'100%', minHeight:'844px', background:'var(--bg)', color:'var(--text)', position:'relative', boxShadow:'0 8px 32px rgba(0,0,0,0.5)', overflow:'hidden', border:'1.5px solid var(--border-strong)', borderRadius:'32px'},
+      mobileBtnStyle: {padding:'6px 14px', fontSize:'11px', fontWeight:800, letterSpacing:'0.04em', textTransform:'uppercase', border:'none', cursor:'pointer', background: !isDesktop ? '#ff5ca8' : 'transparent', color: !isDesktop ? '#f5f3f7' : '#7c7889'},
+      desktopBtnStyle: {padding:'6px 14px', fontSize:'11px', fontWeight:800, letterSpacing:'0.04em', textTransform:'uppercase', border:'none', cursor:'pointer', background: isDesktop ? '#ff5ca8' : 'transparent', color: isDesktop ? '#f5f3f7' : '#7c7889'},
+      todayWrapStyle: isDesktop ? {display:'grid', gridTemplateColumns:'1fr 1fr', minHeight:'100%'} : {display:'flex', flexDirection:'column', minHeight:'100%'},
+      todayColStyle: isDesktop ? {borderLeft: '0'} : {},
+
+      showToday: s.tab === 'today' && !s.screen,
+      showExplore: s.tab === 'explore' && !s.screen,
+      showTodos: s.tab === 'todos' && !s.screen,
+      showHistory: s.tab === 'history' && !s.screen,
+      showSettings: s.tab === 'settings' && !s.screen,
+
+      progressCells,
+      wordlePreviewRow,
+      openWordle: () => this.openScreen('wordle'),
+      openCat: () => this.openScreen('catQuant'),
+      openTrivia: () => this.openScreen('trivia'),
+      openPokemon: () => this.openScreen('pokemon'),
+      openJapan: () => this.openScreen('japan'),
+      openSurprise: () => this.openScreen('surprise'),
+      closeScreen: this.closeScreen,
+      goTodosTab: () => this.goTab('todos'),
+      goExploreTab: () => this.goTab('explore'),
+
+      challengeDone: s.challengeDone, toggleChallenge: this.toggleChallenge,
+      challengeBtnStyle: {padding:'8px 14px', fontSize:'11px', fontWeight:800, letterSpacing:'0.04em', textTransform:'uppercase', borderRadius:'8px', border: s.challengeDone ? 'none' : '1.5px solid var(--border-strong)', background: s.challengeDone ? 'var(--accent)' : 'transparent', color: s.challengeDone ? 'var(--on-accent)' : 'var(--text-secondary)', cursor:'pointer', flex:'none'},
+      challengeBtnLabel: s.challengeDone ? 'Done' : 'Done?',
+
+      dashboardTodos,
+      newTodo: s.newTodo, onNewTodoChange: this.onNewTodoChange, addTodo: this.addTodo,
+      todoSections,
+
+      historyView: s.historyView,
+      showHistWordle: s.historyView === 'wordle',
+      showHistTimeline: s.historyView === 'timeline',
+      setHistoryWordle: this.setHistoryWordle, setHistoryTimeline: this.setHistoryTimeline,
+      histWordleBtnStyle: segBtn(s.historyView === 'wordle'),
+      histTimelineBtnStyle: segBtn(s.historyView === 'timeline'),
+      wordleDist, dailyHistory,
+
+      goToday: () => this.goTab('today'), goExplore: () => this.goTab('explore'), goTodos: () => this.goTab('todos'), goHistory: () => this.goTab('history'), goSettings: () => this.goTab('settings'),
+      navColor, navBar,
+
+      screen: s.screen,
+      screenTitle: screenTitles[s.screen] || '',
+      isWordleScreen: s.screen === 'wordle',
+      isCatScreen: s.screen === 'catQuant',
+      isTriviaScreen: s.screen === 'trivia',
+      isPokemonScreen: s.screen === 'pokemon',
+      isJapanScreen: s.screen === 'japan',
+      isSurpriseScreen: s.screen === 'surprise',
+
+      wordleBoard, keyboardRows,
+
+      catOptions, catSubmitted: s.cat.submitted,
+      catSubmitDisabled: !s.cat.selected,
+      catSubmitStyle: {...btnBase, background: s.cat.selected ? 'var(--accent)' : 'var(--surface-raised)', color: s.cat.selected ? 'var(--on-accent)' : 'var(--text-tertiary)', cursor: s.cat.selected ? 'pointer' : 'not-allowed'},
+      submitCat: this.submitCat,
+      catResultLabel: catCorrect ? 'Correct' : 'Incorrect',
+      catResultColor: catCorrect ? 'var(--success)' : 'var(--error)',
+
+      triviaOptions, triviaSubmitted: s.trivia.submitted,
+      triviaSubmitDisabled: !s.trivia.selected,
+      triviaSubmitStyle: {...btnBase, background: s.trivia.selected ? 'var(--accent)' : 'var(--surface-raised)', color: s.trivia.selected ? 'var(--on-accent)' : 'var(--text-tertiary)', cursor: s.trivia.selected ? 'pointer' : 'not-allowed'},
+      submitTrivia: this.submitTrivia,
+      triviaResultLabel: triviaCorrect ? 'Correct!' : 'Not quite',
+      triviaResultColor: triviaCorrect ? 'var(--success)' : 'var(--error)',
+
+      pokeStats: [{label:'HP', val:55, pct:'55%'}, {label:'ATK', val:55, pct:'55%'}, {label:'DEF', val:50, pct:'50%'}, {label:'SPD', val:55, pct:'55%'}],
+
+      surpriseIdx: s.surpriseIdx,
+      surprisePack: SURPRISE_PACKS[s.surpriseIdx],
+      nextSurprise: this.nextSurprise
+    };
+  }
+}
+</script>
+</body>
+</html>
