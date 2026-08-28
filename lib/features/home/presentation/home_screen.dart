@@ -6,12 +6,16 @@ import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../core/dates/daily_date_service.dart';
 import '../../../core/providers.dart';
+import '../../settings/providers/settings_providers.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../../wordle/presentation/wordle_board.dart';
 import '../../cat_quant/providers/cat_providers.dart';
+import '../../challenges/providers/challenge_providers.dart';
+import '../../surprise/providers/surprise_providers.dart';
 import '../../todos/providers/todo_providers.dart';
 import '../../trivia/providers/trivia_providers.dart';
 import '../../wordle/providers/wordle_providers.dart';
+import '../domain/daily_completion.dart';
 import '../providers/completion_providers.dart';
 import '../providers/history_providers.dart';
 
@@ -30,7 +34,7 @@ class _Dashboard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final name = ref.watch(userNameProvider).value ?? 'there';
+    final name = ref.watch(preferencesProvider).value?.userName ?? 'there';
 
     return SafeArea(
       bottom: false,
@@ -54,7 +58,7 @@ class _Dashboard extends ConsumerWidget {
             const _ProgressSummary(),
             const RitualDivider(),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
@@ -66,10 +70,15 @@ class _Dashboard extends ConsumerWidget {
                   SizedBox(height: RitualShape.stackGap),
                   _ExploreTeaser(),
                   SizedBox(height: RitualShape.stackGap),
+                  _ChallengeRow(),
+                  SizedBox(height: RitualShape.stackGap),
                   _TodosCard(),
                 ],
               ),
             ),
+            // Full-bleed, and last: the day's list ends on the one thing that
+            // isn't part of the day.
+            const _SurpriseBand(),
           ],
         ),
       ),
@@ -211,8 +220,222 @@ class _ProgressSummary extends ConsumerWidget {
               ],
             ],
           ),
+          const SizedBox(height: 14),
+          _Remaining(completion: completion),
         ],
       ),
+    );
+  }
+}
+
+/// The canvas draws this as a bordered row rather than a card — it is a nudge,
+/// not a section.
+class _ChallengeRow extends ConsumerWidget {
+  const _ChallengeRow();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final challenge = ref.watch(dailyChallengeProvider);
+    final done = ref.watch(challengeDoneProvider);
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+      decoration: BoxDecoration(
+        border: Border.all(color: RitualColors.borderStrong, width: 1.5),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.adjust_rounded,
+            size: 17,
+            color: RitualColors.accent,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(challenge.text, style: RitualText.bodySmall),
+                if (challenge.origin != null) ...[
+                  const SizedBox(height: 3),
+                  Eyebrow(challenge.origin!, size: 10, letterSpacing: 0.08),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Material(
+            color: done ? RitualColors.accent : Colors.transparent,
+            borderRadius: BorderRadius.circular(RitualShape.inputRadius),
+            child: InkWell(
+              onTap: () => toggleChallenge(ref),
+              borderRadius: BorderRadius.circular(RitualShape.inputRadius),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  border: done
+                      ? null
+                      : Border.all(
+                          color: RitualColors.borderStrong,
+                          width: 1.5,
+                        ),
+                  borderRadius: BorderRadius.circular(RitualShape.inputRadius),
+                ),
+                child: Text(
+                  done ? 'DONE' : 'DONE?',
+                  style: outfit(
+                    size: 11,
+                    weight: FontWeight.w800,
+                    color: done
+                        ? RitualColors.onAccent
+                        : RitualColors.textSecondary,
+                    letterSpacing: 0.04,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The closing band of the Today page.
+///
+/// Every other section is a rounded card inside the page padding; this one
+/// breaks the margin deliberately. Surprise Me is the one thing on Today that
+/// is *not* part of the day, and letting it run edge to edge is what says so.
+class _SurpriseBand extends ConsumerWidget {
+  const _SurpriseBand();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final rolled = ref.watch(surpriseCountProvider).value ?? 0;
+
+    return Material(
+      color: RitualColors.accent,
+      child: InkWell(
+        onTap: () => context.push(Routes.surpriseRoll),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 26, 20, 30),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.auto_awesome,
+                          size: 18,
+                          color: RitualColors.onAccent,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          rolled == 0 ? 'SURPRISE ME' : 'ROLLED $rolled TODAY',
+                          style: outfit(
+                            size: 10,
+                            weight: FontWeight.w800,
+                            color: RitualColors.onAccent,
+                            letterSpacing: 0.14,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      rolled == 0
+                          ? 'Give me something\nunexpected.'
+                          : 'Pull another one.',
+                      style: outfit(
+                        size: 24,
+                        weight: FontWeight.w800,
+                        color: RitualColors.onAccent,
+                        letterSpacing: -0.015,
+                        height: 1.15,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 16),
+              // A single large target rather than a small pill — the band is
+              // the button, this just says which way it goes.
+              Container(
+                width: 46,
+                height: 46,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border.all(color: RitualColors.onAccent, width: 1.5),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.arrow_forward,
+                  size: 20,
+                  color: RitualColors.onAccent,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Names what is still outstanding.
+///
+/// The bar row shows proportion; this says which. Without it the user can see
+/// that one of seven is missing but has to scan the whole page to find it.
+class _Remaining extends StatelessWidget {
+  const _Remaining({required this.completion});
+
+  final DailyCompletion completion;
+
+  @override
+  Widget build(BuildContext context) {
+    if (completion.total == 0) return const SizedBox.shrink();
+
+    if (completion.isComplete) {
+      return Row(
+        children: [
+          const Icon(
+            Icons.check_rounded,
+            size: 15,
+            color: RitualColors.success,
+          ),
+          const SizedBox(width: 6),
+          Text(
+            "That's everything today.",
+            style: outfit(
+              size: 12,
+              weight: FontWeight.w700,
+              color: RitualColors.success,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Eyebrow('Still to do', size: 10, letterSpacing: 0.1),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            for (final activity in completion.remaining)
+              FeatureChip(activity.label),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -226,8 +449,12 @@ class _WordleCard extends ConsumerWidget {
     final stats = ref.watch(wordleStatsProvider);
     final number = ref.watch(todayWordleNumberProvider);
 
+    // The card and its button do the same thing, so tapping anywhere on the
+    // card behaves the way the button label promises.
+    final route = wordleRouteFor(result);
+
     return RitualCard(
-      onTap: () => context.push(Routes.wordle),
+      onTap: () => context.push(route),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -260,7 +487,7 @@ class _WordleCard extends ConsumerWidget {
           PrimaryButton(
             label: result == null ? 'Play Wordle' : 'View result',
             trailingArrow: true,
-            onPressed: () => context.push(Routes.wordle),
+            onPressed: () => context.push(route),
           ),
           if (stats.total > 0) ...[
             const SizedBox(height: 14),

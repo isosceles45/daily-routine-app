@@ -1,4 +1,4 @@
-/// A "day" in Daily Ritual is the device's **local calendar date**.
+/// A "day" in Ritual is the device's **local calendar date**.
 ///
 /// The app never depends on being open at midnight: the current date is
 /// compared against the stored one on cold start and again every time the app
@@ -52,19 +52,29 @@ class DailyDateService {
   static bool isConsecutive(String a, String b) => daysBetween(a, b) == 1;
 
   static String weekdayName(String date) => switch (parse(date).weekday) {
-        DateTime.monday => 'Monday',
-        DateTime.tuesday => 'Tuesday',
-        DateTime.wednesday => 'Wednesday',
-        DateTime.thursday => 'Thursday',
-        DateTime.friday => 'Friday',
-        DateTime.saturday => 'Saturday',
-        _ => 'Sunday',
-      };
+    DateTime.monday => 'Monday',
+    DateTime.tuesday => 'Tuesday',
+    DateTime.wednesday => 'Wednesday',
+    DateTime.thursday => 'Thursday',
+    DateTime.friday => 'Friday',
+    DateTime.saturday => 'Saturday',
+    _ => 'Sunday',
+  };
 
   static String monthDay(String date) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
     final dt = parse(date);
     return '${months[dt.month - 1]} ${dt.day}';

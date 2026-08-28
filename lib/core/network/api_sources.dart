@@ -27,9 +27,17 @@ abstract final class ApiSources {
   static const uselessFacts =
       'https://uselessfacts.jsph.pl/api/v2/facts/random';
 
-  // --- Japan (Phase 3) ----------------------------------------------------
+  // --- Japan --------------------------------------------------------------
   static const wikipediaSummary =
       'https://en.wikipedia.org/api/rest_v1/page/summary';
+
+  /// The MediaWiki action API, used to enumerate what lives in a category.
+  static const wikipediaAction = 'https://en.wikipedia.org/w/api.php';
+
+  /// Wikipedia asks clients to identify themselves; an anonymous agent gets
+  /// rate-limited quickly.
+  static const userAgent =
+      'DailyRitual/0.1 (https://github.com/isosceles45/daily-routine-app)';
 
   // --- CAT Quant (Phase 2) ------------------------------------------------
   /// Used to independently verify generated answers before they are shown.

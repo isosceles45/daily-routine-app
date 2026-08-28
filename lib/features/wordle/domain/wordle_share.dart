@@ -41,8 +41,10 @@ class WordleShare {
 /// squares, and the colour-blind palette. Anything else returns null rather
 /// than guessing.
 abstract final class WordleShareParser {
-  /// Wordle #1 was 19 June 2021, and the numbering has run unbroken since —
-  /// puzzle 1000 lands on 14 March 2024, which checks out.
+  /// The original Wordle indexed from **zero**: puzzle #0 was 19 June 2021,
+  /// so #N is N days later. Getting this wrong by one silently files every
+  /// imported result under the previous day — verified against #1896 falling
+  /// on 28 August 2026.
   static final DateTime epoch = DateTime(2021, 6, 19);
 
   static final _header = RegExp(
@@ -118,9 +120,9 @@ abstract final class WordleShareParser {
 
   /// The date puzzle [number] was published.
   static String dateFor(int number) =>
-      DailyDateService.format(epoch.add(Duration(days: number - 1)));
+      DailyDateService.format(epoch.add(Duration(days: number)));
 
   /// The puzzle number published on [date].
   static int numberFor(String date) =>
-      DailyDateService.daysBetween(DailyDateService.format(epoch), date) + 1;
+      DailyDateService.daysBetween(DailyDateService.format(epoch), date);
 }

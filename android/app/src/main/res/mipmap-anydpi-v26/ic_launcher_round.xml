@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The icon is one full-bleed illustration, so it goes in the background
+     layer and the foreground is left empty. Splitting it would mean tearing
+     the sun out of its own sky. The launcher applies its own mask, which is
+     why the background art is zoomed slightly when generated. -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@mipmap/ic_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>

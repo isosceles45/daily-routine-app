@@ -1,6 +1,8 @@
-# Daily Ritual — Implementation Plan
+# Ritual — Implementation Plan
 
-> **Status:** Phases 0–2 complete (2026-08-27). Phase 3 is next.
+*(package `daily_ritual`; the app shows as **Ritual** under its icon)*
+
+> **Status:** Phases 0–3 complete (2026-08-27). Phase 4 is next.
 > This is the durable reference for the project: design system, API registry, architecture and phase plan.
 > Keep it updated as phases land.
 
@@ -34,8 +36,8 @@ Goal: a genuinely usable personal daily companion — something to do, learn, la
 | 0 — Scaffold | ✅ done | `flutter create` (android+ios), git init, design moved to `design/` |
 | 1 — Foundation + first live content | ✅ done | Verified running on the Pixel 10 Pro emulator |
 | 2 — Wordle, CAT Quant, completion & streaks | ✅ done | 203 tests; not yet exercised on device |
-| 3 — Japan, Surprise, Explore/Settings, offline | ⬜ next | |
-| 4 — Notifications, Firestore, tests, release | ⬜ | |
+| 3 — Japan, Surprise, Settings, offline | ✅ done | 218 tests; not yet exercised on device |
+| 4 — Notifications, Firestore, tests, release | ⬜ next | |
 
 ### What Phase 1 shipped
 
@@ -45,6 +47,28 @@ JokeAPI, and a full local todo system. 74 unit tests pass; `flutter analyze` is 
 
 Daily rollover was confirmed in the wild — the emulator crossed midnight during development and
 the app correctly started a new day with fresh content while todos persisted.
+
+### What Phase 3 shipped
+
+Japan of the day, Surprise Me, the daily challenge, real Settings, and an offline banner.
+All eleven home sections are now live and the completion ring reads its full **n / 7**.
+
+### Phase 3 decisions
+
+| Decision | Reason |
+|---|---|
+| **Japan curates *categories*, not places** | I had planned an authored list of ~200 place names. Wikipedia's `categorymembers` API removes the need: it enumerates what is in a category, so both the content *and* the choice come from the API. Only the category list is ours. |
+| **Only tightly curated categories are used** | Broad ones return meta-articles and oddities — "Japanese cuisine" yields *Aspergillus oryzae* and *Blood sausage*, "Cities in Japan" yields *Prefectural road*. Gardens, World Heritage Sites, Festivals, Prefectures, Temples, Shrines, Folklore and National Treasures all return real subjects. |
+| **A candidate must have a photo and a substantial extract** | The canvas puts a hero image on this card, so an entry without one cannot render as designed. That makes the image a functional requirement that doubles as a quality filter, rejecting stubs and disambiguation pages without any hand-maintained blocklist. |
+| **The challenge is derived from the day's own content** | "Find out what Eevee evolves into" beats a canned prompt, and it makes the app feel joined up. Content-independent prompts remain as a floor so a failed fetch never leaves the day without a challenge. |
+| **Surprise Me never touches the daily cache** | §12 requires it. It calls the services directly with a fresh random token rather than going through the repositories, so re-rolling cannot change what Today shows. All five sources fire together and the pack is built from whatever returns. |
+| **Settings ships only controls that do something** | The canvas draws notification and appearance toggles. Notifications arrive in Phase 4, and a light palette would have to be invented since the canvas defines only dark — so rather than fake toggles, Settings has the name field and the dark-joke preference, and says plainly that notifications are coming. |
+| **The offline banner sits above the nav, not at the top** | The tab bodies already own their status-bar inset; stacking a second `SafeArea` above them double-pads the page. |
+| **Sentence splitting knows about abbreviations** | The "Did you know?" block splits the Wikipedia extract, and a naive split turns "Mt. Fuji" into two sentences, truncating the lead mid-phrase. Caught by a test. |
+
+**Not yet done:** Phase 3 has not been exercised on the emulator.
+
+---
 
 ### What Phase 2 shipped
 

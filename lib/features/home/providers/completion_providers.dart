@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers.dart';
 import '../../animals/providers/fun_providers.dart';
 import '../../cat_quant/providers/cat_providers.dart';
+import '../../challenges/providers/challenge_providers.dart';
+import '../../surprise/providers/surprise_providers.dart';
 import '../../pokemon/providers/pokemon_providers.dart';
 import '../../trivia/providers/trivia_providers.dart';
 import '../../wordle/providers/wordle_providers.dart';
@@ -92,16 +94,16 @@ final dailyCompletionProvider = Provider<DailyCompletion>((ref) {
       completed: seen.contains(DailyActivity.pokemon),
       available: pokemonLoaded,
     ),
-    // Phase 3 flips these on.
-    const ActivityStatus(
+    ActivityStatus(
       activity: DailyActivity.challenge,
-      completed: false,
-      available: false,
+      completed: ref.watch(challengeDoneProvider),
+      available: true,
     ),
-    const ActivityStatus(
+    ActivityStatus(
       activity: DailyActivity.surprise,
-      completed: false,
-      available: false,
+      // Generating one is the whole activity — there is nothing to finish.
+      completed: ref.watch(surpriseGeneratedProvider),
+      available: true,
     ),
   ]);
 });

@@ -53,4 +53,14 @@ class DailyCompletion {
 
   int get total => availableStatuses.length;
 
+  /// What is still outstanding today, in the order it appears on Today.
+  ///
+  /// A count on its own ("6 / 7") tells you that something is missing without
+  /// telling you what, which leaves you hunting the page for it.
+  List<DailyActivity> get remaining => availableStatuses
+      .where((s) => !s.completed)
+      .map((s) => s.activity)
+      .toList(growable: false);
+
+  bool get isComplete => total > 0 && remaining.isEmpty;
 }

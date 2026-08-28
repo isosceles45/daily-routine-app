@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +8,7 @@ import '../../../shared/widgets/widgets.dart';
 import '../../home/domain/daily_completion.dart';
 import '../../home/providers/completion_providers.dart';
 import '../../pokemon/presentation/pokemon_screen.dart';
+import '../../japan/presentation/japan_card.dart';
 import '../../pokemon/providers/pokemon_providers.dart';
 import '../domain/daily_fun.dart';
 import '../providers/fun_providers.dart';
@@ -48,6 +48,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             const SizedBox(height: 14),
             const RitualDivider(),
             const SizedBox(height: 20),
+            // Today owns the big Surprise call to action; Explore only
+            // needs a way in. Repeating the full accent card here was what
+            // made the two screens feel like the same page.
+            const _SurpriseStrip(),
+            const SizedBox(height: RitualShape.stackGap),
+            const JapanCard(),
+            const SizedBox(height: RitualShape.stackGap),
             const _PokemonCard(),
             const SizedBox(height: RitualShape.stackGap),
             _AnimalCard(provider: dailyCatProvider, title: 'Cat of the day'),
@@ -145,7 +152,7 @@ class _AnimalCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (data.imageUrl != null) AnimalPhoto(url: data.imageUrl!),
+            if (data.imageUrl != null) AdaptivePhoto(url: data.imageUrl!),
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
               child: Column(
@@ -237,96 +244,47 @@ class _ExtraFunCard extends ConsumerWidget {
   }
 }
 
-/// Animal photos arrive at wildly different aspect ratios, and these are
-/// pictures of a specific animal — a fixed band either lops off heads and
-/// tails (cover) or strands the photo in wide grey margins (contain).
-///
-/// Instead the card takes the photo's own shape, clamped only at the extremes
-/// so a panorama or a tower can't dominate the screen. Inside the clamp there
-/// is no crop at all, which is where nearly every photo lands.
-class AnimalPhoto extends StatefulWidget {
-  const AnimalPhoto({super.key, required this.url});
-
-  final String url;
-
-  /// Tall-portrait and wide-landscape limits for the card.
-  static const minRatio = 0.72;
-  static const maxRatio = 1.9;
-  static const fallbackRatio = 4 / 3;
-
-  @override
-  State<AnimalPhoto> createState() => _AnimalPhotoState();
-}
-
-class _AnimalPhotoState extends State<AnimalPhoto> {
-  late CachedNetworkImageProvider _provider;
-  ImageStreamListener? _listener;
-  ImageStream? _stream;
-  double? _ratio;
-  bool _failed = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _provider = CachedNetworkImageProvider(widget.url);
-    _resolve();
-  }
-
-  void _resolve() {
-    final listener = ImageStreamListener(
-      (info, _) {
-        if (!mounted) return;
-        setState(() => _ratio = info.image.width / info.image.height);
-      },
-      onError: (error, stack) {
-        if (mounted) setState(() => _failed = true);
-      },
-    );
-    _listener = listener;
-    _stream = _provider.resolve(const ImageConfiguration())
-      ..addListener(listener);
-  }
-
-  @override
-  void dispose() {
-    if (_listener != null) _stream?.removeListener(_listener!);
-    super.dispose();
-  }
+/// Slim entry point to Surprise Me.
+class _SurpriseStrip extends StatelessWidget {
+  const _SurpriseStrip();
 
   @override
   Widget build(BuildContext context) {
-    final ratio = (_ratio ?? AnimalPhoto.fallbackRatio).clamp(
-      AnimalPhoto.minRatio,
-      AnimalPhoto.maxRatio,
-    );
-
-    return AspectRatio(
-      aspectRatio: ratio,
-      child: Container(
-        color: RitualColors.surfaceRaised,
-        child: _failed
-            ? const Center(
-                child: Icon(
-                  Icons.image_not_supported_outlined,
-                  color: RitualColors.textTertiary,
-                ),
-              )
-            : _ratio == null
-            ? const Center(
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: RitualColors.textTertiary,
+    return Material(
+      color: RitualColors.accent,
+      borderRadius: BorderRadius.circular(RitualShape.buttonRadius),
+      child: InkWell(
+        onTap: () => context.push(Routes.surprise),
+        borderRadius: BorderRadius.circular(RitualShape.buttonRadius),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.auto_awesome,
+                size: 18,
+                color: RitualColors.onAccent,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Surprise me',
+                  style: outfit(
+                    size: 14,
+                    weight: FontWeight.w800,
+                    color: RitualColors.onAccent,
+                    letterSpacing: 0.02,
                   ),
                 ),
-              )
-            : Image(
-                image: _provider,
-                fit: BoxFit.cover,
-                width: double.infinity,
               ),
+              const Icon(
+                Icons.arrow_forward,
+                size: 16,
+                color: RitualColors.onAccent,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

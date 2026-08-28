@@ -4,9 +4,11 @@ import '../features/animals/presentation/explore_screen.dart';
 import '../features/cat_quant/presentation/cat_screen.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/home/presentation/home_screen.dart';
+import '../features/japan/presentation/japan_screen.dart';
 import '../features/home/presentation/home_shell.dart';
 import '../features/pokemon/presentation/pokemon_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/surprise/presentation/surprise_screen.dart';
 import '../features/todos/presentation/todos_screen.dart';
 import '../features/trivia/presentation/trivia_screen.dart';
 import '../features/wordle/presentation/wordle_screen.dart';
@@ -22,6 +24,14 @@ abstract final class Routes {
   static const pokemon = '/pokemon';
   static const wordle = '/wordle';
   static const catQuant = '/cat-quant';
+  static const japan = '/japan';
+  static const surprise = '/surprise';
+
+  /// Opens Wordle immediately on arrival.
+  static const wordlePlay = '$wordle?play=1';
+
+  /// Rolls a new pack on arrival.
+  static const surpriseRoll = '$surprise?roll=1';
 }
 
 GoRouter buildRouter() {
@@ -88,11 +98,23 @@ GoRouter buildRouter() {
       ),
       GoRoute(
         path: Routes.wordle,
-        builder: (context, state) => const WordleScreen(),
+        builder: (context, state) => WordleScreen(
+          autoPlay: state.uri.queryParameters['play'] == '1',
+        ),
       ),
       GoRoute(
         path: Routes.catQuant,
         builder: (context, state) => const CatScreen(),
+      ),
+      GoRoute(
+        path: Routes.japan,
+        builder: (context, state) => const JapanScreen(),
+      ),
+      GoRoute(
+        path: Routes.surprise,
+        builder: (context, state) => SurpriseScreen(
+          autoRoll: state.uri.queryParameters['roll'] == '1',
+        ),
       ),
     ],
   );

@@ -13,8 +13,10 @@ import 'api_result.dart';
 /// up in the repositories, because only they know what "today's content" means.
 class ApiClient {
   ApiClient({Dio? dio, this.maxRetries = 2})
-      : _dio = dio ??
-            Dio(BaseOptions(
+    : _dio =
+          dio ??
+          Dio(
+            BaseOptions(
               connectTimeout: const Duration(seconds: 10),
               receiveTimeout: const Duration(seconds: 15),
               sendTimeout: const Duration(seconds: 10),
@@ -23,7 +25,8 @@ class ApiClient {
               // on 4xx, so `validateStatus` stays permissive.
               validateStatus: (_) => true,
               responseType: ResponseType.json,
-            ));
+            ),
+          );
 
   final Dio _dio;
   final int maxRetries;
@@ -76,8 +79,11 @@ class ApiClient {
           return Success(parse(body));
         } catch (e) {
           return Failure(
-            ApiException(ApiErrorKind.parse, 'Could not parse $url: $e',
-                uri: url),
+            ApiException(
+              ApiErrorKind.parse,
+              'Could not parse $url: $e',
+              uri: url,
+            ),
           );
         }
       } on DioException catch (e) {
@@ -89,16 +95,16 @@ class ApiClient {
         }
         return Failure(failure);
       } catch (e) {
-        return Failure(
-          ApiException(ApiErrorKind.unknown, '$e', uri: url),
-        );
+        return Failure(ApiException(ApiErrorKind.unknown, '$e', uri: url));
       }
     }
   }
 
   /// Fetches a plain-text body, for endpoints that don't return JSON.
-  Future<ApiResult<String>> getText(String url,
-      {Map<String, dynamic>? query}) async {
+  Future<ApiResult<String>> getText(
+    String url, {
+    Map<String, dynamic>? query,
+  }) async {
     return getJson<String>(
       url,
       query: query,

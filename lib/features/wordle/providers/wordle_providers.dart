@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/database/database.dart';
+import '../../../app/router.dart';
 import '../../../core/providers.dart';
 import '../data/wordle_repository.dart';
 import '../domain/wordle_share.dart';
@@ -30,6 +31,14 @@ final todayWordleProvider = StreamProvider<WordleResult?>((ref) {
 final todayWordleNumberProvider = Provider<int>(
   (ref) => WordleShareParser.numberFor(ref.watch(currentDateProvider)),
 );
+
+/// Where a Wordle entry point should go.
+///
+/// Before today's puzzle is imported, every tap means "play" — so it opens
+/// Wordle directly rather than landing on a screen with another Play button.
+/// Once there is a result there is nothing to play, so it opens the result.
+String wordleRouteFor(WordleResult? todayResult) =>
+    todayResult == null ? Routes.wordlePlay : Routes.wordle;
 
 /// Outcome of pasting share text.
 sealed class ImportOutcome {

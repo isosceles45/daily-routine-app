@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme.dart';
 import '../../../core/providers.dart';
+import '../../settings/providers/settings_providers.dart';
 
 /// The "Happy New Day" greeting (§5), shown once per calendar day.
 ///
@@ -31,7 +32,7 @@ class _HappyNewDayOverlayState extends ConsumerState<HappyNewDayOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    final name = ref.watch(userNameProvider).value ?? 'there';
+    final name = ref.watch(preferencesProvider).value?.userName ?? 'there';
     final isFirstOfMonth = ref.watch(isFirstOfMonthProvider);
 
     // Sits above the Navigator via MaterialApp.builder, so it has no Material

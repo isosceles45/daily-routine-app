@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme.dart';
+import '../../../shared/widgets/offline_banner.dart';
 
 /// The five-tab frame from the canvas: page body above, a bottom bar with a
 /// 2px top rule and a 2px accent indicator over the active item.
@@ -22,7 +23,15 @@ class HomeShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: RitualColors.bg,
-      body: shell,
+      // The banner sits above the nav rather than at the top of the page: the
+      // tab bodies already own their status-bar inset, and stacking a second
+      // SafeArea above them would double the padding.
+      body: Column(
+        children: [
+          Expanded(child: shell),
+          const OfflineBanner(),
+        ],
+      ),
       bottomNavigationBar: DecoratedBox(
         decoration: const BoxDecoration(
           color: RitualColors.bg,
@@ -137,10 +146,18 @@ class _NavItem extends StatelessWidget {
 
 /// Header for the full-screen detail routes: back chevron, title, 2px rule.
 class DetailScaffold extends StatelessWidget {
-  const DetailScaffold({super.key, required this.title, required this.child});
+  const DetailScaffold({
+    super.key,
+    required this.title,
+    required this.child,
+    this.padding = RitualShape.screenPadding,
+  });
 
   final String title;
   final Widget child;
+
+  /// Set to [EdgeInsets.zero] for screens that bleed to the edges.
+  final EdgeInsets padding;
 
   @override
   Widget build(BuildContext context) {
@@ -180,10 +197,7 @@ class DetailScaffold extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                padding: RitualShape.screenPadding,
-                child: child,
-              ),
+              child: SingleChildScrollView(padding: padding, child: child),
             ),
           ],
         ),

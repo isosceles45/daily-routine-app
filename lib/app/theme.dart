@@ -19,6 +19,13 @@ abstract final class RitualColors {
   static const accentSoftText = Color(0xFFFFB4D3);
   static const onAccent = Color(0xFF26101B);
 
+  /// Wordle's "right letter, wrong place" tile.
+  ///
+  /// The canvas drew this as a dark tile with an accent border, but everyone
+  /// already knows what a yellow Wordle tile means — reusing the palette's
+  /// amber reads instantly and costs nothing.
+  static const wordlePresent = Color(0xFFFFC24D);
+
   static const success = Color(0xFF2FD1A0);
   static const successOn = Color(0xFF06231A);
   static const error = Color(0xFFFF6B6B);

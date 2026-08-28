@@ -118,9 +118,18 @@ void main() {
 
   group('number to date', () {
     test('anchors on the known epoch', () {
-      expect(WordleShareParser.dateFor(1), '2021-06-19');
-      // Widely documented checkpoint: Wordle 1000 was 14 March 2024.
-      expect(WordleShareParser.dateFor(1000), '2024-03-14');
+      // Puzzle #0 was 19 June 2021 — the original game numbered from zero.
+      expect(WordleShareParser.dateFor(0), '2021-06-19');
+      expect(WordleShareParser.dateFor(1), '2021-06-20');
+    });
+
+    test('matches a real published puzzle', () {
+      // Verified against NYT: #1896 was Friday 28 August 2026. An off-by-one
+      // here files every imported result under the wrong day, so this is
+      // pinned to a real-world checkpoint rather than to our own arithmetic.
+      expect(WordleShareParser.dateFor(1896), '2026-08-28');
+      expect(WordleShareParser.numberFor('2026-08-28'), 1896);
+      expect(WordleShareParser.numberFor('2026-08-29'), 1897);
     });
 
     test('round-trips', () {
@@ -131,8 +140,8 @@ void main() {
 
     test('files a pasted result under the day it belongs to', () {
       // Pasting yesterday's share must not be recorded as today's.
-      final r = WordleShareParser.parse('Wordle 1000 3/6')!;
-      expect(r.date, '2024-03-14');
+      final r = WordleShareParser.parse('Wordle 1896 3/6')!;
+      expect(r.date, '2026-08-28');
     });
   });
 }

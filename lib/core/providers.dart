@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'database/database.dart';
 import 'dates/daily_date_service.dart';
+import 'maintenance.dart';
 import 'network/api_client.dart';
 
 /// Long-lived singletons. Everything downstream reads these rather than
@@ -19,8 +20,9 @@ final apiClientProvider = Provider<ApiClient>((ref) {
   return client;
 });
 
-final dailyDateServiceProvider =
-    Provider<DailyDateService>((ref) => const DailyDateService());
+final dailyDateServiceProvider = Provider<DailyDateService>(
+  (ref) => const DailyDateService(),
+);
 
 /// Today's local calendar date as `yyyy-MM-dd`.
 ///
@@ -42,20 +44,14 @@ class CurrentDateNotifier extends Notifier<String> {
   }
 }
 
-final currentDateProvider =
-    NotifierProvider<CurrentDateNotifier, String>(CurrentDateNotifier.new);
+final currentDateProvider = NotifierProvider<CurrentDateNotifier, String>(
+  CurrentDateNotifier.new,
+);
 
 /// True on the first of the month — the day the app celebrates loudly.
 final isFirstOfMonthProvider = Provider<bool>((ref) {
   final date = ref.watch(currentDateProvider);
   return DailyDateService.parse(date).day == 1;
-});
-
-/// The name used in the greeting. Editable from Settings in a later phase;
-/// the default keeps the app personal from first launch.
-final userNameProvider = FutureProvider<String>((ref) async {
-  final stored = await ref.watch(databaseProvider).getSetting('user_name');
-  return (stored == null || stored.trim().isEmpty) ? 'Atharva' : stored;
 });
 
 /// Ensures a `daily_states` row exists for today and exposes it.
@@ -83,6 +79,11 @@ class _DailyRolloverObserverState extends ConsumerState<DailyRolloverObserver>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    // Fire-and-forget: repairs must never delay first paint.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) ref.read(maintenanceProvider);
+    });
   }
 
   @override

@@ -7,7 +7,8 @@ class DailyStates extends Table {
   DateTimeColumn get createdAt => dateTime()();
 
   /// Whether the "Happy New Day" greeting has been shown for this date (§5).
-  BoolColumn get greetingShown => boolean().withDefault(const Constant(false))();
+  BoolColumn get greetingShown =>
+      boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {date};

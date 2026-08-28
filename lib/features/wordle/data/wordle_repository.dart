@@ -56,4 +56,44 @@ class WordleRepository {
 
   Future<void> remove(String date) =>
       (_db.delete(_db.wordleResults)..where((t) => t.date.equals(date))).go();
+
+  /// Moves results that were filed under the wrong date.
+  ///
+  /// The puzzle number is the unambiguous fact in a share; the date is derived
+  /// from it. An earlier build derived it one day late, so any result imported
+  /// then sits on the wrong day — which quietly breaks streaks and leaves
+  /// today's board empty. Recompute from the number and move the row.
+  ///
+  /// Returns how many rows were moved.
+  Future<int> repairMisfiledDates() async {
+    final rows = await all();
+    var moved = 0;
+
+    for (final row in rows) {
+      final correct = WordleShareParser.dateFor(row.wordleNumber);
+      if (correct == row.date) continue;
+
+      await _db.transaction(() async {
+        await (_db.delete(
+          _db.wordleResults,
+        )..where((t) => t.date.equals(row.date))).go();
+        await _db
+            .into(_db.wordleResults)
+            .insertOnConflictUpdate(
+              WordleResultsCompanion.insert(
+                date: correct,
+                wordleNumber: row.wordleNumber,
+                score: Value(row.score),
+                completed: Value(row.completed),
+                hardMode: Value(row.hardMode),
+                grid: Value(row.grid),
+                importedAt: row.importedAt,
+              ),
+            );
+      });
+      moved++;
+    }
+
+    return moved;
+  }
 }

@@ -1,10 +1,14 @@
-# Daily Ritual
+# Ritual
 
 A personal daily companion for Android and iOS. Every calendar day it puts
 together something to do, something to learn, something funny and something
 unexpected — and it keeps working with no signal.
 
 Built in Flutter, offline-first, no account, no backend.
+
+> The Dart package is `daily_ritual` and the application id is
+> `com.atharva.daily_ritual` — those are identifiers and stay put. "Ritual" is
+> what appears under the icon.
 
 ## What it does
 

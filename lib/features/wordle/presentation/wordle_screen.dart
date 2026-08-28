@@ -18,7 +18,7 @@ import 'wordle_import_sheet.dart';
 ///
 /// `inAppBrowserView` is a Chrome Custom Tab on Android and an
 /// `SFSafariViewController` on iOS. Both render the real NYT page — nothing is
-/// scraped or reimplemented — while keeping Daily Ritual on the back stack, so
+/// scraped or reimplemented — while keeping Ritual on the back stack, so
 /// finishing the puzzle and returning to paste the result is one gesture
 /// rather than an app switch.
 ///
@@ -36,7 +36,12 @@ Future<bool> openWordle() async {
 }
 
 class WordleScreen extends ConsumerStatefulWidget {
-  const WordleScreen({super.key});
+  const WordleScreen({super.key, this.autoPlay = false});
+
+  /// Set when the user tapped "Play Wordle" on Today. The button said it would
+  /// open Wordle, so it opens Wordle — landing here first and asking again was
+  /// a tap that did nothing.
+  final bool autoPlay;
 
   @override
   ConsumerState<WordleScreen> createState() => _WordleScreenState();
@@ -53,6 +58,14 @@ class _WordleScreenState extends ConsumerState<WordleScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    if (widget.autoPlay) {
+      // After the first frame, so the screen is mounted underneath and the
+      // user returns to stats and the import sheet rather than a blank route.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _play();
+      });
+    }
   }
 
   @override

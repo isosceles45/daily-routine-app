@@ -25,7 +25,7 @@ part 'database.g.dart';
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
-      : super(executor ?? driftDatabase(name: 'daily_ritual'));
+    : super(executor ?? driftDatabase(name: 'daily_ritual'));
 
   @override
   int get schemaVersion => 1;
@@ -33,9 +33,9 @@ class AppDatabase extends _$AppDatabase {
   // --- Daily state --------------------------------------------------------
 
   Future<DailyState> ensureDay(String date) async {
-    final existing = await (select(dailyStates)
-          ..where((t) => t.date.equals(date)))
-        .getSingleOrNull();
+    final existing = await (select(
+      dailyStates,
+    )..where((t) => t.date.equals(date))).getSingleOrNull();
     if (existing != null) return existing;
 
     final row = DailyStatesCompanion.insert(
@@ -43,13 +43,13 @@ class AppDatabase extends _$AppDatabase {
       createdAt: DateTime.now(),
     );
     await into(dailyStates).insert(row, mode: InsertMode.insertOrIgnore);
-    return (select(dailyStates)..where((t) => t.date.equals(date)))
-        .getSingle();
+    return (select(dailyStates)..where((t) => t.date.equals(date))).getSingle();
   }
 
   Future<void> markGreetingShown(String date) async {
-    await (update(dailyStates)..where((t) => t.date.equals(date)))
-        .write(const DailyStatesCompanion(greetingShown: Value(true)));
+    await (update(dailyStates)..where((t) => t.date.equals(date))).write(
+      const DailyStatesCompanion(greetingShown: Value(true)),
+    );
   }
 
   /// Every day the app has seen, newest first.
@@ -64,10 +64,14 @@ class AppDatabase extends _$AppDatabase {
 
   /// Returns the cached payload for [date]/[contentType], or null on a miss.
   Future<Map<String, dynamic>?> readContent(
-      String date, String contentType) async {
-    final row = await (select(dailyContents)
-          ..where((t) => t.date.equals(date) & t.contentType.equals(contentType)))
-        .getSingleOrNull();
+    String date,
+    String contentType,
+  ) async {
+    final row =
+        await (select(dailyContents)..where(
+              (t) => t.date.equals(date) & t.contentType.equals(contentType),
+            ))
+            .getSingleOrNull();
     if (row == null) return null;
     try {
       return jsonDecode(row.payload) as Map<String, dynamic>;
@@ -99,17 +103,18 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> deleteContent(String date, String contentType) {
-    return (delete(dailyContents)
-          ..where(
-              (t) => t.date.equals(date) & t.contentType.equals(contentType)))
+    return (delete(dailyContents)..where(
+          (t) => t.date.equals(date) & t.contentType.equals(contentType),
+        ))
         .go();
   }
 
   // --- Settings -----------------------------------------------------------
 
   Future<String?> getSetting(String key) async {
-    final row = await (select(appSettings)..where((t) => t.key.equals(key)))
-        .getSingleOrNull();
+    final row = await (select(
+      appSettings,
+    )..where((t) => t.key.equals(key))).getSingleOrNull();
     return row?.value;
   }
 

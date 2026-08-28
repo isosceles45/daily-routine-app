@@ -48,6 +48,6 @@ abstract final class StreakCalculator {
   }
 
   static String _shift(String date, int days) => DailyDateService.format(
-        DailyDateService.parse(date).add(Duration(days: days)),
-      );
+    DailyDateService.parse(date).add(Duration(days: days)),
+  );
 }

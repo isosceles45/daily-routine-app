@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/api_result.dart';
 import '../../../core/providers.dart';
+import '../../settings/providers/settings_providers.dart';
 import '../data/fun_repository.dart';
 import '../data/fun_service.dart';
 import '../domain/daily_fun.dart';
@@ -15,9 +16,20 @@ final funRepositoryProvider = Provider<FunRepository>(
       FunRepository(ref.watch(funServiceProvider), ref.watch(databaseProvider)),
 );
 
+/// The day's rotating kind, after applying the user's preferences.
+final dailyFunKindProvider = Provider<FunKind>((ref) {
+  final kind = FunKind.forDate(ref.watch(currentDateProvider));
+  final allowDark =
+      ref.watch(preferencesProvider).value?.allowDarkJokes ?? true;
+
+  // Saturday is dark-joke day; swap it for an ordinary one when asked.
+  return (kind == FunKind.darkJoke && !allowDark) ? FunKind.joke : kind;
+});
+
 final dailyFunProvider = FutureProvider<DailyFun>((ref) async {
   final date = ref.watch(currentDateProvider);
-  final result = await ref.watch(funRepositoryProvider).funFor(date);
+  final kind = ref.watch(dailyFunKindProvider);
+  final result = await ref.watch(funRepositoryProvider).kindFor(date, kind);
   return switch (result) {
     Success<DailyFun>(:final data) => data,
     Failure<DailyFun>(:final error) => throw error,
@@ -37,7 +49,7 @@ final dailyDogProvider = FutureProvider<DailyFun>(
 /// The rotating slot, but only when it is something other than a cat or dog —
 /// those already have dedicated cards, and showing them twice is noise.
 final dailyExtraFunProvider = Provider<FunKind?>((ref) {
-  final kind = FunKind.forDate(ref.watch(currentDateProvider));
+  final kind = ref.watch(dailyFunKindProvider);
   return (kind == FunKind.cat || kind == FunKind.dog) ? null : kind;
 });
 
