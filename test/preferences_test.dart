@@ -10,6 +10,8 @@ void main() {
         reason: 'never opt someone into notifications by default');
     expect(d.allowDarkJokes, isTrue);
     expect(d.userName, isNotEmpty);
+    expect(d.syncEnabled, isFalse,
+        reason: 'onboarding promises nothing is uploaded, so sync starts off');
   });
 
   test('copyWith changes only what it is given', () {
@@ -20,6 +22,7 @@ void main() {
     expect(renamed.allowDarkJokes, base.allowDarkJokes);
     expect(renamed.dailyReminders, base.dailyReminders);
     expect(renamed.onboardingComplete, base.onboardingComplete);
+    expect(renamed.syncEnabled, base.syncEnabled);
   });
 
   test('flags can be turned off, not just on', () {
@@ -30,10 +33,12 @@ void main() {
       allowDarkJokes: true,
       dailyReminders: true,
       onboardingComplete: true,
+      syncEnabled: true,
     );
 
     expect(base.copyWith(allowDarkJokes: false).allowDarkJokes, isFalse);
     expect(base.copyWith(dailyReminders: false).dailyReminders, isFalse);
     expect(base.copyWith(onboardingComplete: false).onboardingComplete, isFalse);
+    expect(base.copyWith(syncEnabled: false).syncEnabled, isFalse);
   });
 }

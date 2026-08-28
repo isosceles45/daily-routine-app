@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme.dart';
+import '../../../core/notifications/notification_providers.dart';
 import '../../../core/database/database.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../domain/todo.dart';
@@ -40,6 +41,22 @@ class _TodoEditSheetState extends ConsumerState<_TodoEditSheet> {
 
   late TodoPriority _priority = TodoPriority.fromValue(widget.todo.priority);
   late DateTime? _dueDate = widget.todo.dueDate;
+  late bool _remind = widget.todo.reminderAt != null;
+
+  /// Reminders fire mid-morning on the due date. A specific time picker is
+  /// more precision than a todo list needs, and every extra field is another
+  /// reason not to bother setting one at all.
+  static const _reminderHour = 9;
+
+  DateTime? get _reminderAt {
+    if (!_remind || _dueDate == null) return null;
+    return DateTime(
+      _dueDate!.year,
+      _dueDate!.month,
+      _dueDate!.day,
+      _reminderHour,
+    );
+  }
 
   @override
   void dispose() {
@@ -52,6 +69,8 @@ class _TodoEditSheetState extends ConsumerState<_TodoEditSheet> {
     final title = _title.text.trim();
     if (title.isEmpty) return;
 
+    final reminder = _reminderAt;
+
     await ref
         .read(todoRepositoryProvider)
         .edit(
@@ -62,7 +81,16 @@ class _TodoEditSheetState extends ConsumerState<_TodoEditSheet> {
           dueDate: _dueDate,
           // An explicit clear has to be distinguishable from "leave it alone".
           clearDueDate: _dueDate == null,
+          reminderAt: reminder,
+          clearReminder: reminder == null,
         );
+
+    // Scheduling follows the saved row, so the notification and the database
+    // can never disagree about whether a reminder exists.
+    await ref
+        .read(notificationServiceProvider)
+        .setTodoReminder(todoId: widget.todo.id, title: title, at: reminder);
+
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -100,6 +128,11 @@ class _TodoEditSheetState extends ConsumerState<_TodoEditSheet> {
     );
 
     if (confirmed != true) return;
+    // Cancel first: a reminder for a deleted todo is the worst kind of
+    // notification.
+    await ref
+        .read(notificationServiceProvider)
+        .cancelTodoReminder(widget.todo.id);
     await ref.read(todoRepositoryProvider).remove(widget.todo.id);
     if (mounted) Navigator.of(context).pop();
   }
@@ -177,11 +210,25 @@ class _TodoEditSheetState extends ConsumerState<_TodoEditSheet> {
                     _Choice(
                       label: 'Clear',
                       selected: false,
-                      onTap: () => setState(() => _dueDate = null),
+                      onTap: () => setState(() {
+                        _dueDate = null;
+                        // A reminder with no date to hang on cannot fire.
+                        _remind = false;
+                      }),
                     ),
                   ],
                 ],
               ),
+              if (_dueDate != null) ...[
+                const SizedBox(height: 14),
+                _Choice(
+                  label: _remind
+                      ? 'Reminder at 9:00 on'
+                      : 'Remind me on the day',
+                  selected: _remind,
+                  onTap: () => setState(() => _remind = !_remind),
+                ),
+              ],
               const SizedBox(height: 24),
               Row(
                 children: [

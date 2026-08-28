@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'database/database.dart';
 import 'dates/daily_date_service.dart';
 import 'maintenance.dart';
+import 'notifications/notification_providers.dart';
 import 'network/api_client.dart';
 
 /// Long-lived singletons. Everything downstream reads these rather than
@@ -80,9 +81,13 @@ class _DailyRolloverObserverState extends ConsumerState<DailyRolloverObserver>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    // Fire-and-forget: repairs must never delay first paint.
+    // Fire-and-forget: neither of these may delay first paint.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) ref.read(maintenanceProvider);
+      if (!mounted) return;
+      ref.read(maintenanceProvider);
+      // Android drops scheduled alarms on reboot and on app update, so the
+      // schedule is rebuilt each launch rather than assumed to survive.
+      ref.read(notificationBootstrapProvider);
     });
   }
 

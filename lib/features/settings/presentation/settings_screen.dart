@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../../sync/presentation/sync_section.dart';
+import '../../../core/notifications/notification_providers.dart';
 import '../providers/settings_providers.dart';
 
 class SettingsScreen extends ConsumerWidget {
@@ -48,11 +50,28 @@ class SettingsScreen extends ConsumerWidget {
             _Toggle(
               label: 'Daily reminders',
               description:
-                  "Saved now; we'll ask for permission when they arrive.",
+                  'Happy New Day at midnight, and reminders for todos you '
+                  'give a due date.',
               value: prefs?.dailyReminders ?? false,
-              onChanged: (v) =>
-                  ref.read(preferencesProvider.notifier).setDailyReminders(v),
+              onChanged: (v) async {
+                final granted = await setRemindersEnabled(ref, v);
+                if (granted || !context.mounted) return;
+
+                // The OS said no, so the switch must not sit there claiming
+                // reminders are on.
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Notifications are blocked for Ritual. Turn them on in '
+                      'your system settings first.',
+                    ),
+                  ),
+                );
+              },
             ),
+            const SizedBox(height: 24),
+
+            const SyncSection(),
             const SizedBox(height: 24),
 
             Eyebrow('About'),

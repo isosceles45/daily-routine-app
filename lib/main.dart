@@ -4,9 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/app.dart';
 import 'app/theme.dart';
+import 'core/firebase/firebase_bootstrap.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Sync is opt-in, but Firebase has to be up before Settings can offer it.
+  // A failure here is not fatal: the app is local-first and works with no
+  // backend at all.
+  final firebaseReady = await initialiseFirebase();
 
   // The design is a dark app edge to edge; let content run under the system
   // bars and draw their icons light.
@@ -17,5 +23,10 @@ void main() {
     systemNavigationBarIconBrightness: Brightness.light,
   ));
 
-  runApp(const ProviderScope(child: DailyRitualApp()));
+  runApp(
+    ProviderScope(
+      overrides: [firebaseReadyProvider.overrideWithValue(firebaseReady)],
+      child: const DailyRitualApp(),
+    ),
+  );
 }

@@ -1,0 +1,10 @@
+# Copy to android/key.properties and fill in to sign a release build.
+# key.properties itself is gitignored and must never be committed.
+#
+# Create the keystore first:
+#   keytool -genkey -v -keystore ~/ritual-release.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias ritual
+storeFile=/absolute/path/to/ritual-release.jks
+storePassword=
+keyAlias=ritual
+keyPassword=

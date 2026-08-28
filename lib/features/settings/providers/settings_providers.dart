@@ -9,6 +9,7 @@ class AppPreferences {
     required this.allowDarkJokes,
     required this.dailyReminders,
     required this.onboardingComplete,
+    required this.syncEnabled,
   });
 
   static const defaults = AppPreferences(
@@ -16,6 +17,7 @@ class AppPreferences {
     allowDarkJokes: true,
     dailyReminders: false,
     onboardingComplete: false,
+    syncEnabled: false,
   );
 
   /// Shown in the greeting and the Happy New Day screen.
@@ -30,17 +32,24 @@ class AppPreferences {
 
   final bool onboardingComplete;
 
+  /// Backup and cross-device sync. Off unless explicitly switched on:
+  /// onboarding promises nothing is uploaded, and that has to stay true for
+  /// anyone who never opts in.
+  final bool syncEnabled;
+
   AppPreferences copyWith({
     String? userName,
     bool? allowDarkJokes,
     bool? dailyReminders,
     bool? onboardingComplete,
+    bool? syncEnabled,
   }) =>
       AppPreferences(
         userName: userName ?? this.userName,
         allowDarkJokes: allowDarkJokes ?? this.allowDarkJokes,
         dailyReminders: dailyReminders ?? this.dailyReminders,
         onboardingComplete: onboardingComplete ?? this.onboardingComplete,
+        syncEnabled: syncEnabled ?? this.syncEnabled,
       );
 }
 
@@ -49,6 +58,7 @@ class PreferencesNotifier extends AsyncNotifier<AppPreferences> {
   static const _darkJokesKey = 'allow_dark_jokes';
   static const _remindersKey = 'daily_reminders';
   static const _onboardedKey = 'onboarding_complete';
+  static const _syncKey = 'sync_enabled';
 
   @override
   Future<AppPreferences> build() async {
@@ -68,6 +78,7 @@ class PreferencesNotifier extends AsyncNotifier<AppPreferences> {
       allowDarkJokes: await flag(_darkJokesKey, fallback: true),
       dailyReminders: await flag(_remindersKey, fallback: false),
       onboardingComplete: await flag(_onboardedKey, fallback: false),
+      syncEnabled: await flag(_syncKey, fallback: false),
     );
   }
 
@@ -90,6 +101,11 @@ class PreferencesNotifier extends AsyncNotifier<AppPreferences> {
     state = AsyncData(_current.copyWith(dailyReminders: on));
   }
 
+  Future<void> setSyncEnabled(bool on) async {
+    await ref.read(databaseProvider).setSetting(_syncKey, '$on');
+    state = AsyncData(_current.copyWith(syncEnabled: on));
+  }
+
   /// Finishes onboarding in one write so a crash midway can't leave the app
   /// half-configured.
   Future<void> completeOnboarding({
@@ -110,6 +126,7 @@ class PreferencesNotifier extends AsyncNotifier<AppPreferences> {
       allowDarkJokes: allowDarkJokes,
       dailyReminders: dailyReminders,
       onboardingComplete: true,
+      syncEnabled: _current.syncEnabled,
     ));
   }
 }
