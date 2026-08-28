@@ -8,6 +8,7 @@ class SyncState {
     this.message,
     this.recordCount = 0,
     this.isAnonymous = true,
+    this.email,
   });
 
   static const off = SyncState(phase: SyncPhase.off);
@@ -23,6 +24,9 @@ class SyncState {
   /// Anonymous accounts live and die with the app install, so the UI has to
   /// be able to say that out loud and offer to link a real identity.
   final bool isAnonymous;
+
+  /// The linked Google account, once there is one.
+  final String? email;
 
   SyncState copyWith({
     SyncPhase? phase,

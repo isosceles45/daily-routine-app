@@ -2,7 +2,7 @@
 
 *(package `daily_ritual`; the app shows as **Ritual** under its icon)*
 
-> **Status:** Phases 0–3 complete (2026-08-27). Phase 4 is next.
+> **Status:** all four phases complete (2026-08-28). V1 is feature-complete; see the checklist below.
 > This is the durable reference for the project: design system, API registry, architecture and phase plan.
 > Keep it updated as phases land.
 
@@ -37,7 +37,7 @@ Goal: a genuinely usable personal daily companion — something to do, learn, la
 | 1 — Foundation + first live content | ✅ done | Verified running on the Pixel 10 Pro emulator |
 | 2 — Wordle, CAT Quant, completion & streaks | ✅ done | 203 tests; not yet exercised on device |
 | 3 — Japan, Surprise, Settings, offline | ✅ done | 218 tests; not yet exercised on device |
-| 4 — Notifications, Firestore, tests, release | ⬜ next | |
+| 4 — Notifications, Firestore, tests, release | ✅ done | 253 tests; release builds and signs |
 
 ### What Phase 1 shipped
 
@@ -47,6 +47,72 @@ JokeAPI, and a full local todo system. 74 unit tests pass; `flutter analyze` is 
 
 Daily rollover was confirmed in the wild — the emulator crossed midnight during development and
 the app correctly started a new day with fresh content while todos persisted.
+
+### What Phase 4 shipped
+
+Local notifications, opt-in Firestore backup, an end-to-end integration test, and a release build
+that minifies, shrinks and signs.
+
+### Phase 4 decisions
+
+| Decision | Reason |
+|---|---|
+| **Sync is opt-in, off by default** | The plan called for silent anonymous auth. But onboarding tells the user "No account, nothing uploaded. Everything stays on this device" — uploading anyway would make that a lie. Sync lives behind a switch in Settings, so the promise holds for anyone who never turns it on. |
+| **Turning sync off leaves the cloud copy alone** | Switching off a backup should not destroy it. |
+| **Remote only wins when strictly newer** | A fresh install pulls history down; an active device never loses today's work to a stale cloud copy. |
+| **One generic table mirror, not six** | Every synced table is the same shape — rows with a primary key and a timestamp — so they share an implementation. Drift's generated `toJson`/`fromJson` with an int-serialising `ValueSerializer` keeps what lands in Firestore as plain JSON. |
+| **`app_settings` is synced too** | It carries the `seen:` completion markers, which is what makes a restored install show the right history rather than an empty timeline. |
+| **The greeting is an *exact* alarm at 00:00** | Briefly changed to 08:00 on my own judgement, which was not mine to make — §16 says midnight. Inexact alarms drift by an hour or more under Doze, which would land a midnight greeting in the middle of the night, so this one is exact. Todo reminders stay inexact; 9am-ish is fine for those. |
+| **The notification schedule is rebuilt every launch** | Android drops scheduled alarms on reboot *and* on app update. Assuming they survive means reminders silently stop working after an update. |
+| **A dedicated monochrome status-bar icon** | Android renders notification icons from the alpha channel only; the colour launcher icon would appear as a white blob. |
+| **The integration test seeds the cache instead of stubbing the network** | Seeded `daily_content` is exactly the path the app takes offline, so the test exercises the caching layer rather than bypassing it — and it cannot fail because a public API was slow. |
+| **`-dontwarn com.google.android.play.core.**`** | Flutter's engine references Play Core's split-install API for deferred components, which this app does not use, so the library is absent and R8 stops on dangling references. Those code paths are never reached. |
+
+### Release sizes
+
+The universal APK is 67 MB because it carries three CPU architectures. Per-device, which is what a
+user actually downloads once Play splits the bundle:
+
+| ABI | Size |
+|---|---|
+| arm64-v8a | 26.5 MB |
+| armeabi-v7a | 24.0 MB |
+
+Upload `app-release.aab`, not an APK.
+
+---
+
+## V1 definition of done (§31)
+
+| | |
+|---|---|
+| Android app launches | ✅ |
+| Web / Linux launch | ➖ dropped by decision; Android + iOS only |
+| Daily state changes after midnight | ✅ verified in the wild when the emulator crossed midnight |
+| Happy New Day on a new day | ✅ |
+| Wordle opens, share text imports, history and stats persist | ✅ |
+| Daily Trivia from OpenTDB | ✅ |
+| CAT question loads and its answer is validated | ✅ via the generator floor; every answer derived twice offline and confirmed against math.js |
+| Daily animal/fun, Pokémon, Japan | ✅ |
+| Surprise Me combines multiple APIs | ✅ |
+| Todos work offline | ✅ |
+| Daily completion and streaks | ✅ |
+| Cached content works offline | ✅ |
+| API failures don't crash the app | ✅ |
+| Android notifications | ✅ |
+| No secrets committed | ✅ |
+| Tests cover critical business logic | ✅ 253 tests |
+
+### Known gaps carried past V1
+
+- **Widget test coverage is thin.** Only onboarding and the Wordle board have widget tests. Home,
+  trivia, CAT, todos, history and surprise have none — a layout bug reached the emulator once
+  because of this.
+- **Google sign-in is not built.** Anonymous auth gives sync while the install lives, not recovery.
+- **iOS is unverified.** Code is platform-agnostic but nothing has been built or run on a Mac.
+- `assets/video/first-of-the-month.mp4` is still absent; the greeting branches on the 1st already.
+
+---
 
 ### What Phase 3 shipped
 

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/firebase/firebase_bootstrap.dart';
 import '../../../core/providers.dart';
 import '../../settings/providers/settings_providers.dart';
+import '../data/account_service.dart';
 import '../data/sync_service.dart';
 import '../domain/sync_state.dart';
 
@@ -32,7 +33,11 @@ class SyncController extends AsyncNotifier<SyncState> {
     if (user == null) {
       return const SyncState(phase: SyncPhase.signedOut);
     }
-    return SyncState(phase: SyncPhase.idle, isAnonymous: user.isAnonymous);
+    return SyncState(
+      phase: SyncPhase.idle,
+      isAnonymous: user.isAnonymous,
+      email: user.email,
+    );
   }
 
   /// Switches sync on: signs in anonymously, then does a first full sync so
@@ -107,3 +112,27 @@ class SyncController extends AsyncNotifier<SyncState> {
 final syncControllerProvider = AsyncNotifierProvider<SyncController, SyncState>(
   SyncController.new,
 );
+
+final accountServiceProvider = Provider<AccountService>(
+  (ref) => const AccountService(),
+);
+
+/// Attaches a Google account to the current anonymous one, then syncs so the
+/// result is visible immediately rather than promised.
+Future<LinkOutcome> linkGoogleAccount(WidgetRef ref) async {
+  final outcome = await ref.read(accountServiceProvider).linkGoogle();
+
+  if (outcome is LinkedInPlace || outcome is SignedInToExisting) {
+    ref.invalidate(syncControllerProvider);
+    await ref.read(syncControllerProvider.notifier).syncNow();
+  }
+  return outcome;
+}
+
+/// Signs out. Sync is switched off with it — leaving it on with no account
+/// would just fail silently on every attempt.
+Future<void> signOutOfSync(WidgetRef ref) async {
+  await ref.read(accountServiceProvider).signOut();
+  await ref.read(syncControllerProvider.notifier).disable();
+  ref.invalidate(syncControllerProvider);
+}

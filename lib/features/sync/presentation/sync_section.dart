@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme.dart';
 import '../../../shared/widgets/widgets.dart';
+import '../data/account_service.dart';
 import '../domain/sync_state.dart';
 import '../providers/sync_providers.dart';
 
@@ -51,33 +52,14 @@ class SyncSection extends ConsumerWidget {
               ),
             ],
           ),
-          if (sync.isAnonymous) ...[
-            const SizedBox(height: 12),
-            RitualCard(
-              padding: RitualShape.cardPaddingCompact,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(
-                    Icons.info_outline,
-                    size: 16,
-                    color: RitualColors.textTertiary,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    // Worth being blunt about: an anonymous account is tied to
-                    // this install. It gives sync, not recovery.
-                    child: Text(
-                      'This backup is tied to this installation. Uninstall the '
-                      'app and it cannot be recovered. Signing in with Google '
-                      'will make it restorable — that is coming next.',
-                      style: RitualText.bodySmall,
-                    ),
-                  ),
-                ],
-              ),
+          const SizedBox(height: 12),
+          if (sync.isAnonymous)
+            _LinkPrompt(onLink: () => _link(context, ref))
+          else
+            _LinkedAccount(
+              email: sync.email,
+              onSignOut: () => signOutOfSync(ref),
             ),
-          ],
         ],
       ],
     );
@@ -180,6 +162,121 @@ class _Toggle extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Runs the link and reports what actually happened.
+///
+/// The three outcomes are genuinely different and the user needs to know which
+/// they got — especially signing in to an account that already had data, since
+/// the uid changes underneath them.
+Future<void> _link(BuildContext context, WidgetRef ref) async {
+  final outcome = await linkGoogleAccount(ref);
+  if (!context.mounted) return;
+
+  final message = switch (outcome) {
+    LinkedInPlace(:final email) =>
+      'Backup linked to ${email ?? 'your Google account'}. It can be restored '
+          'on another device now.',
+    SignedInToExisting(:final email) =>
+      'Signed in to ${email ?? 'that account'}, which already had a backup. '
+          "You're now seeing its data.",
+    LinkCancelled() => null,
+    LinkFailed(:final message) => message,
+  };
+
+  if (message == null) return;
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+}
+
+class _LinkPrompt extends StatelessWidget {
+  const _LinkPrompt({required this.onLink});
+
+  final VoidCallback onLink;
+
+  @override
+  Widget build(BuildContext context) {
+    return RitualCard(
+      padding: RitualShape.cardPaddingCompact,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(
+                Icons.info_outline,
+                size: 16,
+                color: RitualColors.textTertiary,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                // Blunt on purpose: an anonymous account gives sync between
+                // sessions, not recovery after an uninstall.
+                child: Text(
+                  'This backup is tied to this installation. Uninstall the app '
+                  'and it cannot be recovered.',
+                  style: RitualText.bodySmall,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          PrimaryButton(
+            label: 'Link a Google account',
+            expand: false,
+            onPressed: onLink,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LinkedAccount extends StatelessWidget {
+  const _LinkedAccount({required this.email, required this.onSignOut});
+
+  final String? email;
+  final VoidCallback onSignOut;
+
+  @override
+  Widget build(BuildContext context) {
+    return RitualCard(
+      padding: RitualShape.cardPaddingCompact,
+      child: Row(
+        children: [
+          const Icon(
+            Icons.verified_user_outlined,
+            size: 16,
+            color: RitualColors.success,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Recoverable',
+                  style: outfit(size: 13, weight: FontWeight.w700),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  email ?? 'Linked to your Google account',
+                  style: outfit(size: 12, color: RitualColors.textTertiary),
+                ),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: onSignOut,
+            child: Text(
+              'Sign out',
+              style: outfit(size: 12, color: RitualColors.textSecondary),
+            ),
+          ),
+        ],
       ),
     );
   }
