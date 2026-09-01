@@ -16,12 +16,14 @@ Future<void> main() async {
 
   // The design is a dark app edge to edge; let content run under the system
   // bars and draw their icons light.
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-    systemNavigationBarColor: RitualColors.bg,
-    systemNavigationBarIconBrightness: Brightness.light,
-  ));
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: RitualColors.bg,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
 
   runApp(
     ProviderScope(

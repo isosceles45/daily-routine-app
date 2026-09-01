@@ -21,10 +21,12 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enabled = onPressed != null;
-    final background =
-        enabled ? RitualColors.accent : RitualColors.surfaceRaised;
-    final foreground =
-        enabled ? RitualColors.onAccent : RitualColors.textTertiary;
+    final background = enabled
+        ? RitualColors.accent
+        : RitualColors.surfaceRaised;
+    final foreground = enabled
+        ? RitualColors.onAccent
+        : RitualColors.textTertiary;
 
     final content = Row(
       mainAxisSize: expand ? MainAxisSize.max : MainAxisSize.min,
@@ -41,7 +43,8 @@ class PrimaryButton extends StatelessWidget {
             letterSpacing: 0.04,
           ),
         ),
-        if (trailingArrow) Icon(Icons.arrow_forward, size: 16, color: foreground),
+        if (trailingArrow)
+          Icon(Icons.arrow_forward, size: 16, color: foreground),
       ],
     );
 

@@ -37,14 +37,17 @@ void main() {
     expect(stored.grid!.split('\n'), hasLength(4));
   });
 
-  test('re-importing the same day overwrites rather than duplicating', () async {
-    await repository.save(WordleShareParser.parse('Wordle 1234 5/6')!);
-    await repository.save(WordleShareParser.parse('Wordle 1234 3/6')!);
+  test(
+    're-importing the same day overwrites rather than duplicating',
+    () async {
+      await repository.save(WordleShareParser.parse('Wordle 1234 5/6')!);
+      await repository.save(WordleShareParser.parse('Wordle 1234 3/6')!);
 
-    final all = await repository.all();
-    expect(all, hasLength(1), reason: 'pasting twice must not inflate stats');
-    expect(all.single.score, 3);
-  });
+      final all = await repository.all();
+      expect(all, hasLength(1), reason: 'pasting twice must not inflate stats');
+      expect(all.single.score, 3);
+    },
+  );
 
   test('stores a failure without a score', () async {
     await repository.save(WordleShareParser.parse('Wordle 1234 X/6')!);
@@ -59,11 +62,14 @@ void main() {
     expect(stored!.hardMode, isTrue);
   });
 
-  test('a share with no grid stores null rather than an empty string', () async {
-    await repository.save(WordleShareParser.parse('Wordle 1234 4/6')!);
-    final stored = await repository.forDate(WordleShareParser.dateFor(1234));
-    expect(stored!.grid, isNull);
-  });
+  test(
+    'a share with no grid stores null rather than an empty string',
+    () async {
+      await repository.save(WordleShareParser.parse('Wordle 1234 4/6')!);
+      final stored = await repository.forDate(WordleShareParser.dateFor(1234));
+      expect(stored!.grid, isNull);
+    },
+  );
 
   test('different puzzles land on different days', () async {
     await repository.save(WordleShareParser.parse('Wordle 1234 4/6')!);
@@ -84,7 +90,9 @@ void main() {
 
   group('repairMisfiledDates', () {
     Future<void> insertAt(String date, int number) async {
-      await db.into(db.wordleResults).insert(
+      await db
+          .into(db.wordleResults)
+          .insert(
             WordleResultsCompanion.insert(
               date: date,
               wordleNumber: number,
@@ -131,9 +139,16 @@ void main() {
       expect(await repository.repairMisfiledDates(), 3);
 
       final all = await repository.all();
-      expect(all, hasLength(3), reason: 'shifting must not overwrite neighbours');
-      expect(all.map((r) => r.date).toSet(),
-          {'2026-08-26', '2026-08-27', '2026-08-28'});
+      expect(
+        all,
+        hasLength(3),
+        reason: 'shifting must not overwrite neighbours',
+      );
+      expect(all.map((r) => r.date).toSet(), {
+        '2026-08-26',
+        '2026-08-27',
+        '2026-08-28',
+      });
     });
   });
 
@@ -150,8 +165,11 @@ void main() {
       final today = await repository.forDate('2026-08-28');
 
       expect(wordleRouteFor(today), Routes.wordle);
-      expect(Routes.wordle, isNot(contains('play=1')),
-          reason: 'there is nothing left to play once a result exists');
+      expect(
+        Routes.wordle,
+        isNot(contains('play=1')),
+        reason: 'there is nothing left to play once a result exists',
+      );
     });
   });
 }

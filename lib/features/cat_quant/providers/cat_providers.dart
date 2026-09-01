@@ -54,11 +54,9 @@ Future<void> answerCatQuestion(WidgetRef ref, int index) async {
   final question = await ref.read(catQuestionProvider.future);
   if (question == null) return;
 
-  await ref.read(catRepositoryProvider).saveAnswer(
-        date: date,
-        question: question,
-        selectedIndex: index,
-      );
+  await ref
+      .read(catRepositoryProvider)
+      .saveAnswer(date: date, question: question, selectedIndex: index);
 }
 
 /// Drops the cached question and fetches a new one — the `TRY AGAIN` action.

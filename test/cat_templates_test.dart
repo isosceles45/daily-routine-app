@@ -36,25 +36,35 @@ void main() {
         setUp(() => questions = sample(template));
 
         test('produces questions at all', () {
-          expect(questions, isNotEmpty,
-              reason: '${template.topic} never generated a valid question');
+          expect(
+            questions,
+            isNotEmpty,
+            reason: '${template.topic} never generated a valid question',
+          );
         });
 
         test('two independent derivations always agree', () {
           // This is the offline half of the §8 guarantee: a question whose
           // second derivation disagrees must never reach the screen.
           for (final q in questions) {
-            expect(q.selfConsistent, isTrue,
-                reason: 'answer ${q.answer} vs cross-check ${q.crossCheck} '
-                    'for: ${q.stem}');
+            expect(
+              q.selfConsistent,
+              isTrue,
+              reason:
+                  'answer ${q.answer} vs cross-check ${q.crossCheck} '
+                  'for: ${q.stem}',
+            );
           }
         });
 
         test('offers exactly four distinct options', () {
           for (final q in questions) {
             expect(q.options, hasLength(4), reason: q.stem);
-            expect(q.options.toSet(), hasLength(4),
-                reason: 'duplicate option in: ${q.stem}');
+            expect(
+              q.options.toSet(),
+              hasLength(4),
+              reason: 'duplicate option in: ${q.stem}',
+            );
           }
         });
 
@@ -90,8 +100,11 @@ void main() {
 
         test('the answer varies across seeds', () {
           final distinct = questions.map((q) => q.stem).toSet();
-          expect(distinct.length, greaterThan(1),
-              reason: '${template.topic} produced only one question');
+          expect(
+            distinct.length,
+            greaterThan(1),
+            reason: '${template.topic} produced only one question',
+          );
         });
       });
     }
@@ -115,8 +128,9 @@ void main() {
 
     test('time & work', () {
       for (final q in sample(const TimeAndWorkTemplate())) {
-        final match = RegExp(r'in (\d+) days and B can complete the same work in (\d+) days')
-            .firstMatch(q.stem)!;
+        final match = RegExp(
+          r'in (\d+) days and B can complete the same work in (\d+) days',
+        ).firstMatch(q.stem)!;
         final a = int.parse(match.group(1)!);
         final b = int.parse(match.group(2)!);
         expect(q.answer, closeTo(a * b / (a + b), 1e-9));
@@ -125,8 +139,9 @@ void main() {
 
     test('average speed is the harmonic mean', () {
       for (final q in sample(const AverageSpeedTemplate())) {
-        final match = RegExp(r'speed of (\d+) km/h and returns along the same road at (\d+) km/h')
-            .firstMatch(q.stem)!;
+        final match = RegExp(
+          r'speed of (\d+) km/h and returns along the same road at (\d+) km/h',
+        ).firstMatch(q.stem)!;
         final u = int.parse(match.group(1)!);
         final v = int.parse(match.group(2)!);
 
@@ -138,7 +153,9 @@ void main() {
 
     test('trailing zeros', () {
       for (final q in sample(const TrailingZerosTemplate())) {
-        final n = int.parse(RegExp(r'end of (\d+)!').firstMatch(q.stem)!.group(1)!);
+        final n = int.parse(
+          RegExp(r'end of (\d+)!').firstMatch(q.stem)!.group(1)!,
+        );
 
         var expected = 0;
         for (var p = 5; p <= n; p *= 5) {
@@ -174,8 +191,10 @@ void main() {
         final blue = int.parse(match.group(2)!);
         final total = red + blue;
 
-        expect(q.answer,
-            closeTo(red * (red - 1) / (total * (total - 1)), 1e-9));
+        expect(
+          q.answer,
+          closeTo(red * (red - 1) / (total * (total - 1)), 1e-9),
+        );
         expect(q.answer, greaterThan(0));
         expect(q.answer, lessThan(1));
       }
@@ -184,9 +203,9 @@ void main() {
     test('mixture dilution reaches the target ratio', () {
       for (final q in sample(const MixtureTemplate())) {
         final match = RegExp(
-                r'(\d+) litres of a mixture of milk and water in the ratio (\d+) : (\d+).*becomes (\d+) : (\d+)',
-                dotAll: true)
-            .firstMatch(q.stem)!;
+          r'(\d+) litres of a mixture of milk and water in the ratio (\d+) : (\d+).*becomes (\d+) : (\d+)',
+          dotAll: true,
+        ).firstMatch(q.stem)!;
         final volume = int.parse(match.group(1)!);
         final milkPart = int.parse(match.group(2)!);
         final waterPart = int.parse(match.group(3)!);
@@ -197,8 +216,10 @@ void main() {
         final water = volume * waterPart / (milkPart + waterPart);
 
         // The point of the question: after adding, the ratio must be exact.
-        expect(milk / (water + q.answer),
-            closeTo(targetMilk / targetWater, 1e-9));
+        expect(
+          milk / (water + q.answer),
+          closeTo(targetMilk / targetWater, 1e-9),
+        );
         expect(q.answer, greaterThan(0));
       }
     });
@@ -206,31 +227,33 @@ void main() {
     test('average change solves for the original count', () {
       for (final q in sample(const AverageChangeTemplate())) {
         final match = RegExp(
-                r'average weight of a group of students is (\d+) kg.*weighing (\d+) kg joins.*rises to (\d+) kg',
-                dotAll: true)
-            .firstMatch(q.stem)!;
+          r'average weight of a group of students is (\d+) kg.*weighing (\d+) kg joins.*rises to (\d+) kg',
+          dotAll: true,
+        ).firstMatch(q.stem)!;
         final oldAverage = int.parse(match.group(1)!);
         final weight = int.parse(match.group(2)!);
         final newAverage = int.parse(match.group(3)!);
 
         final n = q.answer;
         // Substituting the answer must reproduce the stated new average.
-        expect((n * oldAverage + weight) / (n + 1),
-            closeTo(newAverage.toDouble(), 1e-9));
+        expect(
+          (n * oldAverage + weight) / (n + 1),
+          closeTo(newAverage.toDouble(), 1e-9),
+        );
         expect(n, greaterThan(0));
       }
     });
 
     test('successive change is not the naive difference', () {
       for (final q in sample(const SuccessiveChangeTemplate())) {
-        final match = RegExp(r'increased by (\d+)%.*decreased by (\d+)%',
-                dotAll: true)
-            .firstMatch(q.stem)!;
+        final match = RegExp(
+          r'increased by (\d+)%.*decreased by (\d+)%',
+          dotAll: true,
+        ).firstMatch(q.stem)!;
         final rise = int.parse(match.group(1)!);
         final fall = int.parse(match.group(2)!);
 
-        expect(q.answer,
-            closeTo(rise - fall - rise * fall / 100, 1e-9));
+        expect(q.answer, closeTo(rise - fall - rise * fall / 100, 1e-9));
         expect(q.answer, isNot(closeTo((rise - fall).toDouble(), 1e-9)));
       }
     });

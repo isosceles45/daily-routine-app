@@ -87,7 +87,7 @@ class RitualDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        height: strong ? 2 : 1,
-        color: strong ? RitualColors.borderStrong : RitualColors.border,
-      );
+    height: strong ? 2 : 1,
+    color: strong ? RitualColors.borderStrong : RitualColors.border,
+  );
 }

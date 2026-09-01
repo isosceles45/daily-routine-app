@@ -43,14 +43,13 @@ class AppPreferences {
     bool? dailyReminders,
     bool? onboardingComplete,
     bool? syncEnabled,
-  }) =>
-      AppPreferences(
-        userName: userName ?? this.userName,
-        allowDarkJokes: allowDarkJokes ?? this.allowDarkJokes,
-        dailyReminders: dailyReminders ?? this.dailyReminders,
-        onboardingComplete: onboardingComplete ?? this.onboardingComplete,
-        syncEnabled: syncEnabled ?? this.syncEnabled,
-      );
+  }) => AppPreferences(
+    userName: userName ?? this.userName,
+    allowDarkJokes: allowDarkJokes ?? this.allowDarkJokes,
+    dailyReminders: dailyReminders ?? this.dailyReminders,
+    onboardingComplete: onboardingComplete ?? this.onboardingComplete,
+    syncEnabled: syncEnabled ?? this.syncEnabled,
+  );
 }
 
 class PreferencesNotifier extends AsyncNotifier<AppPreferences> {
@@ -121,17 +120,19 @@ class PreferencesNotifier extends AsyncNotifier<AppPreferences> {
     await db.setSetting(_remindersKey, '$dailyReminders');
     await db.setSetting(_onboardedKey, 'true');
 
-    state = AsyncData(AppPreferences(
-      userName: trimmed.isEmpty ? _current.userName : trimmed,
-      allowDarkJokes: allowDarkJokes,
-      dailyReminders: dailyReminders,
-      onboardingComplete: true,
-      syncEnabled: _current.syncEnabled,
-    ));
+    state = AsyncData(
+      AppPreferences(
+        userName: trimmed.isEmpty ? _current.userName : trimmed,
+        allowDarkJokes: allowDarkJokes,
+        dailyReminders: dailyReminders,
+        onboardingComplete: true,
+        syncEnabled: _current.syncEnabled,
+      ),
+    );
   }
 }
 
 final preferencesProvider =
     AsyncNotifierProvider<PreferencesNotifier, AppPreferences>(
-  PreferencesNotifier.new,
-);
+      PreferencesNotifier.new,
+    );

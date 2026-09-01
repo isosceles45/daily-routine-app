@@ -5,6 +5,9 @@ import 'package:drift_flutter/drift_flutter.dart';
 
 import 'tables/activity_tables.dart';
 import 'tables/daily_tables.dart';
+import 'tables/event_tables.dart';
+import 'tables/game_tables.dart';
+import 'tables/gym_tables.dart';
 import 'tables/settings_tables.dart';
 import 'tables/todo_tables.dart';
 
@@ -21,6 +24,11 @@ part 'database.g.dart';
     Surprises,
     Todos,
     AppSettings,
+    Events,
+    WorkoutSlots,
+    WorkoutLogs,
+    GameScores,
+    PuzzleStates,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -28,7 +36,25 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'daily_ritual'));
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  /// v1 → v2 adds countdowns, the training split and the games.
+  ///
+  /// Purely additive: nothing existing is altered, so an upgrade cannot lose a
+  /// todo, a streak or an imported Wordle result.
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        await m.createTable(events);
+        await m.createTable(workoutSlots);
+        await m.createTable(workoutLogs);
+        await m.createTable(gameScores);
+        await m.createTable(puzzleStates);
+      }
+    },
+  );
 
   // --- Daily state --------------------------------------------------------
 

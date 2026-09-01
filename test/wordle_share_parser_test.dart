@@ -47,7 +47,8 @@ void main() {
 
     test('is case-insensitive and tolerates surrounding chatter', () {
       final r = WordleShareParser.parse(
-          'look at this!\nwordle 1,234 4/6\n\nnice one')!;
+        'look at this!\nwordle 1,234 4/6\n\nnice one',
+      )!;
       expect(r.number, 1234);
     });
   });
@@ -82,7 +83,9 @@ void main() {
 
     test('accepts the colour-blind palette', () {
       // Orange is correct and blue is present in high-contrast mode.
-      final r = WordleShareParser.parse('Wordle 1,234 2/6\n\n⬛🟦⬛⬛⬛\n🟧🟧🟧🟧🟧')!;
+      final r = WordleShareParser.parse(
+        'Wordle 1,234 2/6\n\n⬛🟦⬛⬛⬛\n🟧🟧🟧🟧🟧',
+      )!;
       expect(r.grid, hasLength(2));
       expect(WordleShareParser.tileState('🟧'), 'correct');
       expect(WordleShareParser.tileState('🟦'), 'present');
@@ -105,7 +108,8 @@ void main() {
 
     test('ignores stray emoji that are not five-tile rows', () {
       final r = WordleShareParser.parse(
-          'Wordle 1,234 1/6 🟩🟩\n\n🟩🟩🟩🟩🟩\n\nso close 🟨')!;
+        'Wordle 1,234 1/6 🟩🟩\n\n🟩🟩🟩🟩🟩\n\nso close 🟨',
+      )!;
       expect(r.grid, ['🟩🟩🟩🟩🟩']);
     });
 

@@ -30,8 +30,11 @@ class TriviaService {
     String? token,
   }) async {
     final category = TriviaCategory.forDate(date);
-    final difficulty =
-        dailyPick(date, 'trivia-difficulty', const ['easy', 'medium', 'hard']);
+    final difficulty = dailyPick(date, 'trivia-difficulty', const [
+      'easy',
+      'medium',
+      'hard',
+    ]);
 
     return _client.getJson<TriviaQuestion>(
       ApiSources.openTrivia,
@@ -82,8 +85,8 @@ class TriviaService {
         final question =
             (item['question'] as Map<String, dynamic>)['text'] as String;
         final correct = item['correctAnswer'] as String;
-        final incorrect =
-            (item['incorrectAnswers'] as List<dynamic>).cast<String>();
+        final incorrect = (item['incorrectAnswers'] as List<dynamic>)
+            .cast<String>();
 
         final answers = [correct, ...incorrect]
           ..shuffle(dailyRandom(date, 'trivia-answers'));
@@ -105,5 +108,7 @@ class TriviaService {
 }
 
 /// Thrown when both trivia sources are exhausted.
-const triviaUnavailable =
-    ApiException(ApiErrorKind.empty, 'No trivia source returned a question');
+const triviaUnavailable = ApiException(
+  ApiErrorKind.empty,
+  'No trivia source returned a question',
+);

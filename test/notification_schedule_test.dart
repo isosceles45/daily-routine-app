@@ -21,8 +21,11 @@ void main() {
 
     expect(next.hour, 0);
     expect(next.minute, 0);
-    expect(next.isAfter(tz.TZDateTime.now(tz.local)), isTrue,
-        reason: 'a schedule in the past would fire immediately');
+    expect(
+      next.isAfter(tz.TZDateTime.now(tz.local)),
+      isTrue,
+      reason: 'a schedule in the past would fire immediately',
+    );
   });
 
   test('it is always within a day', () {
@@ -33,10 +36,14 @@ void main() {
 
   test('todo notification ids are stable and distinct from the greeting', () {
     expect(NotificationIds.forTodo('abc'), NotificationIds.forTodo('abc'));
-    expect(NotificationIds.forTodo('abc'),
-        isNot(NotificationIds.forTodo('xyz')));
-    expect(NotificationIds.forTodo('abc'),
-        isNot(NotificationIds.dailyGreeting));
+    expect(
+      NotificationIds.forTodo('abc'),
+      isNot(NotificationIds.forTodo('xyz')),
+    );
+    expect(
+      NotificationIds.forTodo('abc'),
+      isNot(NotificationIds.dailyGreeting),
+    );
     expect(NotificationIds.forTodo('abc'), greaterThan(999));
   });
 }

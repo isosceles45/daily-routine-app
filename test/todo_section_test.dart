@@ -32,8 +32,10 @@ void main() {
 
     test('due today is today', () {
       expect(
-        TodoRepository.sectionFor(todo(dueDate: DateTime(2026, 8, 26, 23, 59)),
-            today),
+        TodoRepository.sectionFor(
+          todo(dueDate: DateTime(2026, 8, 26, 23, 59)),
+          today,
+        ),
         TodoSection.today,
       );
     });
@@ -67,7 +69,9 @@ void main() {
       for (final hour in [0, 6, 12, 23]) {
         expect(
           TodoRepository.sectionFor(
-              todo(dueDate: DateTime(2026, 8, 26, hour)), today),
+            todo(dueDate: DateTime(2026, 8, 26, hour)),
+            today,
+          ),
           TodoSection.today,
         );
       }

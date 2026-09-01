@@ -1,8 +1,11 @@
 import 'package:daily_ritual/features/home/domain/daily_completion.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-ActivityStatus status(DailyActivity a, {bool done = false, bool avail = true}) =>
-    ActivityStatus(activity: a, completed: done, available: avail);
+ActivityStatus status(
+  DailyActivity a, {
+  bool done = false,
+  bool avail = true,
+}) => ActivityStatus(activity: a, completed: done, available: avail);
 
 void main() {
   group('scoring', () {
@@ -21,8 +24,11 @@ void main() {
     test('an empty day scores zero of zero', () {
       expect(DailyCompletion.empty.total, 0);
       expect(DailyCompletion.empty.completed, 0);
-      expect(DailyCompletion.empty.isComplete, isFalse,
-          reason: 'nothing to do is not the same as everything done');
+      expect(
+        DailyCompletion.empty.isComplete,
+        isFalse,
+        reason: 'nothing to do is not the same as everything done',
+      );
     });
   });
 
@@ -45,8 +51,11 @@ void main() {
         status(DailyActivity.catQuant),
         status(DailyActivity.trivia),
       ]);
-      expect(c.remaining,
-          [DailyActivity.wordle, DailyActivity.catQuant, DailyActivity.trivia]);
+      expect(c.remaining, [
+        DailyActivity.wordle,
+        DailyActivity.catQuant,
+        DailyActivity.trivia,
+      ]);
     });
 
     test('excludes unavailable activities', () {

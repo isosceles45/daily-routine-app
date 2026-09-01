@@ -3,52 +3,62 @@ import 'package:daily_ritual/features/pokemon/domain/daily_pokemon.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Map<String, dynamic> pokemonPayload() => {
-      'id': 133,
-      'name': 'eevee',
-      'height': 3,
-      'weight': 65,
-      'types': [
-        {
-          'slot': 1,
-          'type': {'name': 'normal'}
-        }
-      ],
-      'abilities': [
-        {
-          'ability': {'name': 'run-away'}
-        },
-        {
-          'ability': {'name': 'adaptability'}
-        },
-      ],
-      'stats': [
-        {'base_stat': 55, 'stat': {'name': 'hp'}},
-        {'base_stat': 55, 'stat': {'name': 'attack'}},
-        {'base_stat': 50, 'stat': {'name': 'defense'}},
-        {'base_stat': 55, 'stat': {'name': 'speed'}},
-      ],
-      'sprites': {
-        'front_default': 'https://example.test/front.png',
-        'other': {
-          'official-artwork': {
-            'front_default': 'https://example.test/artwork.png'
-          }
-        }
-      },
-    };
+  'id': 133,
+  'name': 'eevee',
+  'height': 3,
+  'weight': 65,
+  'types': [
+    {
+      'slot': 1,
+      'type': {'name': 'normal'},
+    },
+  ],
+  'abilities': [
+    {
+      'ability': {'name': 'run-away'},
+    },
+    {
+      'ability': {'name': 'adaptability'},
+    },
+  ],
+  'stats': [
+    {
+      'base_stat': 55,
+      'stat': {'name': 'hp'},
+    },
+    {
+      'base_stat': 55,
+      'stat': {'name': 'attack'},
+    },
+    {
+      'base_stat': 50,
+      'stat': {'name': 'defense'},
+    },
+    {
+      'base_stat': 55,
+      'stat': {'name': 'speed'},
+    },
+  ],
+  'sprites': {
+    'front_default': 'https://example.test/front.png',
+    'other': {
+      'official-artwork': {'front_default': 'https://example.test/artwork.png'},
+    },
+  },
+};
 
 Map<String, dynamic> speciesPayload() => {
-      'flavor_text_entries': [
-        {
-          'flavor_text': 'Its genetic code is\nirregular.\fIt may mutate.',
-          'language': {'name': 'ja'},
-        },
-        {
-          'flavor_text': 'Its genetic code is\nirregular.\fIt may mutate.',
-          'language': {'name': 'en'},
-        },
-      ]
-    };
+  'flavor_text_entries': [
+    {
+      'flavor_text': 'Its genetic code is\nirregular.\fIt may mutate.',
+      'language': {'name': 'ja'},
+    },
+    {
+      'flavor_text': 'Its genetic code is\nirregular.\fIt may mutate.',
+      'language': {'name': 'en'},
+    },
+  ],
+};
 
 void main() {
   test('parses the core fields', () {
@@ -75,8 +85,10 @@ void main() {
   test('falls back to the plain sprite when artwork is missing', () {
     final payload = pokemonPayload();
     (payload['sprites'] as Map<String, dynamic>).remove('other');
-    expect(DailyPokemon.fromApi(payload).artworkUrl,
-        'https://example.test/front.png');
+    expect(
+      DailyPokemon.fromApi(payload).artworkUrl,
+      'https://example.test/front.png',
+    );
   });
 
   test('reads the four displayed stats in order', () {
@@ -92,8 +104,7 @@ void main() {
   });
 
   test('takes the English blurb and flattens cartridge line breaks', () {
-    final p =
-        DailyPokemon.fromApi(pokemonPayload(), species: speciesPayload());
+    final p = DailyPokemon.fromApi(pokemonPayload(), species: speciesPayload());
     expect(p.flavorText, 'Its genetic code is irregular. It may mutate.');
   });
 
@@ -104,13 +115,17 @@ void main() {
   });
 
   test('survives a cache round-trip', () {
-    final original =
-        DailyPokemon.fromApi(pokemonPayload(), species: speciesPayload());
+    final original = DailyPokemon.fromApi(
+      pokemonPayload(),
+      species: speciesPayload(),
+    );
     final restored = DailyPokemon.fromJson(original.toJson());
     expect(restored.id, original.id);
     expect(restored.flavorText, original.flavorText);
-    expect(restored.stats.map((s) => s.value),
-        original.stats.map((s) => s.value));
+    expect(
+      restored.stats.map((s) => s.value),
+      original.stats.map((s) => s.value),
+    );
   });
 
   group('daily selection', () {
@@ -118,8 +133,11 @@ void main() {
       for (var d = 1; d <= 28; d++) {
         final date = '2026-09-${d.toString().padLeft(2, '0')}';
         final id = PokemonRepository.idForDate(date);
-        expect(id, inInclusiveRange(1, 1025),
-            reason: 'the Dex is 1-indexed; id 0 does not exist');
+        expect(
+          id,
+          inInclusiveRange(1, 1025),
+          reason: 'the Dex is 1-indexed; id 0 does not exist',
+        );
         expect(PokemonRepository.idForDate(date), id);
       }
     });
@@ -127,7 +145,9 @@ void main() {
     test('varies across a month', () {
       final ids = {
         for (var d = 1; d <= 28; d++)
-          PokemonRepository.idForDate('2026-09-${d.toString().padLeft(2, '0')}')
+          PokemonRepository.idForDate(
+            '2026-09-${d.toString().padLeft(2, '0')}',
+          ),
       };
       expect(ids.length, greaterThan(20));
     });

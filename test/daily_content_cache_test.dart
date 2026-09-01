@@ -15,8 +15,11 @@ void main() {
       final second = await db.ensureDay('2026-08-26');
 
       expect(second.date, first.date);
-      expect(second.createdAt, first.createdAt,
-          reason: 'reopening the app must not reset the day');
+      expect(
+        second.createdAt,
+        first.createdAt,
+        reason: 'reopening the app must not reset the day',
+      );
       expect(await db.select(db.dailyStates).get(), hasLength(1));
     });
 
@@ -47,7 +50,10 @@ void main() {
         contentType: 'trivia',
         source: 'OpenTDB',
         sourceId: 'abc',
-        payload: {'question': 'Why?', 'answers': ['a', 'b']},
+        payload: {
+          'question': 'Why?',
+          'answers': ['a', 'b'],
+        },
       );
 
       final cached = await db.readContent('2026-08-26', 'trivia');
@@ -56,38 +62,45 @@ void main() {
       expect(cached['answers'], ['a', 'b']);
     });
 
-    test('writing again for the same day replaces rather than duplicates',
-        () async {
-      for (final q in ['first', 'second']) {
-        await db.writeContent(
-          date: '2026-08-26',
-          contentType: 'trivia',
-          source: 'OpenTDB',
-          payload: {'question': q},
-        );
-      }
+    test(
+      'writing again for the same day replaces rather than duplicates',
+      () async {
+        for (final q in ['first', 'second']) {
+          await db.writeContent(
+            date: '2026-08-26',
+            contentType: 'trivia',
+            source: 'OpenTDB',
+            payload: {'question': q},
+          );
+        }
 
-      expect(await db.select(db.dailyContents).get(), hasLength(1));
-      expect((await db.readContent('2026-08-26', 'trivia'))!['question'],
-          'second');
-    });
+        expect(await db.select(db.dailyContents).get(), hasLength(1));
+        expect(
+          (await db.readContent('2026-08-26', 'trivia'))!['question'],
+          'second',
+        );
+      },
+    );
 
     test('content types and dates are independent keys', () async {
       await db.writeContent(
-          date: '2026-08-26',
-          contentType: 'trivia',
-          source: 'x',
-          payload: {'v': 1});
+        date: '2026-08-26',
+        contentType: 'trivia',
+        source: 'x',
+        payload: {'v': 1},
+      );
       await db.writeContent(
-          date: '2026-08-26',
-          contentType: 'pokemon',
-          source: 'x',
-          payload: {'v': 2});
+        date: '2026-08-26',
+        contentType: 'pokemon',
+        source: 'x',
+        payload: {'v': 2},
+      );
       await db.writeContent(
-          date: '2026-08-27',
-          contentType: 'trivia',
-          source: 'x',
-          payload: {'v': 3});
+        date: '2026-08-27',
+        contentType: 'trivia',
+        source: 'x',
+        payload: {'v': 3},
+      );
 
       expect((await db.readContent('2026-08-26', 'trivia'))!['v'], 1);
       expect((await db.readContent('2026-08-26', 'pokemon'))!['v'], 2);
@@ -96,7 +109,9 @@ void main() {
 
     test('a corrupt row is dropped instead of crashing the caller', () async {
       // Simulates a partial write or a payload from an incompatible build.
-      await db.into(db.dailyContents).insert(
+      await db
+          .into(db.dailyContents)
+          .insert(
             DailyContentsCompanion.insert(
               date: '2026-08-26',
               contentType: 'trivia',
@@ -108,16 +123,20 @@ void main() {
           );
 
       expect(await db.readContent('2026-08-26', 'trivia'), isNull);
-      expect(await db.select(db.dailyContents).get(), isEmpty,
-          reason: 'the bad row must be cleared so the next fetch can cache');
+      expect(
+        await db.select(db.dailyContents).get(),
+        isEmpty,
+        reason: 'the bad row must be cleared so the next fetch can cache',
+      );
     });
 
     test('deleting a cache entry forces a refetch', () async {
       await db.writeContent(
-          date: '2026-08-26',
-          contentType: 'trivia',
-          source: 'x',
-          payload: {'v': 1});
+        date: '2026-08-26',
+        contentType: 'trivia',
+        source: 'x',
+        payload: {'v': 1},
+      );
       await db.deleteContent('2026-08-26', 'trivia');
       expect(await db.readContent('2026-08-26', 'trivia'), isNull);
     });

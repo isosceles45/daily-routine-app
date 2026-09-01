@@ -42,25 +42,25 @@ class OptionRow extends StatelessWidget {
     final (background, foreground, border) = switch (state) {
       OptionState.idle => (RitualColors.surface, RitualColors.text, null),
       OptionState.selected => (
-          RitualColors.surface,
-          RitualColors.text,
-          RitualColors.accent,
-        ),
+        RitualColors.surface,
+        RitualColors.text,
+        RitualColors.accent,
+      ),
       OptionState.correct => (
-          RitualColors.success,
-          RitualColors.successOn,
-          null,
-        ),
+        RitualColors.success,
+        RitualColors.successOn,
+        null,
+      ),
       OptionState.wrongChoice => (
-          RitualColors.surface,
-          RitualColors.error,
-          RitualColors.error,
-        ),
+        RitualColors.surface,
+        RitualColors.error,
+        RitualColors.error,
+      ),
       OptionState.dimmed => (
-          RitualColors.surface,
-          RitualColors.textTertiary,
-          null,
-        ),
+        RitualColors.surface,
+        RitualColors.textTertiary,
+        null,
+      ),
     };
 
     final trailing = switch (state) {
@@ -89,8 +89,8 @@ class OptionRow extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(RitualShape.chipRadius),
                 border: Border.all(
-                  color: state == OptionState.idle ||
-                          state == OptionState.selected
+                  color:
+                      state == OptionState.idle || state == OptionState.selected
                       ? RitualColors.borderStrong
                       : Colors.transparent,
                   width: 1.5,
@@ -99,7 +99,10 @@ class OptionRow extends StatelessWidget {
               child: Text(
                 letter!,
                 style: outfit(
-                    size: 11, weight: FontWeight.w800, color: foreground),
+                  size: 11,
+                  weight: FontWeight.w800,
+                  color: foreground,
+                ),
               ),
             ),
             const SizedBox(width: 12),

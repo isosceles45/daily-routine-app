@@ -4,6 +4,7 @@ import '../../../core/providers.dart';
 import '../../animals/providers/fun_providers.dart';
 import '../../cat_quant/providers/cat_providers.dart';
 import '../../challenges/providers/challenge_providers.dart';
+import '../../gym/providers/gym_providers.dart';
 import '../../surprise/providers/surprise_providers.dart';
 import '../../pokemon/providers/pokemon_providers.dart';
 import '../../trivia/providers/trivia_providers.dart';
@@ -98,6 +99,14 @@ final dailyCompletionProvider = Provider<DailyCompletion>((ref) {
       activity: DailyActivity.challenge,
       completed: ref.watch(challengeDoneProvider),
       available: true,
+    ),
+    ActivityStatus(
+      activity: DailyActivity.gym,
+      // Ticking anything off is the signal — showing up is what is being
+      // tracked, not finishing a prescribed list.
+      completed: ref.watch(workoutDoneProvider),
+      // A rest day is not a workout you skipped, so it does not count at all.
+      available: !ref.watch(todayFocusProvider).isRest,
     ),
     ActivityStatus(
       activity: DailyActivity.surprise,

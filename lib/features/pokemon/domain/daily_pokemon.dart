@@ -47,11 +47,9 @@ class DailyPokemon {
   /// `#025`, matching the canvas.
   String get dexNumber => '#${id.toString().padLeft(3, '0')}';
 
-  String get heightLabel =>
-      '${(heightDecimetres / 10).toStringAsFixed(1)} m';
+  String get heightLabel => '${(heightDecimetres / 10).toStringAsFixed(1)} m';
 
-  String get weightLabel =>
-      '${(weightHectograms / 10).toStringAsFixed(1)} kg';
+  String get weightLabel => '${(weightHectograms / 10).toStringAsFixed(1)} kg';
 
   /// Builds from `/pokemon/{id}` plus the optional `/pokemon-species/{id}`.
   factory DailyPokemon.fromApi(
@@ -60,15 +58,20 @@ class DailyPokemon {
   }) {
     List<String> namesFrom(String key, String inner) {
       return (pokemon[key] as List<dynamic>? ?? const [])
-          .map((e) => ((e as Map<String, dynamic>)[inner]
-              as Map<String, dynamic>)['name'] as String)
+          .map(
+            (e) =>
+                ((e as Map<String, dynamic>)[inner]
+                        as Map<String, dynamic>)['name']
+                    as String,
+          )
           .toList(growable: false);
     }
 
     final statMap = <String, int>{
       for (final entry in (pokemon['stats'] as List<dynamic>? ?? const []))
         ((entry as Map<String, dynamic>)['stat']
-            as Map<String, dynamic>)['name'] as String:
+                    as Map<String, dynamic>)['name']
+                as String:
             entry['base_stat'] as int,
     };
 
@@ -83,7 +86,8 @@ class DailyPokemon {
       abilities: namesFrom('abilities', 'ability'),
       heightDecimetres: pokemon['height'] as int? ?? 0,
       weightHectograms: pokemon['weight'] as int? ?? 0,
-      artworkUrl: artwork?['front_default'] as String? ??
+      artworkUrl:
+          artwork?['front_default'] as String? ??
           sprites?['front_default'] as String?,
       stats: [
         PokemonStat('HP', statMap['hp'] ?? 0),
@@ -114,28 +118,28 @@ class DailyPokemon {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'types': types,
-        'abilities': abilities,
-        'heightDecimetres': heightDecimetres,
-        'weightHectograms': weightHectograms,
-        'artworkUrl': artworkUrl,
-        'stats': stats.map((s) => s.toJson()).toList(),
-        'flavorText': flavorText,
-      };
+    'id': id,
+    'name': name,
+    'types': types,
+    'abilities': abilities,
+    'heightDecimetres': heightDecimetres,
+    'weightHectograms': weightHectograms,
+    'artworkUrl': artworkUrl,
+    'stats': stats.map((s) => s.toJson()).toList(),
+    'flavorText': flavorText,
+  };
 
   factory DailyPokemon.fromJson(Map<String, dynamic> json) => DailyPokemon(
-        id: json['id'] as int,
-        name: json['name'] as String,
-        types: (json['types'] as List<dynamic>).cast<String>(),
-        abilities: (json['abilities'] as List<dynamic>).cast<String>(),
-        heightDecimetres: json['heightDecimetres'] as int,
-        weightHectograms: json['weightHectograms'] as int,
-        artworkUrl: json['artworkUrl'] as String?,
-        stats: (json['stats'] as List<dynamic>)
-            .map((e) => PokemonStat.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        flavorText: json['flavorText'] as String?,
-      );
+    id: json['id'] as int,
+    name: json['name'] as String,
+    types: (json['types'] as List<dynamic>).cast<String>(),
+    abilities: (json['abilities'] as List<dynamic>).cast<String>(),
+    heightDecimetres: json['heightDecimetres'] as int,
+    weightHectograms: json['weightHectograms'] as int,
+    artworkUrl: json['artworkUrl'] as String?,
+    stats: (json['stats'] as List<dynamic>)
+        .map((e) => PokemonStat.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    flavorText: json['flavorText'] as String?,
+  );
 }

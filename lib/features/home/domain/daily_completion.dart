@@ -1,8 +1,9 @@
-/// The seven activities the Today screen tracks (§14).
+/// The activities the Today screen tracks (§14).
 ///
-/// The canvas shows `4 / 7` over seven progress cells, so the set is fixed —
-/// but features arrive across phases, and a slot that doesn't exist yet must
-/// not be counted as "not done". [DailyCompletion] therefore scores only the
+/// The canvas showed `4 / 7` over a fixed set of cells, but the set is no
+/// longer fixed: a feature can be unavailable because its API is down, and the
+/// gym slot is genuinely absent on a rest day. A slot that does not apply must
+/// not read as one the user skipped, so [DailyCompletion] scores only the
 /// activities that are actually available.
 enum DailyActivity {
   wordle('Wordle'),
@@ -11,7 +12,8 @@ enum DailyActivity {
   fun('Daily Fun'),
   pokemon('Pokémon'),
   challenge('Challenge'),
-  surprise('Surprise');
+  surprise('Surprise'),
+  gym('Gym');
 
   const DailyActivity(this.label);
 

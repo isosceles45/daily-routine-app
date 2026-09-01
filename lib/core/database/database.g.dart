@@ -3694,6 +3694,1864 @@ class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
   }
 }
 
+class $EventsTable extends Events with TableInfo<$EventsTable, Event> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EventsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _noteMeta = const VerificationMeta('note');
+  @override
+  late final GeneratedColumn<String> note = GeneratedColumn<String>(
+    'note',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _emojiMeta = const VerificationMeta('emoji');
+  @override
+  late final GeneratedColumn<String> emoji = GeneratedColumn<String>(
+    'emoji',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _pinnedMeta = const VerificationMeta('pinned');
+  @override
+  late final GeneratedColumn<bool> pinned = GeneratedColumn<bool>(
+    'pinned',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("pinned" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    date,
+    note,
+    emoji,
+    pinned,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'events';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Event> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('note')) {
+      context.handle(
+        _noteMeta,
+        note.isAcceptableOrUnknown(data['note']!, _noteMeta),
+      );
+    }
+    if (data.containsKey('emoji')) {
+      context.handle(
+        _emojiMeta,
+        emoji.isAcceptableOrUnknown(data['emoji']!, _emojiMeta),
+      );
+    }
+    if (data.containsKey('pinned')) {
+      context.handle(
+        _pinnedMeta,
+        pinned.isAcceptableOrUnknown(data['pinned']!, _pinnedMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Event map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Event(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}date'],
+      )!,
+      note: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}note'],
+      ),
+      emoji: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}emoji'],
+      ),
+      pinned: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}pinned'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $EventsTable createAlias(String alias) {
+    return $EventsTable(attachedDatabase, alias);
+  }
+}
+
+class Event extends DataClass implements Insertable<Event> {
+  final String id;
+  final String title;
+
+  /// The day it happens, local calendar date as `yyyy-MM-dd`.
+  ///
+  /// Stored as text rather than DateTime for the same reason every other date
+  /// in this app is: a countdown is measured in calendar days, and a UTC
+  /// instant would tip over a day early or late depending on the timezone.
+  final String date;
+  final String? note;
+
+  /// Optional emoji shown on the countdown card.
+  final String? emoji;
+
+  /// Pinned events lead the list and surface on Today.
+  final bool pinned;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Event({
+    required this.id,
+    required this.title,
+    required this.date,
+    this.note,
+    this.emoji,
+    required this.pinned,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['title'] = Variable<String>(title);
+    map['date'] = Variable<String>(date);
+    if (!nullToAbsent || note != null) {
+      map['note'] = Variable<String>(note);
+    }
+    if (!nullToAbsent || emoji != null) {
+      map['emoji'] = Variable<String>(emoji);
+    }
+    map['pinned'] = Variable<bool>(pinned);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  EventsCompanion toCompanion(bool nullToAbsent) {
+    return EventsCompanion(
+      id: Value(id),
+      title: Value(title),
+      date: Value(date),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      emoji: emoji == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emoji),
+      pinned: Value(pinned),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Event.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Event(
+      id: serializer.fromJson<String>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      date: serializer.fromJson<String>(json['date']),
+      note: serializer.fromJson<String?>(json['note']),
+      emoji: serializer.fromJson<String?>(json['emoji']),
+      pinned: serializer.fromJson<bool>(json['pinned']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'title': serializer.toJson<String>(title),
+      'date': serializer.toJson<String>(date),
+      'note': serializer.toJson<String?>(note),
+      'emoji': serializer.toJson<String?>(emoji),
+      'pinned': serializer.toJson<bool>(pinned),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Event copyWith({
+    String? id,
+    String? title,
+    String? date,
+    Value<String?> note = const Value.absent(),
+    Value<String?> emoji = const Value.absent(),
+    bool? pinned,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => Event(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    date: date ?? this.date,
+    note: note.present ? note.value : this.note,
+    emoji: emoji.present ? emoji.value : this.emoji,
+    pinned: pinned ?? this.pinned,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  Event copyWithCompanion(EventsCompanion data) {
+    return Event(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      date: data.date.present ? data.date.value : this.date,
+      note: data.note.present ? data.note.value : this.note,
+      emoji: data.emoji.present ? data.emoji.value : this.emoji,
+      pinned: data.pinned.present ? data.pinned.value : this.pinned,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Event(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('date: $date, ')
+          ..write('note: $note, ')
+          ..write('emoji: $emoji, ')
+          ..write('pinned: $pinned, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, title, date, note, emoji, pinned, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Event &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.date == this.date &&
+          other.note == this.note &&
+          other.emoji == this.emoji &&
+          other.pinned == this.pinned &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class EventsCompanion extends UpdateCompanion<Event> {
+  final Value<String> id;
+  final Value<String> title;
+  final Value<String> date;
+  final Value<String?> note;
+  final Value<String?> emoji;
+  final Value<bool> pinned;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const EventsCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.date = const Value.absent(),
+    this.note = const Value.absent(),
+    this.emoji = const Value.absent(),
+    this.pinned = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  EventsCompanion.insert({
+    required String id,
+    required String title,
+    required String date,
+    this.note = const Value.absent(),
+    this.emoji = const Value.absent(),
+    this.pinned = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       title = Value(title),
+       date = Value(date),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<Event> custom({
+    Expression<String>? id,
+    Expression<String>? title,
+    Expression<String>? date,
+    Expression<String>? note,
+    Expression<String>? emoji,
+    Expression<bool>? pinned,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (date != null) 'date': date,
+      if (note != null) 'note': note,
+      if (emoji != null) 'emoji': emoji,
+      if (pinned != null) 'pinned': pinned,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  EventsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? title,
+    Value<String>? date,
+    Value<String?>? note,
+    Value<String?>? emoji,
+    Value<bool>? pinned,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return EventsCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      date: date ?? this.date,
+      note: note ?? this.note,
+      emoji: emoji ?? this.emoji,
+      pinned: pinned ?? this.pinned,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
+    if (note.present) {
+      map['note'] = Variable<String>(note.value);
+    }
+    if (emoji.present) {
+      map['emoji'] = Variable<String>(emoji.value);
+    }
+    if (pinned.present) {
+      map['pinned'] = Variable<bool>(pinned.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EventsCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('date: $date, ')
+          ..write('note: $note, ')
+          ..write('emoji: $emoji, ')
+          ..write('pinned: $pinned, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $WorkoutSlotsTable extends WorkoutSlots
+    with TableInfo<$WorkoutSlotsTable, WorkoutSlot> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WorkoutSlotsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _weekdayMeta = const VerificationMeta(
+    'weekday',
+  );
+  @override
+  late final GeneratedColumn<int> weekday = GeneratedColumn<int>(
+    'weekday',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _focusMeta = const VerificationMeta('focus');
+  @override
+  late final GeneratedColumn<String> focus = GeneratedColumn<String>(
+    'focus',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _wgerCategoryMeta = const VerificationMeta(
+    'wgerCategory',
+  );
+  @override
+  late final GeneratedColumn<int> wgerCategory = GeneratedColumn<int>(
+    'wger_category',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    weekday,
+    focus,
+    wgerCategory,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'workout_slots';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WorkoutSlot> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('weekday')) {
+      context.handle(
+        _weekdayMeta,
+        weekday.isAcceptableOrUnknown(data['weekday']!, _weekdayMeta),
+      );
+    }
+    if (data.containsKey('focus')) {
+      context.handle(
+        _focusMeta,
+        focus.isAcceptableOrUnknown(data['focus']!, _focusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_focusMeta);
+    }
+    if (data.containsKey('wger_category')) {
+      context.handle(
+        _wgerCategoryMeta,
+        wgerCategory.isAcceptableOrUnknown(
+          data['wger_category']!,
+          _wgerCategoryMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {weekday};
+  @override
+  WorkoutSlot map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WorkoutSlot(
+      weekday: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}weekday'],
+      )!,
+      focus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}focus'],
+      )!,
+      wgerCategory: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}wger_category'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $WorkoutSlotsTable createAlias(String alias) {
+    return $WorkoutSlotsTable(attachedDatabase, alias);
+  }
+}
+
+class WorkoutSlot extends DataClass implements Insertable<WorkoutSlot> {
+  final int weekday;
+
+  /// What that day trains — a wger category name such as "Chest", or "Rest".
+  final String focus;
+
+  /// The wger category id this focus maps to, so suggestions can be fetched.
+  /// Null for a rest day, or a focus the user typed that maps to nothing.
+  final int? wgerCategory;
+  final DateTime updatedAt;
+  const WorkoutSlot({
+    required this.weekday,
+    required this.focus,
+    this.wgerCategory,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['weekday'] = Variable<int>(weekday);
+    map['focus'] = Variable<String>(focus);
+    if (!nullToAbsent || wgerCategory != null) {
+      map['wger_category'] = Variable<int>(wgerCategory);
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  WorkoutSlotsCompanion toCompanion(bool nullToAbsent) {
+    return WorkoutSlotsCompanion(
+      weekday: Value(weekday),
+      focus: Value(focus),
+      wgerCategory: wgerCategory == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wgerCategory),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory WorkoutSlot.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WorkoutSlot(
+      weekday: serializer.fromJson<int>(json['weekday']),
+      focus: serializer.fromJson<String>(json['focus']),
+      wgerCategory: serializer.fromJson<int?>(json['wgerCategory']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'weekday': serializer.toJson<int>(weekday),
+      'focus': serializer.toJson<String>(focus),
+      'wgerCategory': serializer.toJson<int?>(wgerCategory),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  WorkoutSlot copyWith({
+    int? weekday,
+    String? focus,
+    Value<int?> wgerCategory = const Value.absent(),
+    DateTime? updatedAt,
+  }) => WorkoutSlot(
+    weekday: weekday ?? this.weekday,
+    focus: focus ?? this.focus,
+    wgerCategory: wgerCategory.present ? wgerCategory.value : this.wgerCategory,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  WorkoutSlot copyWithCompanion(WorkoutSlotsCompanion data) {
+    return WorkoutSlot(
+      weekday: data.weekday.present ? data.weekday.value : this.weekday,
+      focus: data.focus.present ? data.focus.value : this.focus,
+      wgerCategory: data.wgerCategory.present
+          ? data.wgerCategory.value
+          : this.wgerCategory,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkoutSlot(')
+          ..write('weekday: $weekday, ')
+          ..write('focus: $focus, ')
+          ..write('wgerCategory: $wgerCategory, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(weekday, focus, wgerCategory, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WorkoutSlot &&
+          other.weekday == this.weekday &&
+          other.focus == this.focus &&
+          other.wgerCategory == this.wgerCategory &&
+          other.updatedAt == this.updatedAt);
+}
+
+class WorkoutSlotsCompanion extends UpdateCompanion<WorkoutSlot> {
+  final Value<int> weekday;
+  final Value<String> focus;
+  final Value<int?> wgerCategory;
+  final Value<DateTime> updatedAt;
+  const WorkoutSlotsCompanion({
+    this.weekday = const Value.absent(),
+    this.focus = const Value.absent(),
+    this.wgerCategory = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  WorkoutSlotsCompanion.insert({
+    this.weekday = const Value.absent(),
+    required String focus,
+    this.wgerCategory = const Value.absent(),
+    required DateTime updatedAt,
+  }) : focus = Value(focus),
+       updatedAt = Value(updatedAt);
+  static Insertable<WorkoutSlot> custom({
+    Expression<int>? weekday,
+    Expression<String>? focus,
+    Expression<int>? wgerCategory,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (weekday != null) 'weekday': weekday,
+      if (focus != null) 'focus': focus,
+      if (wgerCategory != null) 'wger_category': wgerCategory,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  WorkoutSlotsCompanion copyWith({
+    Value<int>? weekday,
+    Value<String>? focus,
+    Value<int?>? wgerCategory,
+    Value<DateTime>? updatedAt,
+  }) {
+    return WorkoutSlotsCompanion(
+      weekday: weekday ?? this.weekday,
+      focus: focus ?? this.focus,
+      wgerCategory: wgerCategory ?? this.wgerCategory,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (weekday.present) {
+      map['weekday'] = Variable<int>(weekday.value);
+    }
+    if (focus.present) {
+      map['focus'] = Variable<String>(focus.value);
+    }
+    if (wgerCategory.present) {
+      map['wger_category'] = Variable<int>(wgerCategory.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkoutSlotsCompanion(')
+          ..write('weekday: $weekday, ')
+          ..write('focus: $focus, ')
+          ..write('wgerCategory: $wgerCategory, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $WorkoutLogsTable extends WorkoutLogs
+    with TableInfo<$WorkoutLogsTable, WorkoutLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WorkoutLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _focusMeta = const VerificationMeta('focus');
+  @override
+  late final GeneratedColumn<String> focus = GeneratedColumn<String>(
+    'focus',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _doneMeta = const VerificationMeta('done');
+  @override
+  late final GeneratedColumn<String> done = GeneratedColumn<String>(
+    'done',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _completedMeta = const VerificationMeta(
+    'completed',
+  );
+  @override
+  late final GeneratedColumn<bool> completed = GeneratedColumn<bool>(
+    'completed',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("completed" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _completedAtMeta = const VerificationMeta(
+    'completedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> completedAt = GeneratedColumn<DateTime>(
+    'completed_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    date,
+    focus,
+    done,
+    completed,
+    completedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'workout_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WorkoutLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('focus')) {
+      context.handle(
+        _focusMeta,
+        focus.isAcceptableOrUnknown(data['focus']!, _focusMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_focusMeta);
+    }
+    if (data.containsKey('done')) {
+      context.handle(
+        _doneMeta,
+        done.isAcceptableOrUnknown(data['done']!, _doneMeta),
+      );
+    }
+    if (data.containsKey('completed')) {
+      context.handle(
+        _completedMeta,
+        completed.isAcceptableOrUnknown(data['completed']!, _completedMeta),
+      );
+    }
+    if (data.containsKey('completed_at')) {
+      context.handle(
+        _completedAtMeta,
+        completedAt.isAcceptableOrUnknown(
+          data['completed_at']!,
+          _completedAtMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {date};
+  @override
+  WorkoutLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WorkoutLog(
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}date'],
+      )!,
+      focus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}focus'],
+      )!,
+      done: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}done'],
+      ),
+      completed: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}completed'],
+      )!,
+      completedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}completed_at'],
+      ),
+    );
+  }
+
+  @override
+  $WorkoutLogsTable createAlias(String alias) {
+    return $WorkoutLogsTable(attachedDatabase, alias);
+  }
+}
+
+class WorkoutLog extends DataClass implements Insertable<WorkoutLog> {
+  final String date;
+  final String focus;
+
+  /// Exercise names the user ticked off, JSON-encoded.
+  final String? done;
+  final bool completed;
+  final DateTime? completedAt;
+  const WorkoutLog({
+    required this.date,
+    required this.focus,
+    this.done,
+    required this.completed,
+    this.completedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['date'] = Variable<String>(date);
+    map['focus'] = Variable<String>(focus);
+    if (!nullToAbsent || done != null) {
+      map['done'] = Variable<String>(done);
+    }
+    map['completed'] = Variable<bool>(completed);
+    if (!nullToAbsent || completedAt != null) {
+      map['completed_at'] = Variable<DateTime>(completedAt);
+    }
+    return map;
+  }
+
+  WorkoutLogsCompanion toCompanion(bool nullToAbsent) {
+    return WorkoutLogsCompanion(
+      date: Value(date),
+      focus: Value(focus),
+      done: done == null && nullToAbsent ? const Value.absent() : Value(done),
+      completed: Value(completed),
+      completedAt: completedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(completedAt),
+    );
+  }
+
+  factory WorkoutLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WorkoutLog(
+      date: serializer.fromJson<String>(json['date']),
+      focus: serializer.fromJson<String>(json['focus']),
+      done: serializer.fromJson<String?>(json['done']),
+      completed: serializer.fromJson<bool>(json['completed']),
+      completedAt: serializer.fromJson<DateTime?>(json['completedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'date': serializer.toJson<String>(date),
+      'focus': serializer.toJson<String>(focus),
+      'done': serializer.toJson<String?>(done),
+      'completed': serializer.toJson<bool>(completed),
+      'completedAt': serializer.toJson<DateTime?>(completedAt),
+    };
+  }
+
+  WorkoutLog copyWith({
+    String? date,
+    String? focus,
+    Value<String?> done = const Value.absent(),
+    bool? completed,
+    Value<DateTime?> completedAt = const Value.absent(),
+  }) => WorkoutLog(
+    date: date ?? this.date,
+    focus: focus ?? this.focus,
+    done: done.present ? done.value : this.done,
+    completed: completed ?? this.completed,
+    completedAt: completedAt.present ? completedAt.value : this.completedAt,
+  );
+  WorkoutLog copyWithCompanion(WorkoutLogsCompanion data) {
+    return WorkoutLog(
+      date: data.date.present ? data.date.value : this.date,
+      focus: data.focus.present ? data.focus.value : this.focus,
+      done: data.done.present ? data.done.value : this.done,
+      completed: data.completed.present ? data.completed.value : this.completed,
+      completedAt: data.completedAt.present
+          ? data.completedAt.value
+          : this.completedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkoutLog(')
+          ..write('date: $date, ')
+          ..write('focus: $focus, ')
+          ..write('done: $done, ')
+          ..write('completed: $completed, ')
+          ..write('completedAt: $completedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(date, focus, done, completed, completedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WorkoutLog &&
+          other.date == this.date &&
+          other.focus == this.focus &&
+          other.done == this.done &&
+          other.completed == this.completed &&
+          other.completedAt == this.completedAt);
+}
+
+class WorkoutLogsCompanion extends UpdateCompanion<WorkoutLog> {
+  final Value<String> date;
+  final Value<String> focus;
+  final Value<String?> done;
+  final Value<bool> completed;
+  final Value<DateTime?> completedAt;
+  final Value<int> rowid;
+  const WorkoutLogsCompanion({
+    this.date = const Value.absent(),
+    this.focus = const Value.absent(),
+    this.done = const Value.absent(),
+    this.completed = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  WorkoutLogsCompanion.insert({
+    required String date,
+    required String focus,
+    this.done = const Value.absent(),
+    this.completed = const Value.absent(),
+    this.completedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : date = Value(date),
+       focus = Value(focus);
+  static Insertable<WorkoutLog> custom({
+    Expression<String>? date,
+    Expression<String>? focus,
+    Expression<String>? done,
+    Expression<bool>? completed,
+    Expression<DateTime>? completedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (date != null) 'date': date,
+      if (focus != null) 'focus': focus,
+      if (done != null) 'done': done,
+      if (completed != null) 'completed': completed,
+      if (completedAt != null) 'completed_at': completedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  WorkoutLogsCompanion copyWith({
+    Value<String>? date,
+    Value<String>? focus,
+    Value<String?>? done,
+    Value<bool>? completed,
+    Value<DateTime?>? completedAt,
+    Value<int>? rowid,
+  }) {
+    return WorkoutLogsCompanion(
+      date: date ?? this.date,
+      focus: focus ?? this.focus,
+      done: done ?? this.done,
+      completed: completed ?? this.completed,
+      completedAt: completedAt ?? this.completedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
+    if (focus.present) {
+      map['focus'] = Variable<String>(focus.value);
+    }
+    if (done.present) {
+      map['done'] = Variable<String>(done.value);
+    }
+    if (completed.present) {
+      map['completed'] = Variable<bool>(completed.value);
+    }
+    if (completedAt.present) {
+      map['completed_at'] = Variable<DateTime>(completedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkoutLogsCompanion(')
+          ..write('date: $date, ')
+          ..write('focus: $focus, ')
+          ..write('done: $done, ')
+          ..write('completed: $completed, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $GameScoresTable extends GameScores
+    with TableInfo<$GameScoresTable, GameScore> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $GameScoresTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _gameMeta = const VerificationMeta('game');
+  @override
+  late final GeneratedColumn<String> game = GeneratedColumn<String>(
+    'game',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _scoreMeta = const VerificationMeta('score');
+  @override
+  late final GeneratedColumn<int> score = GeneratedColumn<int>(
+    'score',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _detailMeta = const VerificationMeta('detail');
+  @override
+  late final GeneratedColumn<String> detail = GeneratedColumn<String>(
+    'detail',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _playedAtMeta = const VerificationMeta(
+    'playedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> playedAt = GeneratedColumn<DateTime>(
+    'played_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    game,
+    score,
+    detail,
+    date,
+    playedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'game_scores';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<GameScore> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('game')) {
+      context.handle(
+        _gameMeta,
+        game.isAcceptableOrUnknown(data['game']!, _gameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_gameMeta);
+    }
+    if (data.containsKey('score')) {
+      context.handle(
+        _scoreMeta,
+        score.isAcceptableOrUnknown(data['score']!, _scoreMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_scoreMeta);
+    }
+    if (data.containsKey('detail')) {
+      context.handle(
+        _detailMeta,
+        detail.isAcceptableOrUnknown(data['detail']!, _detailMeta),
+      );
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('played_at')) {
+      context.handle(
+        _playedAtMeta,
+        playedAt.isAcceptableOrUnknown(data['played_at']!, _playedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_playedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  GameScore map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return GameScore(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      game: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}game'],
+      )!,
+      score: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}score'],
+      )!,
+      detail: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}detail'],
+      ),
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}date'],
+      )!,
+      playedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}played_at'],
+      )!,
+    );
+  }
+
+  @override
+  $GameScoresTable createAlias(String alias) {
+    return $GameScoresTable(attachedDatabase, alias);
+  }
+}
+
+class GameScore extends DataClass implements Insertable<GameScore> {
+  final int id;
+
+  /// Matches `GameKind.name`.
+  final String game;
+
+  /// Higher is better for every game here, which is what lets one table serve
+  /// all of them.
+  final int score;
+
+  /// Per-game extras — difficulty, duration, accuracy — as JSON.
+  final String? detail;
+
+  /// The calendar date the run happened, for per-day history.
+  final String date;
+  final DateTime playedAt;
+  const GameScore({
+    required this.id,
+    required this.game,
+    required this.score,
+    this.detail,
+    required this.date,
+    required this.playedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['game'] = Variable<String>(game);
+    map['score'] = Variable<int>(score);
+    if (!nullToAbsent || detail != null) {
+      map['detail'] = Variable<String>(detail);
+    }
+    map['date'] = Variable<String>(date);
+    map['played_at'] = Variable<DateTime>(playedAt);
+    return map;
+  }
+
+  GameScoresCompanion toCompanion(bool nullToAbsent) {
+    return GameScoresCompanion(
+      id: Value(id),
+      game: Value(game),
+      score: Value(score),
+      detail: detail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(detail),
+      date: Value(date),
+      playedAt: Value(playedAt),
+    );
+  }
+
+  factory GameScore.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return GameScore(
+      id: serializer.fromJson<int>(json['id']),
+      game: serializer.fromJson<String>(json['game']),
+      score: serializer.fromJson<int>(json['score']),
+      detail: serializer.fromJson<String?>(json['detail']),
+      date: serializer.fromJson<String>(json['date']),
+      playedAt: serializer.fromJson<DateTime>(json['playedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'game': serializer.toJson<String>(game),
+      'score': serializer.toJson<int>(score),
+      'detail': serializer.toJson<String?>(detail),
+      'date': serializer.toJson<String>(date),
+      'playedAt': serializer.toJson<DateTime>(playedAt),
+    };
+  }
+
+  GameScore copyWith({
+    int? id,
+    String? game,
+    int? score,
+    Value<String?> detail = const Value.absent(),
+    String? date,
+    DateTime? playedAt,
+  }) => GameScore(
+    id: id ?? this.id,
+    game: game ?? this.game,
+    score: score ?? this.score,
+    detail: detail.present ? detail.value : this.detail,
+    date: date ?? this.date,
+    playedAt: playedAt ?? this.playedAt,
+  );
+  GameScore copyWithCompanion(GameScoresCompanion data) {
+    return GameScore(
+      id: data.id.present ? data.id.value : this.id,
+      game: data.game.present ? data.game.value : this.game,
+      score: data.score.present ? data.score.value : this.score,
+      detail: data.detail.present ? data.detail.value : this.detail,
+      date: data.date.present ? data.date.value : this.date,
+      playedAt: data.playedAt.present ? data.playedAt.value : this.playedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GameScore(')
+          ..write('id: $id, ')
+          ..write('game: $game, ')
+          ..write('score: $score, ')
+          ..write('detail: $detail, ')
+          ..write('date: $date, ')
+          ..write('playedAt: $playedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, game, score, detail, date, playedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is GameScore &&
+          other.id == this.id &&
+          other.game == this.game &&
+          other.score == this.score &&
+          other.detail == this.detail &&
+          other.date == this.date &&
+          other.playedAt == this.playedAt);
+}
+
+class GameScoresCompanion extends UpdateCompanion<GameScore> {
+  final Value<int> id;
+  final Value<String> game;
+  final Value<int> score;
+  final Value<String?> detail;
+  final Value<String> date;
+  final Value<DateTime> playedAt;
+  const GameScoresCompanion({
+    this.id = const Value.absent(),
+    this.game = const Value.absent(),
+    this.score = const Value.absent(),
+    this.detail = const Value.absent(),
+    this.date = const Value.absent(),
+    this.playedAt = const Value.absent(),
+  });
+  GameScoresCompanion.insert({
+    this.id = const Value.absent(),
+    required String game,
+    required int score,
+    this.detail = const Value.absent(),
+    required String date,
+    required DateTime playedAt,
+  }) : game = Value(game),
+       score = Value(score),
+       date = Value(date),
+       playedAt = Value(playedAt);
+  static Insertable<GameScore> custom({
+    Expression<int>? id,
+    Expression<String>? game,
+    Expression<int>? score,
+    Expression<String>? detail,
+    Expression<String>? date,
+    Expression<DateTime>? playedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (game != null) 'game': game,
+      if (score != null) 'score': score,
+      if (detail != null) 'detail': detail,
+      if (date != null) 'date': date,
+      if (playedAt != null) 'played_at': playedAt,
+    });
+  }
+
+  GameScoresCompanion copyWith({
+    Value<int>? id,
+    Value<String>? game,
+    Value<int>? score,
+    Value<String?>? detail,
+    Value<String>? date,
+    Value<DateTime>? playedAt,
+  }) {
+    return GameScoresCompanion(
+      id: id ?? this.id,
+      game: game ?? this.game,
+      score: score ?? this.score,
+      detail: detail ?? this.detail,
+      date: date ?? this.date,
+      playedAt: playedAt ?? this.playedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (game.present) {
+      map['game'] = Variable<String>(game.value);
+    }
+    if (score.present) {
+      map['score'] = Variable<int>(score.value);
+    }
+    if (detail.present) {
+      map['detail'] = Variable<String>(detail.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
+    if (playedAt.present) {
+      map['played_at'] = Variable<DateTime>(playedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GameScoresCompanion(')
+          ..write('id: $id, ')
+          ..write('game: $game, ')
+          ..write('score: $score, ')
+          ..write('detail: $detail, ')
+          ..write('date: $date, ')
+          ..write('playedAt: $playedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PuzzleStatesTable extends PuzzleStates
+    with TableInfo<$PuzzleStatesTable, PuzzleState> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PuzzleStatesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _gameMeta = const VerificationMeta('game');
+  @override
+  late final GeneratedColumn<String> game = GeneratedColumn<String>(
+    'game',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _payloadMeta = const VerificationMeta(
+    'payload',
+  );
+  @override
+  late final GeneratedColumn<String> payload = GeneratedColumn<String>(
+    'payload',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [game, payload, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'puzzle_states';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PuzzleState> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('game')) {
+      context.handle(
+        _gameMeta,
+        game.isAcceptableOrUnknown(data['game']!, _gameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_gameMeta);
+    }
+    if (data.containsKey('payload')) {
+      context.handle(
+        _payloadMeta,
+        payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_payloadMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {game};
+  @override
+  PuzzleState map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PuzzleState(
+      game: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}game'],
+      )!,
+      payload: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $PuzzleStatesTable createAlias(String alias) {
+    return $PuzzleStatesTable(attachedDatabase, alias);
+  }
+}
+
+class PuzzleState extends DataClass implements Insertable<PuzzleState> {
+  /// Matches `GameKind.name`.
+  final String game;
+
+  /// The whole board, JSON-encoded. Kept opaque for the same reason
+  /// `daily_contents` is: a game changing its representation must not need a
+  /// schema migration.
+  final String payload;
+  final DateTime updatedAt;
+  const PuzzleState({
+    required this.game,
+    required this.payload,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['game'] = Variable<String>(game);
+    map['payload'] = Variable<String>(payload);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  PuzzleStatesCompanion toCompanion(bool nullToAbsent) {
+    return PuzzleStatesCompanion(
+      game: Value(game),
+      payload: Value(payload),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory PuzzleState.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PuzzleState(
+      game: serializer.fromJson<String>(json['game']),
+      payload: serializer.fromJson<String>(json['payload']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'game': serializer.toJson<String>(game),
+      'payload': serializer.toJson<String>(payload),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  PuzzleState copyWith({String? game, String? payload, DateTime? updatedAt}) =>
+      PuzzleState(
+        game: game ?? this.game,
+        payload: payload ?? this.payload,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  PuzzleState copyWithCompanion(PuzzleStatesCompanion data) {
+    return PuzzleState(
+      game: data.game.present ? data.game.value : this.game,
+      payload: data.payload.present ? data.payload.value : this.payload,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PuzzleState(')
+          ..write('game: $game, ')
+          ..write('payload: $payload, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(game, payload, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PuzzleState &&
+          other.game == this.game &&
+          other.payload == this.payload &&
+          other.updatedAt == this.updatedAt);
+}
+
+class PuzzleStatesCompanion extends UpdateCompanion<PuzzleState> {
+  final Value<String> game;
+  final Value<String> payload;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const PuzzleStatesCompanion({
+    this.game = const Value.absent(),
+    this.payload = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PuzzleStatesCompanion.insert({
+    required String game,
+    required String payload,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : game = Value(game),
+       payload = Value(payload),
+       updatedAt = Value(updatedAt);
+  static Insertable<PuzzleState> custom({
+    Expression<String>? game,
+    Expression<String>? payload,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (game != null) 'game': game,
+      if (payload != null) 'payload': payload,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PuzzleStatesCompanion copyWith({
+    Value<String>? game,
+    Value<String>? payload,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return PuzzleStatesCompanion(
+      game: game ?? this.game,
+      payload: payload ?? this.payload,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (game.present) {
+      map['game'] = Variable<String>(game.value);
+    }
+    if (payload.present) {
+      map['payload'] = Variable<String>(payload.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PuzzleStatesCompanion(')
+          ..write('game: $game, ')
+          ..write('payload: $payload, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3708,6 +5566,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SurprisesTable surprises = $SurprisesTable(this);
   late final $TodosTable todos = $TodosTable(this);
   late final $AppSettingsTable appSettings = $AppSettingsTable(this);
+  late final $EventsTable events = $EventsTable(this);
+  late final $WorkoutSlotsTable workoutSlots = $WorkoutSlotsTable(this);
+  late final $WorkoutLogsTable workoutLogs = $WorkoutLogsTable(this);
+  late final $GameScoresTable gameScores = $GameScoresTable(this);
+  late final $PuzzleStatesTable puzzleStates = $PuzzleStatesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3722,6 +5585,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     surprises,
     todos,
     appSettings,
+    events,
+    workoutSlots,
+    workoutLogs,
+    gameScores,
+    puzzleStates,
   ];
 }
 
@@ -5666,6 +7534,1004 @@ typedef $$AppSettingsTableProcessedTableManager =
       AppSetting,
       PrefetchHooks Function()
     >;
+typedef $$EventsTableCreateCompanionBuilder = EventsCompanion Function({
+  required String id,
+  required String title,
+  required String date,
+  Value<String?> note,
+  Value<String?> emoji,
+  Value<bool> pinned,
+  required DateTime createdAt,
+  required DateTime updatedAt,
+  Value<int> rowid,
+});
+typedef $$EventsTableUpdateCompanionBuilder = EventsCompanion Function({
+  Value<String> id,
+  Value<String> title,
+  Value<String> date,
+  Value<String?> note,
+  Value<String?> emoji,
+  Value<bool> pinned,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+
+class $$EventsTableFilterComposer
+    extends Composer<_$AppDatabase, $EventsTable> {
+  $$EventsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get emoji => $composableBuilder(
+    column: $table.emoji,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get pinned => $composableBuilder(
+    column: $table.pinned,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$EventsTableOrderingComposer
+    extends Composer<_$AppDatabase, $EventsTable> {
+  $$EventsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get note => $composableBuilder(
+    column: $table.note,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get emoji => $composableBuilder(
+    column: $table.emoji,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get pinned => $composableBuilder(
+    column: $table.pinned,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$EventsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $EventsTable> {
+  $$EventsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get note =>
+      $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<String> get emoji =>
+      $composableBuilder(column: $table.emoji, builder: (column) => column);
+
+  GeneratedColumn<bool> get pinned =>
+      $composableBuilder(column: $table.pinned, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$EventsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $EventsTable,
+          Event,
+          $$EventsTableFilterComposer,
+          $$EventsTableOrderingComposer,
+          $$EventsTableAnnotationComposer,
+          $$EventsTableCreateCompanionBuilder,
+          $$EventsTableUpdateCompanionBuilder,
+          (Event, BaseReferences<_$AppDatabase, $EventsTable, Event>),
+          Event,
+          PrefetchHooks Function()
+        > {
+  $$EventsTableTableManager(_$AppDatabase db, $EventsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$EventsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$EventsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$EventsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> date = const Value.absent(),
+                Value<String?> note = const Value.absent(),
+                Value<String?> emoji = const Value.absent(),
+                Value<bool> pinned = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => EventsCompanion(
+                id: id,
+                title: title,
+                date: date,
+                note: note,
+                emoji: emoji,
+                pinned: pinned,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String title,
+                required String date,
+                Value<String?> note = const Value.absent(),
+                Value<String?> emoji = const Value.absent(),
+                Value<bool> pinned = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => EventsCompanion.insert(
+                id: id,
+                title: title,
+                date: date,
+                note: note,
+                emoji: emoji,
+                pinned: pinned,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$EventsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $EventsTable,
+      Event,
+      $$EventsTableFilterComposer,
+      $$EventsTableOrderingComposer,
+      $$EventsTableAnnotationComposer,
+      $$EventsTableCreateCompanionBuilder,
+      $$EventsTableUpdateCompanionBuilder,
+      (Event, BaseReferences<_$AppDatabase, $EventsTable, Event>),
+      Event,
+      PrefetchHooks Function()
+    >;
+typedef $$WorkoutSlotsTableCreateCompanionBuilder =
+    WorkoutSlotsCompanion Function({
+      Value<int> weekday,
+      required String focus,
+      Value<int?> wgerCategory,
+      required DateTime updatedAt,
+    });
+typedef $$WorkoutSlotsTableUpdateCompanionBuilder =
+    WorkoutSlotsCompanion Function({
+      Value<int> weekday,
+      Value<String> focus,
+      Value<int?> wgerCategory,
+      Value<DateTime> updatedAt,
+    });
+
+class $$WorkoutSlotsTableFilterComposer
+    extends Composer<_$AppDatabase, $WorkoutSlotsTable> {
+  $$WorkoutSlotsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get weekday => $composableBuilder(
+    column: $table.weekday,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get focus => $composableBuilder(
+    column: $table.focus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get wgerCategory => $composableBuilder(
+    column: $table.wgerCategory,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WorkoutSlotsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WorkoutSlotsTable> {
+  $$WorkoutSlotsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get weekday => $composableBuilder(
+    column: $table.weekday,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get focus => $composableBuilder(
+    column: $table.focus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get wgerCategory => $composableBuilder(
+    column: $table.wgerCategory,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WorkoutSlotsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WorkoutSlotsTable> {
+  $$WorkoutSlotsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get weekday =>
+      $composableBuilder(column: $table.weekday, builder: (column) => column);
+
+  GeneratedColumn<String> get focus =>
+      $composableBuilder(column: $table.focus, builder: (column) => column);
+
+  GeneratedColumn<int> get wgerCategory => $composableBuilder(
+    column: $table.wgerCategory,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$WorkoutSlotsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WorkoutSlotsTable,
+          WorkoutSlot,
+          $$WorkoutSlotsTableFilterComposer,
+          $$WorkoutSlotsTableOrderingComposer,
+          $$WorkoutSlotsTableAnnotationComposer,
+          $$WorkoutSlotsTableCreateCompanionBuilder,
+          $$WorkoutSlotsTableUpdateCompanionBuilder,
+          (
+            WorkoutSlot,
+            BaseReferences<_$AppDatabase, $WorkoutSlotsTable, WorkoutSlot>,
+          ),
+          WorkoutSlot,
+          PrefetchHooks Function()
+        > {
+  $$WorkoutSlotsTableTableManager(_$AppDatabase db, $WorkoutSlotsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WorkoutSlotsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WorkoutSlotsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WorkoutSlotsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> weekday = const Value.absent(),
+                Value<String> focus = const Value.absent(),
+                Value<int?> wgerCategory = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+              }) => WorkoutSlotsCompanion(
+                weekday: weekday,
+                focus: focus,
+                wgerCategory: wgerCategory,
+                updatedAt: updatedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> weekday = const Value.absent(),
+                required String focus,
+                Value<int?> wgerCategory = const Value.absent(),
+                required DateTime updatedAt,
+              }) => WorkoutSlotsCompanion.insert(
+                weekday: weekday,
+                focus: focus,
+                wgerCategory: wgerCategory,
+                updatedAt: updatedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WorkoutSlotsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WorkoutSlotsTable,
+      WorkoutSlot,
+      $$WorkoutSlotsTableFilterComposer,
+      $$WorkoutSlotsTableOrderingComposer,
+      $$WorkoutSlotsTableAnnotationComposer,
+      $$WorkoutSlotsTableCreateCompanionBuilder,
+      $$WorkoutSlotsTableUpdateCompanionBuilder,
+      (
+        WorkoutSlot,
+        BaseReferences<_$AppDatabase, $WorkoutSlotsTable, WorkoutSlot>,
+      ),
+      WorkoutSlot,
+      PrefetchHooks Function()
+    >;
+typedef $$WorkoutLogsTableCreateCompanionBuilder =
+    WorkoutLogsCompanion Function({
+      required String date,
+      required String focus,
+      Value<String?> done,
+      Value<bool> completed,
+      Value<DateTime?> completedAt,
+      Value<int> rowid,
+    });
+typedef $$WorkoutLogsTableUpdateCompanionBuilder =
+    WorkoutLogsCompanion Function({
+      Value<String> date,
+      Value<String> focus,
+      Value<String?> done,
+      Value<bool> completed,
+      Value<DateTime?> completedAt,
+      Value<int> rowid,
+    });
+
+class $$WorkoutLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $WorkoutLogsTable> {
+  $$WorkoutLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get focus => $composableBuilder(
+    column: $table.focus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get done => $composableBuilder(
+    column: $table.done,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get completed => $composableBuilder(
+    column: $table.completed,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WorkoutLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WorkoutLogsTable> {
+  $$WorkoutLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get focus => $composableBuilder(
+    column: $table.focus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get done => $composableBuilder(
+    column: $table.done,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get completed => $composableBuilder(
+    column: $table.completed,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WorkoutLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WorkoutLogsTable> {
+  $$WorkoutLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get focus =>
+      $composableBuilder(column: $table.focus, builder: (column) => column);
+
+  GeneratedColumn<String> get done =>
+      $composableBuilder(column: $table.done, builder: (column) => column);
+
+  GeneratedColumn<bool> get completed =>
+      $composableBuilder(column: $table.completed, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get completedAt => $composableBuilder(
+    column: $table.completedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$WorkoutLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WorkoutLogsTable,
+          WorkoutLog,
+          $$WorkoutLogsTableFilterComposer,
+          $$WorkoutLogsTableOrderingComposer,
+          $$WorkoutLogsTableAnnotationComposer,
+          $$WorkoutLogsTableCreateCompanionBuilder,
+          $$WorkoutLogsTableUpdateCompanionBuilder,
+          (
+            WorkoutLog,
+            BaseReferences<_$AppDatabase, $WorkoutLogsTable, WorkoutLog>,
+          ),
+          WorkoutLog,
+          PrefetchHooks Function()
+        > {
+  $$WorkoutLogsTableTableManager(_$AppDatabase db, $WorkoutLogsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WorkoutLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WorkoutLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WorkoutLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> date = const Value.absent(),
+                Value<String> focus = const Value.absent(),
+                Value<String?> done = const Value.absent(),
+                Value<bool> completed = const Value.absent(),
+                Value<DateTime?> completedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorkoutLogsCompanion(
+                date: date,
+                focus: focus,
+                done: done,
+                completed: completed,
+                completedAt: completedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String date,
+                required String focus,
+                Value<String?> done = const Value.absent(),
+                Value<bool> completed = const Value.absent(),
+                Value<DateTime?> completedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => WorkoutLogsCompanion.insert(
+                date: date,
+                focus: focus,
+                done: done,
+                completed: completed,
+                completedAt: completedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WorkoutLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WorkoutLogsTable,
+      WorkoutLog,
+      $$WorkoutLogsTableFilterComposer,
+      $$WorkoutLogsTableOrderingComposer,
+      $$WorkoutLogsTableAnnotationComposer,
+      $$WorkoutLogsTableCreateCompanionBuilder,
+      $$WorkoutLogsTableUpdateCompanionBuilder,
+      (
+        WorkoutLog,
+        BaseReferences<_$AppDatabase, $WorkoutLogsTable, WorkoutLog>,
+      ),
+      WorkoutLog,
+      PrefetchHooks Function()
+    >;
+typedef $$GameScoresTableCreateCompanionBuilder = GameScoresCompanion Function({
+  Value<int> id,
+  required String game,
+  required int score,
+  Value<String?> detail,
+  required String date,
+  required DateTime playedAt,
+});
+typedef $$GameScoresTableUpdateCompanionBuilder = GameScoresCompanion Function({
+  Value<int> id,
+  Value<String> game,
+  Value<int> score,
+  Value<String?> detail,
+  Value<String> date,
+  Value<DateTime> playedAt,
+});
+
+class $$GameScoresTableFilterComposer
+    extends Composer<_$AppDatabase, $GameScoresTable> {
+  $$GameScoresTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get game => $composableBuilder(
+    column: $table.game,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get score => $composableBuilder(
+    column: $table.score,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get detail => $composableBuilder(
+    column: $table.detail,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get playedAt => $composableBuilder(
+    column: $table.playedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$GameScoresTableOrderingComposer
+    extends Composer<_$AppDatabase, $GameScoresTable> {
+  $$GameScoresTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get game => $composableBuilder(
+    column: $table.game,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get score => $composableBuilder(
+    column: $table.score,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get detail => $composableBuilder(
+    column: $table.detail,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get playedAt => $composableBuilder(
+    column: $table.playedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$GameScoresTableAnnotationComposer
+    extends Composer<_$AppDatabase, $GameScoresTable> {
+  $$GameScoresTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get game =>
+      $composableBuilder(column: $table.game, builder: (column) => column);
+
+  GeneratedColumn<int> get score =>
+      $composableBuilder(column: $table.score, builder: (column) => column);
+
+  GeneratedColumn<String> get detail =>
+      $composableBuilder(column: $table.detail, builder: (column) => column);
+
+  GeneratedColumn<String> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get playedAt =>
+      $composableBuilder(column: $table.playedAt, builder: (column) => column);
+}
+
+class $$GameScoresTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $GameScoresTable,
+          GameScore,
+          $$GameScoresTableFilterComposer,
+          $$GameScoresTableOrderingComposer,
+          $$GameScoresTableAnnotationComposer,
+          $$GameScoresTableCreateCompanionBuilder,
+          $$GameScoresTableUpdateCompanionBuilder,
+          (
+            GameScore,
+            BaseReferences<_$AppDatabase, $GameScoresTable, GameScore>,
+          ),
+          GameScore,
+          PrefetchHooks Function()
+        > {
+  $$GameScoresTableTableManager(_$AppDatabase db, $GameScoresTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$GameScoresTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$GameScoresTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$GameScoresTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> game = const Value.absent(),
+                Value<int> score = const Value.absent(),
+                Value<String?> detail = const Value.absent(),
+                Value<String> date = const Value.absent(),
+                Value<DateTime> playedAt = const Value.absent(),
+              }) => GameScoresCompanion(
+                id: id,
+                game: game,
+                score: score,
+                detail: detail,
+                date: date,
+                playedAt: playedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String game,
+                required int score,
+                Value<String?> detail = const Value.absent(),
+                required String date,
+                required DateTime playedAt,
+              }) => GameScoresCompanion.insert(
+                id: id,
+                game: game,
+                score: score,
+                detail: detail,
+                date: date,
+                playedAt: playedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$GameScoresTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $GameScoresTable,
+      GameScore,
+      $$GameScoresTableFilterComposer,
+      $$GameScoresTableOrderingComposer,
+      $$GameScoresTableAnnotationComposer,
+      $$GameScoresTableCreateCompanionBuilder,
+      $$GameScoresTableUpdateCompanionBuilder,
+      (GameScore, BaseReferences<_$AppDatabase, $GameScoresTable, GameScore>),
+      GameScore,
+      PrefetchHooks Function()
+    >;
+typedef $$PuzzleStatesTableCreateCompanionBuilder =
+    PuzzleStatesCompanion Function({
+      required String game,
+      required String payload,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$PuzzleStatesTableUpdateCompanionBuilder =
+    PuzzleStatesCompanion Function({
+      Value<String> game,
+      Value<String> payload,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$PuzzleStatesTableFilterComposer
+    extends Composer<_$AppDatabase, $PuzzleStatesTable> {
+  $$PuzzleStatesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get game => $composableBuilder(
+    column: $table.game,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get payload => $composableBuilder(
+    column: $table.payload,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$PuzzleStatesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PuzzleStatesTable> {
+  $$PuzzleStatesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get game => $composableBuilder(
+    column: $table.game,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get payload => $composableBuilder(
+    column: $table.payload,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PuzzleStatesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PuzzleStatesTable> {
+  $$PuzzleStatesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get game =>
+      $composableBuilder(column: $table.game, builder: (column) => column);
+
+  GeneratedColumn<String> get payload =>
+      $composableBuilder(column: $table.payload, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$PuzzleStatesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PuzzleStatesTable,
+          PuzzleState,
+          $$PuzzleStatesTableFilterComposer,
+          $$PuzzleStatesTableOrderingComposer,
+          $$PuzzleStatesTableAnnotationComposer,
+          $$PuzzleStatesTableCreateCompanionBuilder,
+          $$PuzzleStatesTableUpdateCompanionBuilder,
+          (
+            PuzzleState,
+            BaseReferences<_$AppDatabase, $PuzzleStatesTable, PuzzleState>,
+          ),
+          PuzzleState,
+          PrefetchHooks Function()
+        > {
+  $$PuzzleStatesTableTableManager(_$AppDatabase db, $PuzzleStatesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PuzzleStatesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PuzzleStatesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PuzzleStatesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> game = const Value.absent(),
+                Value<String> payload = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PuzzleStatesCompanion(
+                game: game,
+                payload: payload,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String game,
+                required String payload,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => PuzzleStatesCompanion.insert(
+                game: game,
+                payload: payload,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$PuzzleStatesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PuzzleStatesTable,
+      PuzzleState,
+      $$PuzzleStatesTableFilterComposer,
+      $$PuzzleStatesTableOrderingComposer,
+      $$PuzzleStatesTableAnnotationComposer,
+      $$PuzzleStatesTableCreateCompanionBuilder,
+      $$PuzzleStatesTableUpdateCompanionBuilder,
+      (
+        PuzzleState,
+        BaseReferences<_$AppDatabase, $PuzzleStatesTable, PuzzleState>,
+      ),
+      PuzzleState,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -5688,4 +8554,14 @@ class $AppDatabaseManager {
       $$TodosTableTableManager(_db, _db.todos);
   $$AppSettingsTableTableManager get appSettings =>
       $$AppSettingsTableTableManager(_db, _db.appSettings);
+  $$EventsTableTableManager get events =>
+      $$EventsTableTableManager(_db, _db.events);
+  $$WorkoutSlotsTableTableManager get workoutSlots =>
+      $$WorkoutSlotsTableTableManager(_db, _db.workoutSlots);
+  $$WorkoutLogsTableTableManager get workoutLogs =>
+      $$WorkoutLogsTableTableManager(_db, _db.workoutLogs);
+  $$GameScoresTableTableManager get gameScores =>
+      $$GameScoresTableTableManager(_db, _db.gameScores);
+  $$PuzzleStatesTableTableManager get puzzleStates =>
+      $$PuzzleStatesTableTableManager(_db, _db.puzzleStates);
 }

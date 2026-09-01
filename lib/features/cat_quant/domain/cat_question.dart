@@ -65,34 +65,34 @@ class CatQuestion {
       dailySeed(stem, 'cat-id').toRadixString(16);
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'topic': topic,
-        'difficulty': difficulty,
-        'stem': stem,
-        'options': options,
-        'answerIndex': answerIndex,
-        'solution': solution,
-        'source': source.name,
-        'verification': verification.name,
-      };
+    'id': id,
+    'topic': topic,
+    'difficulty': difficulty,
+    'stem': stem,
+    'options': options,
+    'answerIndex': answerIndex,
+    'solution': solution,
+    'source': source.name,
+    'verification': verification.name,
+  };
 
   factory CatQuestion.fromJson(Map<String, dynamic> json) => CatQuestion(
-        id: json['id'] as String,
-        topic: json['topic'] as String,
-        difficulty: json['difficulty'] as String,
-        stem: json['stem'] as String,
-        options: (json['options'] as List<dynamic>).cast<String>(),
-        answerIndex: json['answerIndex'] as int,
-        solution: json['solution'] as String?,
-        source: CatSource.values.firstWhere(
-          (s) => s.name == json['source'],
-          orElse: () => CatSource.generated,
-        ),
-        verification: CatVerification.values.firstWhere(
-          (v) => v.name == json['verification'],
-          orElse: () => CatVerification.crossChecked,
-        ),
-      );
+    id: json['id'] as String,
+    topic: json['topic'] as String,
+    difficulty: json['difficulty'] as String,
+    stem: json['stem'] as String,
+    options: (json['options'] as List<dynamic>).cast<String>(),
+    answerIndex: json['answerIndex'] as int,
+    solution: json['solution'] as String?,
+    source: CatSource.values.firstWhere(
+      (s) => s.name == json['source'],
+      orElse: () => CatSource.generated,
+    ),
+    verification: CatVerification.values.firstWhere(
+      (v) => v.name == json['verification'],
+      orElse: () => CatVerification.crossChecked,
+    ),
+  );
 }
 
 /// Number formatting shared by the generator templates.

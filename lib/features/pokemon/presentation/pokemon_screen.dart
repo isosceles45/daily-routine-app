@@ -24,9 +24,7 @@ class _PokemonScreenState extends ConsumerState<PokemonScreen> {
     // Opening the screen is what "doing" this activity means — there is
     // nothing to answer.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(seenActivitiesProvider.notifier)
-          .markSeen(DailyActivity.pokemon);
+      ref.read(seenActivitiesProvider.notifier).markSeen(DailyActivity.pokemon);
     });
   }
 
@@ -62,9 +60,7 @@ class _Details extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Center(
-          child: PokemonArtwork(url: pokemon.artworkUrl, size: 220),
-        ),
+        Center(child: PokemonArtwork(url: pokemon.artworkUrl, size: 220)),
         const SizedBox(height: 16),
         Center(
           child: Column(
@@ -100,11 +96,17 @@ class _Details extends StatelessWidget {
           children: [
             Expanded(
               child: StatBlock(
-                  value: pokemon.heightLabel, label: 'Height', size: 16),
+                value: pokemon.heightLabel,
+                label: 'Height',
+                size: 16,
+              ),
             ),
             Expanded(
               child: StatBlock(
-                  value: pokemon.weightLabel, label: 'Weight', size: 16),
+                value: pokemon.weightLabel,
+                label: 'Weight',
+                size: 16,
+              ),
             ),
             Expanded(
               child: StatBlock(
@@ -195,13 +197,16 @@ class PokemonArtwork extends StatelessWidget {
   }
 
   Widget _placeholder() => Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: RitualColors.surface,
-          borderRadius: BorderRadius.circular(RitualShape.cardRadius),
-        ),
-        child: const Icon(Icons.catching_pokemon,
-            color: RitualColors.textTertiary, size: 32),
-      );
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      color: RitualColors.surface,
+      borderRadius: BorderRadius.circular(RitualShape.cardRadius),
+    ),
+    child: const Icon(
+      Icons.catching_pokemon,
+      color: RitualColors.textTertiary,
+      size: 32,
+    ),
+  );
 }

@@ -19,13 +19,13 @@ class Eyebrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-        text.toUpperCase(),
-        style: RitualText.eyebrow(
-          size: size,
-          color: color,
-          letterSpacing: letterSpacing,
-        ),
-      );
+    text.toUpperCase(),
+    style: RitualText.eyebrow(
+      size: size,
+      color: color,
+      letterSpacing: letterSpacing,
+    ),
+  );
 }
 
 /// Outlined pill: `1.5px solid <feature colour>`, radius 6, uppercase.

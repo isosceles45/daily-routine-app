@@ -22,8 +22,11 @@ class OfflineBanner extends ConsumerWidget {
       color: RitualColors.accentSoft,
       child: Row(
         children: [
-          const Icon(Icons.cloud_off_rounded,
-              size: 14, color: RitualColors.accentSoftText),
+          const Icon(
+            Icons.cloud_off_rounded,
+            size: 14,
+            color: RitualColors.accentSoftText,
+          ),
           const SizedBox(width: 8),
           Eyebrow(
             "Offline — showing what's saved",

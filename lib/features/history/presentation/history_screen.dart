@@ -7,19 +7,22 @@ import '../../../shared/widgets/widgets.dart';
 import '../../home/domain/daily_completion.dart';
 import '../../home/domain/day_record.dart';
 import '../../home/providers/history_providers.dart';
+import '../../settings/presentation/settings_screen.dart';
 import '../../wordle/presentation/wordle_distribution.dart';
 import '../../wordle/providers/wordle_providers.dart';
 
-enum _HistoryView { wordle, timeline }
+/// The three things the "You" tab holds: how the Wordle is going, what has
+/// been done lately, and the settings behind both.
+enum _HistoryView { wordle, timeline, settings }
 
-class HistoryScreen extends ConsumerStatefulWidget {
-  const HistoryScreen({super.key});
+class ProfileScreen extends ConsumerStatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  ConsumerState<HistoryScreen> createState() => _HistoryScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _HistoryScreenState extends ConsumerState<HistoryScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   _HistoryView _view = _HistoryView.wordle;
 
   @override
@@ -30,17 +33,18 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
           children: [
-            Text('History', style: RitualText.tabTitle),
+            Text('You', style: RitualText.tabTitle),
             const SizedBox(height: 14),
             _Segmented(
               value: _view,
               onChanged: (v) => setState(() => _view = v),
             ),
             const SizedBox(height: 20),
-            if (_view == _HistoryView.wordle)
-              const _WordleHistory()
-            else
-              const _Timeline(),
+            switch (_view) {
+              _HistoryView.wordle => const WordleHistory(),
+              _HistoryView.timeline => const Timeline(),
+              _HistoryView.settings => const SettingsBody(),
+            },
           ],
         ),
       ),
@@ -91,6 +95,7 @@ class _Segmented extends StatelessWidget {
           children: [
             segment('Wordle', _HistoryView.wordle),
             segment('Timeline', _HistoryView.timeline),
+            segment('Settings', _HistoryView.settings),
           ],
         ),
       ),
@@ -98,8 +103,8 @@ class _Segmented extends StatelessWidget {
   }
 }
 
-class _WordleHistory extends ConsumerWidget {
-  const _WordleHistory();
+class WordleHistory extends ConsumerWidget {
+  const WordleHistory({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -155,8 +160,8 @@ class _WordleHistory extends ConsumerWidget {
   }
 }
 
-class _Timeline extends ConsumerWidget {
-  const _Timeline();
+class Timeline extends ConsumerWidget {
+  const Timeline({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -70,28 +70,29 @@ class TriviaQuestion {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'category': category,
-        'difficulty': difficulty,
-        'question': question,
-        'correctAnswer': correctAnswer,
-        'incorrectAnswers': incorrectAnswers,
-        'answers': answers,
-        'source': source,
-      };
+    'id': id,
+    'category': category,
+    'difficulty': difficulty,
+    'question': question,
+    'correctAnswer': correctAnswer,
+    'incorrectAnswers': incorrectAnswers,
+    'answers': answers,
+    'source': source,
+  };
 
   factory TriviaQuestion.fromJson(Map<String, dynamic> json) => TriviaQuestion(
-        id: json['id'] as String,
-        category: json['category'] as String,
-        difficulty: json['difficulty'] as String,
-        question: json['question'] as String,
-        correctAnswer: json['correctAnswer'] as String,
-        incorrectAnswers:
-            (json['incorrectAnswers'] as List<dynamic>).cast<String>(),
-        answers: List.unmodifiable(
-            (json['answers'] as List<dynamic>).cast<String>()),
-        source: json['source'] as String? ?? 'OpenTDB',
-      );
+    id: json['id'] as String,
+    category: json['category'] as String,
+    difficulty: json['difficulty'] as String,
+    question: json['question'] as String,
+    correctAnswer: json['correctAnswer'] as String,
+    incorrectAnswers: (json['incorrectAnswers'] as List<dynamic>)
+        .cast<String>(),
+    answers: List.unmodifiable(
+      (json['answers'] as List<dynamic>).cast<String>(),
+    ),
+    source: json['source'] as String? ?? 'OpenTDB',
+  );
 }
 
 /// The categories the app draws from (§7), as OpenTDB ids.

@@ -28,7 +28,8 @@ class _CatScreenState extends ConsumerState<CatScreen> {
     return DetailScaffold(
       title: 'CAT Quant',
       child: question.when(
-        loading: () => LoadingCard(title: 'CAT Quant', accent: accent, lines: 3),
+        loading: () =>
+            LoadingCard(title: 'CAT Quant', accent: accent, lines: 3),
         error: (error, _) => ErrorCard(
           title: 'CAT Quant',
           error: error,
@@ -44,7 +45,9 @@ class _CatScreenState extends ConsumerState<CatScreen> {
             question: data,
             accent: accent,
             accuracy: ref.watch(catAccuracyProvider),
-            submittedIndex: saved?.answered == true ? saved!.selectedIndex : null,
+            submittedIndex: saved?.answered == true
+                ? saved!.selectedIndex
+                : null,
             selected: _selected,
             submitting: _submitting,
             onSelect: (i) => setState(() => _selected = i),
@@ -187,7 +190,9 @@ class _Question extends StatelessWidget {
                             accuracy.label,
                             textAlign: TextAlign.right,
                             style: outfit(
-                                size: 12, color: RitualColors.textTertiary),
+                              size: 12,
+                              color: RitualColors.textTertiary,
+                            ),
                           ),
                         ),
                       ],
@@ -210,8 +215,7 @@ class _Question extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(
                       '${question.source.label} · ${question.verification.label}',
-                      style: outfit(
-                          size: 11, color: RitualColors.textTertiary),
+                      style: outfit(size: 11, color: RitualColors.textTertiary),
                     ),
                   ],
                 ),

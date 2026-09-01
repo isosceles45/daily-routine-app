@@ -5,7 +5,6 @@ import '../../../core/network/api_result.dart';
 import '../../../core/network/api_sources.dart';
 import '../../animals/data/fun_service.dart';
 import '../../animals/domain/daily_fun.dart';
-import '../../japan/data/japan_source.dart';
 import '../../pokemon/data/pokemon_service.dart';
 import '../domain/surprise_pack.dart';
 
@@ -20,24 +19,21 @@ class SurpriseGenerator {
     required this.client,
     required this.funService,
     required this.pokemonService,
-    required this.japanSource,
   });
 
   final ApiClient client;
   final FunService funService;
   final PokemonService pokemonService;
-  final JapanSource japanSource;
 
   static final _random = Random();
 
   Future<SurprisePack> generate() async {
-    // A fresh token each time, so re-rolling genuinely re-rolls.
-    final token = 'surprise-${_random.nextInt(1 << 32)}';
-
     // Fired together — the pack is only as slow as its slowest source, and one
     // timing out doesn't hold up the rest.
+    //
+    // Place of the day deliberately has no slot here: it is the one section
+    // worth arriving at deliberately rather than being handed at random.
     final results = await Future.wait([
-      _japan(token),
       _animal(),
       _pokemon(),
       _fact(),
@@ -47,16 +43,6 @@ class SurpriseGenerator {
     return SurprisePack(
       slots: results.whereType<SurpriseSlot>().toList(growable: false),
       challenge: _challenge(),
-    );
-  }
-
-  Future<SurpriseSlot?> _japan(String token) async {
-    final entry = await japanSource.entryFor(token);
-    if (entry == null) return null;
-    return SurpriseSlot(
-      label: 'Japan',
-      value: entry.title,
-      imageUrl: entry.imageUrl,
     );
   }
 

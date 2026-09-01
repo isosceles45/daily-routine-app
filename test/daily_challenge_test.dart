@@ -1,13 +1,14 @@
 import 'package:daily_ritual/features/animals/domain/daily_fun.dart';
 import 'package:daily_ritual/features/challenges/domain/daily_challenge.dart';
-import 'package:daily_ritual/features/japan/domain/japan_entry.dart';
+import 'package:daily_ritual/features/places/domain/place_entry.dart';
 import 'package:daily_ritual/features/pokemon/domain/daily_pokemon.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const japan = JapanEntry(
+const japan = PlaceEntry(
   title: 'Kenroku-en',
   extract: 'A garden. In Kanazawa. Very old.',
   category: 'Gardens',
+  region: 'Japan',
 );
 
 const pokemon = DailyPokemon(
@@ -31,8 +32,8 @@ void main() {
   });
 
   test('is stable for a given date', () {
-    final a = ChallengeGenerator.build(date: '2026-08-26', japan: japan);
-    final b = ChallengeGenerator.build(date: '2026-08-26', japan: japan);
+    final a = ChallengeGenerator.build(date: '2026-08-26', place: japan);
+    final b = ChallengeGenerator.build(date: '2026-08-26', place: japan);
     expect(a.text, b.text);
   });
 
@@ -41,10 +42,10 @@ void main() {
       for (var d = 1; d <= 28; d++)
         ChallengeGenerator.build(
           date: '2026-09-${d.toString().padLeft(2, '0')}',
-          japan: japan,
+          place: japan,
           pokemon: pokemon,
           fun: fun,
-        ).text
+        ).text,
     };
     expect(texts.length, greaterThan(3));
   });
@@ -55,7 +56,7 @@ void main() {
     for (var d = 1; d <= 28; d++) {
       final c = ChallengeGenerator.build(
         date: '2026-10-${d.toString().padLeft(2, '0')}',
-        japan: japan,
+        place: japan,
         pokemon: pokemon,
         fun: fun,
       );
@@ -69,7 +70,8 @@ void main() {
   test('never names content that did not load', () {
     for (var d = 1; d <= 28; d++) {
       final c = ChallengeGenerator.build(
-          date: '2026-11-${d.toString().padLeft(2, '0')}');
+        date: '2026-11-${d.toString().padLeft(2, '0')}',
+      );
       expect(c.text, isNot(contains('Kenroku-en')));
       expect(c.text, isNot(contains('Eevee')));
       expect(c.origin, isNull);
@@ -81,16 +83,18 @@ void main() {
       for (var d = 1; d <= 28; d++)
         ChallengeGenerator.build(
           date: '2026-12-${d.toString().padLeft(2, '0')}',
-          japan: japan,
+          place: japan,
           pokemon: pokemon,
-        )
+        ),
     ];
-    expect(withContent.any((c) => c.origin == 'Japan' || c.origin == 'Pokémon'),
-        isTrue);
+    expect(
+      withContent.any((c) => c.origin == 'Japan' || c.origin == 'Pokémon'),
+      isTrue,
+    );
   });
 
   test('survives a round-trip', () {
-    final original = ChallengeGenerator.build(date: '2026-08-26', japan: japan);
+    final original = ChallengeGenerator.build(date: '2026-08-26', place: japan);
     final restored = DailyChallenge.fromJson(original.toJson());
     expect(restored.text, original.text);
     expect(restored.origin, original.origin);

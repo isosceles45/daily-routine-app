@@ -37,7 +37,8 @@ class GeneratedQuestion {
 
   /// Whether the two offline derivations agree. A question that fails this is
   /// never shown, online or off.
-  bool get selfConsistent => crossCheck.isFinite && Num.agree(answer, crossCheck);
+  bool get selfConsistent =>
+      crossCheck.isFinite && Num.agree(answer, crossCheck);
 }
 
 abstract class CatTemplate {
@@ -148,10 +149,12 @@ class ProfitLossTemplate extends CatTemplate {
     return GeneratedQuestion(
       topic: topic,
       difficulty: difficulty,
-      stem: 'A shopkeeper marks an article $markup% above its cost price and '
+      stem:
+          'A shopkeeper marks an article $markup% above its cost price and '
           'then allows a discount of $discount% on the marked price. What is '
           'his overall profit percentage?',
-      solution: 'Take the cost price as 100. '
+      solution:
+          'Take the cost price as 100. '
           'Marked price = ${100 + markup}. '
           'Selling price = ${100 + markup} × ${100 - discount}/100 = '
           '${Num.format(selling)}. '
@@ -192,25 +195,23 @@ class TimeAndWorkTemplate extends CatTemplate {
     final cross = 1 / (1 / a + 1 / b);
 
     final correct = '${Num.format(together)} days';
-    final built = _options(
-      correct,
-      [
-        '${Num.format((a + b) / 2)} days',
-        '${Num.format((a + b).toDouble())} days',
-        '${Num.format((a - b).abs().toDouble())} days',
-        '${Num.format(together + 1)} days',
-      ],
-      rng,
-    );
+    final built = _options(correct, [
+      '${Num.format((a + b) / 2)} days',
+      '${Num.format((a + b).toDouble())} days',
+      '${Num.format((a - b).abs().toDouble())} days',
+      '${Num.format(together + 1)} days',
+    ], rng);
     if (built == null) return null;
 
     return GeneratedQuestion(
       topic: topic,
       difficulty: difficulty,
-      stem: 'A can complete a piece of work in $a days and B can complete the '
+      stem:
+          'A can complete a piece of work in $a days and B can complete the '
           'same work in $b days. If they work together, in how many days will '
           'the work be finished?',
-      solution: "A's one-day work = 1/$a and B's = 1/$b. "
+      solution:
+          "A's one-day work = 1/$a and B's = 1/$b. "
           'Together they do 1/$a + 1/$b = ${a + b}/${a * b} of the work per '
           'day. So the whole work takes ${a * b}/${a + b} = '
           '${Num.format(together)} days.',
@@ -247,26 +248,24 @@ class AverageSpeedTemplate extends CatTemplate {
     final cross = 2 * distance / (distance / u + distance / v);
 
     final correct = '${Num.format(average)} km/h';
-    final built = _options(
-      correct,
-      [
-        // The arithmetic mean is the trap this question exists to catch.
-        '${Num.format((u + v) / 2)} km/h',
-        '${Num.format(average + 2)} km/h',
-        '${Num.format(u.toDouble())} km/h',
-        '${Num.format(average - 2)} km/h',
-      ],
-      rng,
-    );
+    final built = _options(correct, [
+      // The arithmetic mean is the trap this question exists to catch.
+      '${Num.format((u + v) / 2)} km/h',
+      '${Num.format(average + 2)} km/h',
+      '${Num.format(u.toDouble())} km/h',
+      '${Num.format(average - 2)} km/h',
+    ], rng);
     if (built == null) return null;
 
     return GeneratedQuestion(
       topic: topic,
       difficulty: difficulty,
-      stem: 'A car travels from town P to town Q at a uniform speed of $u km/h '
+      stem:
+          'A car travels from town P to town Q at a uniform speed of $u km/h '
           'and returns along the same road at $v km/h. What is its average '
           'speed for the entire journey?',
-      solution: 'Let the one-way distance be d. '
+      solution:
+          'Let the one-way distance be d. '
           'Time out = d/$u, time back = d/$v, total distance = 2d. '
           'Average speed = 2d ÷ (d/$u + d/$v) = 2 × $u × $v / ($u + $v) = '
           '${Num.format(average)} km/h. '
@@ -310,25 +309,23 @@ class SuccessiveChangeTemplate extends CatTemplate {
     final cross = (after - price) / price * 100;
 
     final correct = _label(net);
-    final built = _options(
-      correct,
-      [
-        _label((rise - fall).toDouble()),
-        _label((fall - rise).toDouble()),
-        _label(-(rise * fall / 100)),
-        _label(net > 0 ? net + 2 : net - 2),
-      ],
-      rng,
-    );
+    final built = _options(correct, [
+      _label((rise - fall).toDouble()),
+      _label((fall - rise).toDouble()),
+      _label(-(rise * fall / 100)),
+      _label(net > 0 ? net + 2 : net - 2),
+    ], rng);
     if (built == null) return null;
 
     return GeneratedQuestion(
       topic: topic,
       difficulty: difficulty,
-      stem: 'The price of a commodity is first increased by $rise% and then '
+      stem:
+          'The price of a commodity is first increased by $rise% and then '
           'the new price is decreased by $fall%. What is the net percentage '
           'change in the original price?',
-      solution: 'Take the original price as 100. '
+      solution:
+          'Take the original price as 100. '
           'After the rise it is ${Num.format(100 * (1 + rise / 100))}. '
           'After the fall it is '
           '${Num.format(100 * (1 + rise / 100) * (1 - fall / 100))}. '
@@ -377,19 +374,22 @@ class TrailingZerosTemplate extends CatTemplate {
     }
 
     final correct = '$zeros';
-    final built = _options(
-      correct,
-      ['${n ~/ 5}', '${zeros + 1}', '${zeros - 1}', '${zeros + 2}'],
-      rng,
-    );
+    final built = _options(correct, [
+      '${n ~/ 5}',
+      '${zeros + 1}',
+      '${zeros - 1}',
+      '${zeros + 2}',
+    ], rng);
     if (built == null) return null;
 
     return GeneratedQuestion(
       topic: topic,
       difficulty: difficulty,
-      stem: 'How many consecutive zeros are there at the end of $n! '
+      stem:
+          'How many consecutive zeros are there at the end of $n! '
           '(that is, $n factorial)?',
-      solution: 'Each trailing zero comes from a factor of 10 = 2 × 5, and '
+      solution:
+          'Each trailing zero comes from a factor of 10 = 2 × 5, and '
           'fives are scarcer than twos, so count the fives: '
           '${terms.join(' + ')} = $zeros. '
           'Note ${n ~/ 5} alone is not enough — multiples of 25 contribute a '
@@ -425,25 +425,23 @@ class CombinationsTemplate extends CatTemplate {
     final cross = _factorial(n) / (_factorial(r) * _factorial(n - r));
 
     final correct = '$ways';
-    final built = _options(
-      correct,
-      [
-        // Treating the committee as ordered is the standard slip.
-        '${_permutations(n, r)}',
-        '${_combinations(n, r - 1)}',
-        '${_combinations(n + 1, r)}',
-        '${n * r}',
-      ],
-      rng,
-    );
+    final built = _options(correct, [
+      // Treating the committee as ordered is the standard slip.
+      '${_permutations(n, r)}',
+      '${_combinations(n, r - 1)}',
+      '${_combinations(n + 1, r)}',
+      '${n * r}',
+    ], rng);
     if (built == null) return null;
 
     return GeneratedQuestion(
       topic: topic,
       difficulty: difficulty,
-      stem: 'A committee of $r members is to be formed from a group of $n '
+      stem:
+          'A committee of $r members is to be formed from a group of $n '
           'people. In how many different ways can this be done?',
-      solution: 'Order does not matter in a committee, so this is a '
+      solution:
+          'Order does not matter in a committee, so this is a '
           'combination: C($n, $r) = $n!/($r! × ${n - r}!) = $ways. '
           'If the roles were distinct it would instead be P($n, $r) = '
           '${_permutations(n, r)}.',
@@ -480,26 +478,24 @@ class ProbabilityTemplate extends CatTemplate {
     final cross = (red / total) * ((red - 1) / (total - 1));
 
     final correct = Num.fraction(favourable, possible);
-    final built = _options(
-      correct,
-      [
-        // Forgetting that the first ball is not replaced.
-        Num.fraction(red * red, total * total),
-        Num.fraction(_combinations(blue, 2), possible),
-        Num.fraction(red, total),
-        Num.fraction(favourable + 1, possible),
-      ],
-      rng,
-    );
+    final built = _options(correct, [
+      // Forgetting that the first ball is not replaced.
+      Num.fraction(red * red, total * total),
+      Num.fraction(_combinations(blue, 2), possible),
+      Num.fraction(red, total),
+      Num.fraction(favourable + 1, possible),
+    ], rng);
     if (built == null) return null;
 
     return GeneratedQuestion(
       topic: topic,
       difficulty: difficulty,
-      stem: 'A bag contains $red red balls and $blue blue balls. Two balls are '
+      stem:
+          'A bag contains $red red balls and $blue blue balls. Two balls are '
           'drawn at random, one after the other, without replacement. What is '
           'the probability that both are red?',
-      solution: 'Favourable pairs = C($red, 2) = $favourable. '
+      solution:
+          'Favourable pairs = C($red, 2) = $favourable. '
           'Total pairs = C($total, 2) = $possible. '
           'Probability = $favourable/$possible = $correct. '
           'Equivalently $red/$total × ${red - 1}/${total - 1} — the second '
@@ -543,25 +539,23 @@ class AverageChangeTemplate extends CatTemplate {
         : double.nan;
 
     final correct = Num.format(answer);
-    final built = _options(
-      correct,
-      [
-        Num.format(answer + 1),
-        Num.format(answer - 1),
-        Num.format((weight - oldAverage) / shift),
-        Num.format(answer + 2),
-      ],
-      rng,
-    );
+    final built = _options(correct, [
+      Num.format(answer + 1),
+      Num.format(answer - 1),
+      Num.format((weight - oldAverage) / shift),
+      Num.format(answer + 2),
+    ], rng);
     if (built == null) return null;
 
     return GeneratedQuestion(
       topic: topic,
       difficulty: difficulty,
-      stem: 'The average weight of a group of students is $oldAverage kg. When '
+      stem:
+          'The average weight of a group of students is $oldAverage kg. When '
           'a new student weighing $weight kg joins the group, the average '
           'rises to $newAverage kg. How many students were there originally?',
-      solution: 'Let there be n students. Then '
+      solution:
+          'Let there be n students. Then '
           '(n × $oldAverage + $weight)/(n + 1) = $newAverage. '
           'So n × $oldAverage + $weight = n × $newAverage + $newAverage, '
           'giving n × $shift = ${weight - newAverage} and n = '
@@ -615,26 +609,24 @@ class MixtureTemplate extends CatTemplate {
         : double.nan;
 
     final correct = '${Num.format(added)} litres';
-    final built = _options(
-      correct,
-      [
-        '${Num.format(added + 5)} litres',
-        '${Num.format(water)} litres',
-        '${Num.format(milk - water)} litres',
-        '${Num.format(added * 2)} litres',
-      ],
-      rng,
-    );
+    final built = _options(correct, [
+      '${Num.format(added + 5)} litres',
+      '${Num.format(water)} litres',
+      '${Num.format(milk - water)} litres',
+      '${Num.format(added * 2)} litres',
+    ], rng);
     if (built == null) return null;
 
     return GeneratedQuestion(
       topic: topic,
       difficulty: difficulty,
-      stem: 'A vessel contains $volume litres of a mixture of milk and water '
+      stem:
+          'A vessel contains $volume litres of a mixture of milk and water '
           'in the ratio $milkPart : $waterPart. How many litres of water must '
           'be added so that the ratio of milk to water becomes '
           '$targetMilk : $targetWater?',
-      solution: 'Milk = $volume × $milkPart/$parts = ${Num.format(milk)} L and '
+      solution:
+          'Milk = $volume × $milkPart/$parts = ${Num.format(milk)} L and '
           'water = ${Num.format(water)} L. '
           'The milk is unchanged, so for a $targetMilk : $targetWater ratio the '
           'water must become ${Num.format(milk)} × $targetWater/$targetMilk = '

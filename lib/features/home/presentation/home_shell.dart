@@ -14,9 +14,9 @@ class HomeShell extends StatelessWidget {
   static const _items = [
     (icon: Icons.home_outlined, label: 'Today'),
     (icon: Icons.explore_outlined, label: 'Explore'),
+    (icon: Icons.videogame_asset_outlined, label: 'Play'),
     (icon: Icons.checklist_rounded, label: 'Todos'),
-    (icon: Icons.schedule_rounded, label: 'History'),
-    (icon: Icons.tune_rounded, label: 'Settings'),
+    (icon: Icons.person_outline_rounded, label: 'You'),
   ];
 
   @override

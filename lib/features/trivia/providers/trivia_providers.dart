@@ -38,9 +38,10 @@ final triviaResultProvider = StreamProvider<TriviaResult?>((ref) {
 
 /// Every trivia result ever, for the History timeline and streaks.
 final triviaAllResultsProvider = StreamProvider<List<TriviaResult>>(
-  (ref) => ref.watch(databaseProvider).select(
-        ref.watch(databaseProvider).triviaResults,
-      ).watch(),
+  (ref) => ref
+      .watch(databaseProvider)
+      .select(ref.watch(databaseProvider).triviaResults)
+      .watch(),
 );
 
 /// Records the user's answer. Answering is one-way — the row is written once

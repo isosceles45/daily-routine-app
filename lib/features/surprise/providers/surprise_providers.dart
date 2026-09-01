@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/database.dart';
 import '../../../core/providers.dart';
 import '../../animals/providers/fun_providers.dart';
-import '../../japan/providers/japan_providers.dart';
 import '../../pokemon/providers/pokemon_providers.dart';
 import '../data/surprise_generator.dart';
 import '../domain/surprise_pack.dart';
@@ -16,7 +15,6 @@ final surpriseGeneratorProvider = Provider<SurpriseGenerator>(
     client: ref.watch(apiClientProvider),
     funService: ref.watch(funServiceProvider),
     pokemonService: ref.watch(pokemonServiceProvider),
-    japanSource: ref.watch(japanSourceProvider),
   ),
 );
 

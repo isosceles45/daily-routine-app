@@ -23,11 +23,17 @@ abstract final class ApiSources {
   static const cataas = 'https://cataas.com/cat';
   static const catFacts = 'https://catfact.ninja/fact';
   static const dogImage = 'https://dog.ceo/api/breeds/image/random';
+
+  /// The rest of the menagerie (§9). Each is keyless, HTTPS and returns a
+  /// single random image, which is all the animal slot needs.
+  static const foxImage = 'https://randomfox.ca/floof/';
+  static const duckImage = 'https://random-d.uk/api/v2/random';
+  static const bunnyImage = 'https://api.bunnies.io/v2/loop/random/';
   static const jokeApi = 'https://v2.jokeapi.dev/joke';
   static const uselessFacts =
       'https://uselessfacts.jsph.pl/api/v2/facts/random';
 
-  // --- Japan --------------------------------------------------------------
+  // --- Places (worldwide) -------------------------------------------------
   static const wikipediaSummary =
       'https://en.wikipedia.org/api/rest_v1/page/summary';
 
@@ -38,6 +44,13 @@ abstract final class ApiSources {
   /// rate-limited quickly.
   static const userAgent =
       'DailyRitual/0.1 (https://github.com/isosceles45/daily-routine-app)';
+
+  // --- Gym ----------------------------------------------------------------
+  /// wger's open workout database. Read access needs no key.
+  ///
+  /// Names and descriptions live on `/exerciseinfo/` rather than `/exercise/`,
+  /// because wger keeps them in per-language translations.
+  static const wger = 'https://wger.de/api/v2';
 
   // --- CAT Quant (Phase 2) ------------------------------------------------
   /// Used to independently verify generated answers before they are shown.

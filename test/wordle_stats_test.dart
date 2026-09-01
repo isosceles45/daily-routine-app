@@ -5,13 +5,13 @@ import 'package:flutter_test/flutter_test.dart';
 const today = '2026-08-26';
 
 WordleResult result(String date, int? score) => WordleResult(
-      date: date,
-      wordleNumber: 1000,
-      score: score,
-      completed: score != null,
-      hardMode: false,
-      importedAt: DateTime(2026, 8, 26),
-    );
+  date: date,
+  wordleNumber: 1000,
+  score: score,
+  completed: score != null,
+  hardMode: false,
+  importedAt: DateTime(2026, 8, 26),
+);
 
 void main() {
   test('empty history reports nothing rather than zero', () {

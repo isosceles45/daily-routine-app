@@ -12,6 +12,8 @@ import '../../wordle/presentation/wordle_board.dart';
 import '../../cat_quant/providers/cat_providers.dart';
 import '../../challenges/providers/challenge_providers.dart';
 import '../../surprise/providers/surprise_providers.dart';
+import '../../games/domain/game_kind.dart';
+import '../../games/providers/game_providers.dart';
 import '../../todos/providers/todo_providers.dart';
 import '../../trivia/providers/trivia_providers.dart';
 import '../../wordle/providers/wordle_providers.dart';
@@ -73,6 +75,8 @@ class _Dashboard extends ConsumerWidget {
                   _ChallengeRow(),
                   SizedBox(height: RitualShape.stackGap),
                   _TodosCard(),
+                  SizedBox(height: RitualShape.stackGap),
+                  _PlayCard(),
                 ],
               ),
             ),
@@ -81,6 +85,67 @@ class _Dashboard extends ConsumerWidget {
             const _SurpriseBand(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// The way out of the daily list.
+///
+/// Everything above it is finished once it is done; this is the row that is
+/// still there afterwards, which is the whole reason the Play tab exists.
+class _PlayCard extends ConsumerWidget {
+  const _PlayCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final stats = ref.watch(gameStatsProvider);
+    final played = ref.watch(playedTodayProvider);
+
+    return RitualCard(
+      padding: RitualShape.cardPaddingCompact,
+      onTap: () => context.push(Routes.play),
+      child: Row(
+        children: [
+          const RitualIcon(
+            RitualIcons.gamepad,
+            size: 22,
+            color: RitualColors.accent,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Eyebrow(
+                  played ? 'Played today' : 'Nothing daily about it',
+                  color: RitualColors.accent,
+                  size: 10,
+                  letterSpacing: 0.08,
+                ),
+                const SizedBox(height: 3),
+                Text('Play', style: RitualText.stat(17)),
+                const SizedBox(height: 2),
+                Text(
+                  [
+                    for (final game in GameKind.values)
+                      stats[game]?.best == null
+                          ? game.label
+                          : '${game.label} ${stats[game]!.best}',
+                  ].join(' · '),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: outfit(size: 11.5, color: RitualColors.textTertiary),
+                ),
+              ],
+            ),
+          ),
+          const Icon(
+            Icons.arrow_forward,
+            size: 16,
+            color: RitualColors.textTertiary,
+          ),
+        ],
       ),
     );
   }
@@ -683,7 +748,7 @@ class _ExploreTeaser extends ConsumerWidget {
       onTap: () => StatefulNavigationShell.of(context).goBranch(1),
       child: Row(
         children: [
-          for (final color in [features.pokemon, features.japan, features.fun])
+          for (final color in [features.pokemon, features.place, features.fun])
             Padding(
               padding: const EdgeInsets.only(right: 6),
               child: Container(

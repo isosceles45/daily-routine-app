@@ -1,29 +1,42 @@
 import '../../../core/dates/daily_date_service.dart';
 import '../../../core/utils/daily_seed.dart';
+import '../../../shared/widgets/ritual_icon.dart';
 
 /// The flavours the daily fun slot rotates through (§9).
 enum FunKind {
-  cat('Cat', '🐈'),
-  dog('Dog', '🐕'),
-  joke('A Joke', '😂'),
-  darkJoke('A Dark Joke', '🃏'),
-  weirdFact('Weird Fact', '🧠');
+  cat('Cat', RitualIcons.cat),
+  dog('Dog', RitualIcons.dog),
+  fox('Fox', RitualIcons.fox),
+  duck('Duck', RitualIcons.duck),
+  bunny('Bunny', RitualIcons.bunny),
+  joke('A Joke', RitualIcons.joke),
+  darkJoke('A Dark Joke', RitualIcons.jokeDark),
+  weirdFact('Weird Fact', RitualIcons.fact);
 
-  const FunKind(this.label, this.emoji);
+  const FunKind(this.label, this.icon);
 
   final String label;
-  final String emoji;
+  final RitualIcons icon;
 
-  /// The §9 rotation. Weekday fixes the flavour so the week has a rhythm;
-  /// Sunday is a free pick, seeded by the date so it's still stable per day.
+  /// Every kind that is an actual animal, in the order Explore lists them.
+  ///
+  /// Kept separate from [values] because the animal slot must never randomly
+  /// serve a joke, and Explore's species picker must never offer one.
+  static const animals = [cat, dog, fox, duck, bunny];
+
+  bool get isAnimal => animals.contains(this);
+
+  /// The §9 rotation. Weekday fixes the *flavour* so the week keeps its
+  /// rhythm — but the three animal days now draw from the whole menagerie
+  /// rather than alternating cat and dog forever.
   static FunKind forDate(String date) {
     final weekday = DailyDateService.parse(date).weekday;
     return switch (weekday) {
-      DateTime.monday => FunKind.cat,
+      DateTime.monday ||
+      DateTime.wednesday ||
+      DateTime.friday => dailyPick(date, 'fun-animal', animals),
       DateTime.tuesday => FunKind.joke,
-      DateTime.wednesday => FunKind.dog,
       DateTime.thursday => FunKind.weirdFact,
-      DateTime.friday => FunKind.cat,
       DateTime.saturday => FunKind.darkJoke,
       _ => dailyPick(date, 'fun-kind', FunKind.values),
     };

@@ -41,8 +41,9 @@ class CatRepository {
   Future<void> invalidate(String date) => _db.deleteContent(date, _contentType);
 
   Stream<CatQuantResult?> watchResult(String date) {
-    return (_db.select(_db.catQuantResults)..where((t) => t.date.equals(date)))
-        .watchSingleOrNull();
+    return (_db.select(
+      _db.catQuantResults,
+    )..where((t) => t.date.equals(date))).watchSingleOrNull();
   }
 
   Future<void> saveAnswer({
@@ -50,7 +51,9 @@ class CatRepository {
     required CatQuestion question,
     required int selectedIndex,
   }) {
-    return _db.into(_db.catQuantResults).insertOnConflictUpdate(
+    return _db
+        .into(_db.catQuantResults)
+        .insertOnConflictUpdate(
           CatQuantResultsCompanion.insert(
             date: date,
             questionId: question.id,

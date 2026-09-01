@@ -1,6 +1,6 @@
 import '../../../core/utils/daily_seed.dart';
 import '../../animals/domain/daily_fun.dart';
-import '../../japan/domain/japan_entry.dart';
+import '../../places/domain/place_entry.dart';
 import '../../pokemon/domain/daily_pokemon.dart';
 
 /// A small thing to actually do today (§4).
@@ -16,38 +16,45 @@ class DailyChallenge {
   Map<String, dynamic> toJson() => {'text': text, 'origin': origin};
 
   factory DailyChallenge.fromJson(Map<String, dynamic> json) => DailyChallenge(
-        text: json['text'] as String,
-        origin: json['origin'] as String?,
-      );
+    text: json['text'] as String,
+    origin: json['origin'] as String?,
+  );
 }
 
 /// Builds the day's challenge out of the day's own content.
 ///
 /// Deriving from what is already on screen keeps the app feeling joined up —
-/// the challenge points at today's Pokémon or today's Japan entry rather than
+/// the challenge points at today's Pokémon or today's place rather than
 /// arriving from nowhere. Only when nothing has loaded does it fall back to
 /// the handful of content-independent prompts.
 abstract final class ChallengeGenerator {
   static DailyChallenge build({
     required String date,
-    JapanEntry? japan,
+    PlaceEntry? place,
     DailyPokemon? pokemon,
     DailyFun? fun,
   }) {
     final candidates = <DailyChallenge>[
-      if (japan != null) ...[
+      if (place != null) ...[
         DailyChallenge(
-          text: 'Find ${japan.title} on a map, and see what is nearby.',
-          origin: 'Japan',
+          text: 'Find ${place.title} on a map, and see what is nearby.',
+          origin: 'Places',
         ),
         DailyChallenge(
-          text: 'Learn how to say the name "${japan.title}" out loud.',
-          origin: 'Japan',
+          text: 'Learn how to say the name "${place.title}" out loud.',
+          origin: 'Places',
         ),
         DailyChallenge(
-          text: 'Read one more paragraph about ${japan.title} than the app '
+          text:
+              'Read one more paragraph about ${place.title} than the app '
               'shows you.',
-          origin: 'Japan',
+          origin: 'Places',
+        ),
+        DailyChallenge(
+          text:
+              'Work out roughly how far ${place.region} is from where you '
+              'are standing.',
+          origin: 'Places',
         ),
       ],
       if (pokemon != null) ...[
@@ -62,7 +69,8 @@ abstract final class ChallengeGenerator {
       ],
       if (fun?.text != null)
         DailyChallenge(
-          text: "Send today's ${fun!.kind.label.toLowerCase()} to someone who "
+          text:
+              "Send today's ${fun!.kind.label.toLowerCase()} to someone who "
               'would enjoy it.',
           origin: 'Explore',
         ),

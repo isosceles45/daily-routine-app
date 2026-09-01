@@ -16,10 +16,82 @@ class FunService {
   Future<ApiResult<DailyFun>> fetch(FunKind kind) => switch (kind) {
     FunKind.cat => _cat(),
     FunKind.dog => _dog(),
+    FunKind.fox => _fox(),
+    FunKind.duck => _duck(),
+    FunKind.bunny => _bunny(),
     FunKind.joke => _joke(safe: true),
     FunKind.darkJoke => _joke(safe: false),
     FunKind.weirdFact => _weirdFact(),
   };
+
+  /// The species that have an image API but no fact API of their own. They
+  /// borrow Useless Facts so the card still has something to read, and the
+  /// source line credits both honestly.
+  Future<ApiResult<DailyFun>> _animalWithBorrowedFact({
+    required FunKind kind,
+    required String source,
+    required Future<ApiResult<String?>> Function() image,
+  }) async {
+    final picture = await image();
+
+    final fact = await _client.getJson<String?>(
+      ApiSources.uselessFacts,
+      query: const {'language': 'en'},
+      parse: (json) => (json as Map<String, dynamic>)['text'] as String?,
+    );
+
+    return _combine(
+      kind: kind,
+      source: '$source · Useless Facts',
+      imageUrl: picture.dataOrNull,
+      text: fact.dataOrNull,
+      fallbackError: picture.errorOrNull ?? fact.errorOrNull,
+    );
+  }
+
+  Future<ApiResult<DailyFun>> _fox() => _animalWithBorrowedFact(
+    kind: FunKind.fox,
+    source: 'RandomFox',
+    image: () => _client.getJson<String?>(
+      ApiSources.foxImage,
+      parse: (json) => (json as Map<String, dynamic>)['image'] as String?,
+    ),
+  );
+
+  Future<ApiResult<DailyFun>> _duck() => _animalWithBorrowedFact(
+    kind: FunKind.duck,
+    source: 'random-d.uk',
+    image: () => _client.getJson<String?>(
+      ApiSources.duckImage,
+      parse: (json) {
+        final url = (json as Map<String, dynamic>)['url'] as String?;
+        // random-d.uk hands back an http:// URL even over TLS; Android blocks
+        // cleartext by default, so it would silently render nothing.
+        return url == null ? null : _https(url);
+      },
+    ),
+  );
+
+  Future<ApiResult<DailyFun>> _bunny() => _animalWithBorrowedFact(
+    kind: FunKind.bunny,
+    source: 'bunnies.io',
+    image: () => _client.getJson<String?>(
+      ApiSources.bunnyImage,
+      query: const {'media': 'gif,poster'},
+      parse: (json) {
+        final media =
+            (json as Map<String, dynamic>)['media'] as Map<String, dynamic>?;
+        if (media == null) return null;
+        // The gif is the point; the poster is a still fallback for when the
+        // animation is missing.
+        final url = (media['gif'] ?? media['poster']) as String?;
+        return url == null ? null : _https(url);
+      },
+    ),
+  );
+
+  static String _https(String url) =>
+      url.startsWith('http://') ? url.replaceFirst('http://', 'https://') : url;
 
   Future<ApiResult<DailyFun>> _cat() async {
     final image = await _client.getJson<String?>(

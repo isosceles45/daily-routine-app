@@ -20,12 +20,12 @@ void main() {
   tearDown(() async => db.close());
 
   Widget harness({VoidCallback? onDone}) => ProviderScope(
-        overrides: [databaseProvider.overrideWithValue(db)],
-        child: MaterialApp(
-          theme: buildRitualTheme(),
-          home: OnboardingScreen(onDone: onDone ?? () {}),
-        ),
-      );
+    overrides: [databaseProvider.overrideWithValue(db)],
+    child: MaterialApp(
+      theme: buildRitualTheme(),
+      home: OnboardingScreen(onDone: onDone ?? () {}),
+    ),
+  );
 
   testWidgets('lays out without throwing', (tester) async {
     await tester.pumpWidget(harness());
@@ -48,8 +48,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the Start button stays on screen while the content scrolls',
-      (tester) async {
+  testWidgets('the Start button stays on screen while the content scrolls', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1080, 1400);
     tester.view.devicePixelRatio = 3.0;
     addTearDown(tester.view.reset);
@@ -59,15 +60,19 @@ void main() {
 
     // The button sits outside the scroll view on purpose, so it must remain
     // visible even after the content is scrolled away.
-    await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -400));
+    await tester.drag(
+      find.byType(SingleChildScrollView),
+      const Offset(0, -400),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('START'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('saves the name and preferences, then reports done',
-      (tester) async {
+  testWidgets('saves the name and preferences, then reports done', (
+    tester,
+  ) async {
     var done = false;
     await tester.pumpWidget(harness(onDone: () => done = true));
     await tester.pumpAndSettle();
@@ -81,8 +86,9 @@ void main() {
     expect(await db.getSetting('onboarding_complete'), 'true');
   });
 
-  testWidgets('skipping the name still completes rather than blocking',
-      (tester) async {
+  testWidgets('skipping the name still completes rather than blocking', (
+    tester,
+  ) async {
     var done = false;
     await tester.pumpWidget(harness(onDone: () => done = true));
     await tester.pumpAndSettle();
@@ -90,12 +96,16 @@ void main() {
     await tester.tap(find.text('START'));
     await tester.pumpAndSettle();
 
-    expect(done, isTrue,
-        reason: 'an empty name must not trap the user on onboarding');
+    expect(
+      done,
+      isTrue,
+      reason: 'an empty name must not trap the user on onboarding',
+    );
   });
 
-  testWidgets('marks today greeted so the user is not welcomed twice',
-      (tester) async {
+  testWidgets('marks today greeted so the user is not welcomed twice', (
+    tester,
+  ) async {
     await tester.pumpWidget(harness());
     await tester.pumpAndSettle();
 

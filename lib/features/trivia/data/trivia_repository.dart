@@ -69,13 +69,15 @@ class TriviaRepository {
   }
 
   Future<TriviaResult?> resultFor(String date) {
-    return (_db.select(_db.triviaResults)..where((t) => t.date.equals(date)))
-        .getSingleOrNull();
+    return (_db.select(
+      _db.triviaResults,
+    )..where((t) => t.date.equals(date))).getSingleOrNull();
   }
 
   Stream<TriviaResult?> watchResult(String date) {
-    return (_db.select(_db.triviaResults)..where((t) => t.date.equals(date)))
-        .watchSingleOrNull();
+    return (_db.select(
+      _db.triviaResults,
+    )..where((t) => t.date.equals(date))).watchSingleOrNull();
   }
 
   Future<void> saveAnswer({
@@ -83,7 +85,9 @@ class TriviaRepository {
     required TriviaQuestion question,
     required String answer,
   }) async {
-    await _db.into(_db.triviaResults).insertOnConflictUpdate(
+    await _db
+        .into(_db.triviaResults)
+        .insertOnConflictUpdate(
           TriviaResultsCompanion.insert(
             date: date,
             questionId: question.id,

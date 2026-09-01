@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/network/api_result.dart';
 import '../../../core/providers.dart';
+import '../../../core/utils/daily_seed.dart';
 import '../../settings/providers/settings_providers.dart';
 import '../data/fun_repository.dart';
 import '../data/fun_service.dart';
@@ -36,15 +37,36 @@ final dailyFunProvider = FutureProvider<DailyFun>((ref) async {
   };
 });
 
-/// Explore always shows both animals, regardless of which one the daily
-/// rotation picked — asking for a dog and getting only a cat is a let-down.
-final dailyCatProvider = FutureProvider<DailyFun>(
-  (ref) => _kind(ref, FunKind.cat),
+/// The day's animal, chosen from the whole menagerie.
+///
+/// Deliberately independent of [dailyFunKindProvider]: Tuesday's rotation is a
+/// joke, but Explore should still have an animal on it. Both use the same
+/// `fun-animal` seed, so on an animal day they agree.
+final animalOfTheDayKindProvider = Provider<FunKind>(
+  (ref) =>
+      dailyPick(ref.watch(currentDateProvider), 'fun-animal', FunKind.animals),
 );
 
-final dailyDogProvider = FutureProvider<DailyFun>(
-  (ref) => _kind(ref, FunKind.dog),
+final animalOfTheDayProvider = FutureProvider<DailyFun>(
+  (ref) => _kind(ref, ref.watch(animalOfTheDayKindProvider)),
 );
+
+/// A freshly fetched animal, deliberately *outside* the daily cache.
+///
+/// This is what makes the menagerie something you can keep pulling on rather
+/// than a once-a-day card. [nonce] is what makes "another one" actually fetch
+/// another one — same species, new request.
+final freshAnimalProvider =
+    FutureProvider.family<DailyFun, ({FunKind kind, int nonce})>((
+      ref,
+      args,
+    ) async {
+      final result = await ref.watch(funServiceProvider).fetch(args.kind);
+      return switch (result) {
+        Success<DailyFun>(:final data) => data,
+        Failure<DailyFun>(:final error) => throw error,
+      };
+    });
 
 /// The rotating slot, but only when it is something other than a cat or dog —
 /// those already have dedicated cards, and showing them twice is noise.

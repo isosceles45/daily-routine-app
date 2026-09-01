@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/database/database.dart';
 import '../../../core/providers.dart';
 import '../../animals/providers/fun_providers.dart';
-import '../../japan/providers/japan_providers.dart';
+import '../../places/providers/place_providers.dart';
 import '../../pokemon/providers/pokemon_providers.dart';
 import '../domain/daily_challenge.dart';
 
@@ -17,7 +17,7 @@ final dailyChallengeProvider = Provider<DailyChallenge>((ref) {
   final date = ref.watch(currentDateProvider);
   return ChallengeGenerator.build(
     date: date,
-    japan: ref.watch(japanOfTheDayProvider).value,
+    place: ref.watch(placeOfTheDayProvider).value,
     pokemon: ref.watch(pokemonOfTheDayProvider).value,
     fun: ref.watch(dailyFunProvider).value,
   );
@@ -26,8 +26,9 @@ final dailyChallengeProvider = Provider<DailyChallenge>((ref) {
 final challengeRowProvider = StreamProvider<Challenge?>((ref) {
   final date = ref.watch(currentDateProvider);
   final db = ref.watch(databaseProvider);
-  return (db.select(db.challenges)..where((t) => t.date.equals(date)))
-      .watchSingleOrNull();
+  return (db.select(
+    db.challenges,
+  )..where((t) => t.date.equals(date))).watchSingleOrNull();
 });
 
 final challengeDoneProvider = Provider<bool>(
@@ -42,7 +43,9 @@ Future<void> toggleChallenge(WidgetRef ref) async {
   final challenge = ref.read(dailyChallengeProvider);
   final done = ref.read(challengeDoneProvider);
 
-  await db.into(db.challenges).insertOnConflictUpdate(
+  await db
+      .into(db.challenges)
+      .insertOnConflictUpdate(
         ChallengesCompanion.insert(
           date: date,
           prompt: challenge.text,

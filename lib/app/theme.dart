@@ -38,21 +38,21 @@ class FeatureColors extends ThemeExtension<FeatureColors> {
     required this.catQuant,
     required this.trivia,
     required this.pokemon,
-    required this.japan,
+    required this.place,
     required this.fun,
   });
 
   final Color catQuant;
   final Color trivia;
   final Color pokemon;
-  final Color japan;
+  final Color place;
   final Color fun;
 
   static const dark = FeatureColors(
     catQuant: Color(0xFF7C8BFF),
     trivia: Color(0xFFFFC24D),
     pokemon: Color(0xFFBD8DFF),
-    japan: Color(0xFFFF7A68),
+    place: Color(0xFFFF7A68),
     fun: Color(0xFF2FD1A0),
   );
 
@@ -61,14 +61,14 @@ class FeatureColors extends ThemeExtension<FeatureColors> {
     Color? catQuant,
     Color? trivia,
     Color? pokemon,
-    Color? japan,
+    Color? place,
     Color? fun,
   }) {
     return FeatureColors(
       catQuant: catQuant ?? this.catQuant,
       trivia: trivia ?? this.trivia,
       pokemon: pokemon ?? this.pokemon,
-      japan: japan ?? this.japan,
+      place: place ?? this.place,
       fun: fun ?? this.fun,
     );
   }
@@ -80,7 +80,7 @@ class FeatureColors extends ThemeExtension<FeatureColors> {
       catQuant: Color.lerp(catQuant, other.catQuant, t)!,
       trivia: Color.lerp(trivia, other.trivia, t)!,
       pokemon: Color.lerp(pokemon, other.pokemon, t)!,
-      japan: Color.lerp(japan, other.japan, t)!,
+      place: Color.lerp(place, other.place, t)!,
       fun: Color.lerp(fun, other.fun, t)!,
     );
   }

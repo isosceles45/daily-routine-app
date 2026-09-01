@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget harness(List<String> rows) => MaterialApp(
-      theme: buildRitualTheme(),
-      home: Scaffold(body: Center(child: WordleBoard(rows: rows))),
-    );
+  theme: buildRitualTheme(),
+  home: Scaffold(
+    body: Center(child: WordleBoard(rows: rows)),
+  ),
+);
 
 /// Counts tiles painted in a given colour.
 int tilesColoured(WidgetTester tester, Color color) {
@@ -24,12 +26,9 @@ void main() {
   });
 
   testWidgets('a solved grid paints greens and yellows', (tester) async {
-    await tester.pumpWidget(harness(const [
-      '⬛⬛🟨⬛⬛',
-      '⬛🟨⬛⬛🟨',
-      '🟨🟩⬛⬛⬛',
-      '🟩🟩🟩🟩🟩',
-    ]));
+    await tester.pumpWidget(
+      harness(const ['⬛⬛🟨⬛⬛', '⬛🟨⬛⬛🟨', '🟨🟩⬛⬛⬛', '🟩🟩🟩🟩🟩']),
+    );
     await tester.pumpAndSettle();
 
     // 5 from the winning row plus the single green on row three.

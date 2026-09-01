@@ -4,6 +4,7 @@ import '../../../core/database/database.dart';
 import '../../../core/providers.dart';
 import '../../../core/utils/streaks.dart';
 import '../../cat_quant/providers/cat_providers.dart';
+import '../../gym/providers/gym_providers.dart';
 import '../../trivia/providers/trivia_providers.dart';
 import '../../wordle/providers/wordle_providers.dart';
 import '../domain/daily_completion.dart';
@@ -35,6 +36,10 @@ final dayRecordsProvider = Provider<List<DayRecord>>((ref) {
 
   for (final result in ref.watch(catAllResultsProvider).value ?? const []) {
     if (result.answered) mark(result.date, DailyActivity.catQuant);
+  }
+
+  for (final log in ref.watch(allWorkoutLogsProvider).value ?? const []) {
+    if (log.completed) mark(log.date, DailyActivity.gym);
   }
 
   for (final marker in ref.watch(seenMarkersProvider).value ?? const []) {

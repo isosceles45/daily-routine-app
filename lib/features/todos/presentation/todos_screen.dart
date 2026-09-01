@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme.dart';
-import '../../../shared/widgets/widgets.dart';
 import '../../../core/database/database.dart';
+import '../../../shared/widgets/widgets.dart';
+import '../../events/presentation/countdown_section.dart';
+import '../../gym/presentation/gym_card.dart';
 import '../domain/todo.dart';
 import '../providers/todo_providers.dart';
 import 'todo_edit_sheet.dart';
@@ -51,6 +53,13 @@ class _TodosScreenState extends ConsumerState<TodosScreen> {
                 child: Text('Todos', style: RitualText.tabTitle),
               ),
             ),
+            const CountdownSection(),
+            const SizedBox(height: 12),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: GymCard(),
+            ),
+            const SizedBox(height: 14),
             Expanded(
               child: sections.isEmpty
                   ? _EmptyState()

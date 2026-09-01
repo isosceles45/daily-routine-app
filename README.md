@@ -18,12 +18,27 @@ Built in Flutter, offline-first, no account, no backend.
 | **CAT Quant** | A CAT-level quantitative question daily, with a worked solution. |
 | **Daily Trivia** | [Open Trivia Database](https://opentdb.com) |
 | **Pokémon of the day** | [PokéAPI](https://pokeapi.co) |
-| **Cats & dogs** | [Cataas](https://cataas.com), [Cat Facts](https://catfact.ninja), [dog.ceo](https://dog.ceo) |
-| **Jokes & facts** | [JokeAPI](https://jokeapi.dev), [Useless Facts](https://uselessfacts.jsph.pl) |
-| **Todos** | Local only — no network, so it can never fail |
+| **Place of the day** | [Wikipedia](https://en.wikipedia.org) — World Heritage sites, national parks and ancient sites across 16 countries |
+| **Animal of the day** | [Cataas](https://cataas.com), [dog.ceo](https://dog.ceo), [RandomFox](https://randomfox.ca), [random-d.uk](https://random-d.uk), [bunnies.io](https://bunnies.io) |
+| **Jokes & facts** | [JokeAPI](https://jokeapi.dev), [Useless Facts](https://uselessfacts.jsph.pl), [Cat Facts](https://catfact.ninja) |
+| **Gym** | Your own weekly split, with exercises from [wger](https://wger.de)'s open database |
+| **Play** | Quant Rush, Sudoku and 2048 — generated on device, no network at all |
+| **Todos & countdowns** | Local only — no network, so they can never fail |
 
 Every source is a keyless public API. **There are no secrets in this repo and
 none are needed to build it.**
+
+## The daily part ends. The app doesn't.
+
+Everything above the fold is finished once you have done it, which made the app
+a thing you opened at night, cleared, and closed. **Play** is the answer to
+that: three games that are generated on the device, have no daily limit, and
+work with no signal.
+
+Sudoku generates a fresh grid and **removes clues only while exactly one
+solution survives** — a puzzle with two solutions cannot be reasoned to an
+answer, only guessed at. Quant Rush derives every answer twice by independent
+routes before showing it, the same rule the CAT card follows.
 
 ## Two things worth knowing
 
@@ -66,7 +81,7 @@ flutter run
 Requires Flutter 3.47+. iOS builds need a Mac.
 
 ```bash
-flutter test        # 203 tests
+flutter test        # 315 tests
 flutter analyze
 ```
 
@@ -76,8 +91,8 @@ flutter analyze
 lib/
 ├── app/         theme, router — theme tokens come from design/
 ├── core/        network, Drift database, date service, seeding
-├── features/    home · wordle · cat_quant · trivia · pokemon
-│                animals · todos · history · settings
+├── features/    home · wordle · cat_quant · trivia · pokemon · places
+│                animals · games · gym · events · todos · history · settings
 └── shared/      the widget set every feature composes from
 ```
 

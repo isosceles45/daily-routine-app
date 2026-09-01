@@ -94,7 +94,13 @@ class OpenTdbMathSource extends CatQuestionSource {
     if (!numeric.hasMatch(answer.trim())) return false;
 
     // And the question has to pose a calculation, not ask for a fact.
-    const factual = ['who', 'when was', 'named after', 'discovered', 'invented'];
+    const factual = [
+      'who',
+      'when was',
+      'named after',
+      'discovered',
+      'invented',
+    ];
     final lower = stem.toLowerCase();
     if (factual.any(lower.contains)) return false;
 
@@ -119,7 +125,8 @@ class RemoteBankSource extends CatQuestionSource {
 
     final result = await _client.getJson<List<dynamic>>(
       url,
-      parse: (json) => (json as Map<String, dynamic>)['questions'] as List<dynamic>,
+      parse: (json) =>
+          (json as Map<String, dynamic>)['questions'] as List<dynamic>,
     );
 
     if (result case Success<List<dynamic>>(:final data)) {
@@ -172,8 +179,10 @@ class GeneratedSource extends CatQuestionSource {
       // Offline gate: the two derivations must agree before we even ask.
       if (!generated.selfConsistent) continue;
 
-      final agrees =
-          await _verifier.agrees(generated.verifyExpr, generated.answer);
+      final agrees = await _verifier.agrees(
+        generated.verifyExpr,
+        generated.answer,
+      );
 
       // False means math.js actively disagreed — drop the question, it is not
       // going on screen. Null means we could not reach it, in which case the

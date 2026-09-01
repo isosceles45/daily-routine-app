@@ -3,20 +3,26 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('the same date and type always give the same seed', () {
-    expect(dailySeed('2026-08-26', 'pokemon'),
-        dailySeed('2026-08-26', 'pokemon'));
+    expect(
+      dailySeed('2026-08-26', 'pokemon'),
+      dailySeed('2026-08-26', 'pokemon'),
+    );
   });
 
   test('different content types decorrelate', () {
     // The whole point of hashing "date:type" rather than the bare date: if
     // these matched, every section would move in lockstep.
-    expect(dailySeed('2026-08-26', 'pokemon'),
-        isNot(dailySeed('2026-08-26', 'trivia-category')));
+    expect(
+      dailySeed('2026-08-26', 'pokemon'),
+      isNot(dailySeed('2026-08-26', 'trivia-category')),
+    );
   });
 
   test('consecutive days produce different seeds', () {
-    expect(dailySeed('2026-08-26', 'pokemon'),
-        isNot(dailySeed('2026-08-27', 'pokemon')));
+    expect(
+      dailySeed('2026-08-26', 'pokemon'),
+      isNot(dailySeed('2026-08-27', 'pokemon')),
+    );
   });
 
   test('stays inside 32 bits', () {
@@ -41,8 +47,10 @@ void main() {
     }
 
     const items = ['a', 'b', 'c'];
-    expect(dailyPick('2026-08-26', 'fun-kind', items),
-        dailyPick('2026-08-26', 'fun-kind', items));
+    expect(
+      dailyPick('2026-08-26', 'fun-kind', items),
+      dailyPick('2026-08-26', 'fun-kind', items),
+    );
   });
 
   test('dailyIndex rejects an empty range', () {

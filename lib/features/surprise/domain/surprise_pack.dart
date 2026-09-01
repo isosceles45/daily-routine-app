@@ -24,7 +24,7 @@ class SurpriseSlot {
 class SurprisePack {
   const SurprisePack({required this.slots, required this.challenge});
 
-  /// Japan, animal, Pokémon, fact, joke — whichever arrived.
+  /// Animal, Pokémon, fact, joke — whichever arrived.
   final List<SurpriseSlot> slots;
 
   /// Drawn separately because the canvas gives it its own accent card.

@@ -103,14 +103,56 @@ Upload `app-release.aab`, not an APK.
 | No secrets committed | ✅ |
 | Tests cover critical business logic | ✅ 253 tests |
 
+### First-of-the-month celebration
+
+Shipped 2026-09-01. `_FirstOfMonthCelebration` in `happy_new_day.dart` plays
+`assets/video/first-of-the-month.mp4` above the greeting on the 1st.
+
+| Decision | Reason |
+|---|---|
+| **Plays on every open that day, not once** | The greeting is a once-a-day flag (`daily_states.greeting_shown`); the 1st ignores it deliberately. `GreetingGate` also re-arms on foreground resume, so returning to the app replays it. Every other date keeps the once-a-day behaviour untouched. |
+| **Sound on** | Asked for explicitly. It is the only place the app makes noise, and it is capped at once per open, on one day a month. |
+| **The banner is the fallback, and shows first** | It renders immediately and is swapped for the video only once the clip is genuinely playable, so a missing asset or an undecodable codec degrades to the old text banner instead of an empty box. A reduced-motion setting skips the video for the same reason. |
+| **Auto-dismiss waits for the clip** | The overlay holds 2.6s normally. On the 1st it opens with a 6s grace, then re-arms to the video's real duration once known — and drops back to 2.6s if there turns out to be no video. A tap still skips instantly. |
+| **Width-filling, height-capped** | `LayoutBuilder` fills the column's width but caps at 340dp, so the greeting underneath is never pushed off a small screen. |
+
+### Phase 5 — worldwide places, the menagerie, gym, countdowns and Play
+
+Shipped 2026-09-01, in response to "the app has zero reusability".
+
+| Decision | Reason |
+|---|---|
+| **Japan of the day became Place of the day** | The feature was already abstracted behind `PlaceSource`, so going worldwide was a category list, not a rewrite. Japan stays the largest single block — it is what the app was built around — but is now one region among 16. Every category was probed live and returns real members. |
+| **The cache key changed from `japan` to `place`** | Rows cached by the Japan-only build carry no region, so they are left behind rather than shown under a wrong country. |
+| **Places left Surprise Me** | Asked for. It is the one section worth arriving at deliberately rather than being handed at random. |
+| **The animal slot draws from five species** | It alternated cat and dog forever because the weekday rotation hard-coded them. Mon/Wed/Fri now pick from the whole menagerie, and Explore has a species picker that fetches *outside* the daily cache — so it is something you can keep pulling on, not a card that is finished once seen. |
+| **`random-d.uk` URLs are forced to HTTPS** | It returns an `http://` URL even over TLS, and Android blocks cleartext by default — the image would silently render nothing. |
+| **Countdowns are not todos** | A todo is something you finish; an event arrives whether you act or not. Conflating them would mean "completing" your holiday. Dates are stored as `yyyy-MM-dd` text like every other date here, because a countdown is measured in calendar days and a UTC instant tips over a day early or late depending on timezone. |
+| **Gym is a split plus suggestions** | The split is local and can never fail; wger supplies exercises per muscle group, cached per day. When wger is unreachable the session is still yours to log — only the suggestions are missing. |
+| **Gym counts as a daily activity, but a rest day does not** | A rest day is not a workout you skipped, so it is `available: false` and does not count against the day. |
+| **Games are deliberately *not* a daily activity** | Making them count towards completion would turn the one part of the app you play for fun into another box to tick. |
+| **Sudoku removes clues only while one solution survives** | A puzzle with two solutions cannot be reasoned to an answer, only guessed at. |
+| **The Sudoku solver uses bitmask constraints** | The first version rescanned the grid per candidate: generation took over six minutes on the hardest band and could not distinguish a contradictory grid from a merely hard one without exhausting the search space. Masks brought it under a second and made impossible grids fail immediately. |
+| **Quant Rush verifies offline only** | Every round is derived twice by independent routes, like the CAT generator — but these are arithmetic identities the second derivation settles on its own, and a 60-second game cannot wait on an HTTP round trip. |
+| **History and Settings share one tab** | Asked for. Six tabs was one too many; the segmented control History already had absorbed Settings as a third segment. |
+| **Emoji were replaced with an authored SVG set** | Emoji render as someone else's artwork, in someone else's colours, at a weight nothing else on screen shares — and they change with the platform. 32 icons on one system (24px box, 1.7 stroke, round caps, `currentColor`) take the colour they are given, so an icon sits at the same weight as the text beside it. The Wordle share tiles stay as emoji: there they are data, not decoration. |
+
+**A bug worth recording:** `DetailScaffold` already wraps its child in a
+`SingleChildScrollView`. Handing it a `ListView` gives that list unbounded
+height and it silently collapses to nothing — header intact, body gone, *no
+exception*. It shipped to the emulator on four screens before being caught by
+eye. `test/game_screens_test.dart` now asserts each body actually renders.
+
 ### Known gaps carried past V1
 
-- **Widget test coverage is thin.** Only onboarding and the Wordle board have widget tests. Home,
-  trivia, CAT, todos, history and surprise have none — a layout bug reached the emulator once
-  because of this.
+- **Widget test coverage is still thin**, though less so: onboarding, the Wordle board, the
+  first-of-the-month greeting and all four new game/gym screens now have widget tests. Home,
+  trivia, CAT, todos and surprise still have none.
 - **Google sign-in is not built.** Anonymous auth gives sync while the install lives, not recovery.
 - **iOS is unverified.** Code is platform-agnostic but nothing has been built or run on a Mac.
-- `assets/video/first-of-the-month.mp4` is still absent; the greeting branches on the 1st already.
+- ~~`assets/video/first-of-the-month.mp4` is absent.~~ **Landed 2026-09-01.** The video plays with
+  sound on the 1st, and — unlike the ordinary greeting — replays on every open that day. Falls back
+  to the text banner if it cannot decode.
 
 ---
 
@@ -200,9 +242,8 @@ against the live endpoint during development.
   It is labelled "Did you know?" rather than implying it is about dogs.
 - Settings is still an honest placeholder; its toggles arrive with the phases that give them
   something to control.
-- `assets/video/first-of-the-month.mp4` is not present yet. The greeting already branches on the
-  1st of the month and shows a text banner; the video drops into that branch when the file arrives
-  (needs `flutter pub add video_player`).
+- ~~`assets/video/first-of-the-month.mp4` is not present yet.~~ **Landed 2026-09-01** — see
+  "First-of-the-month celebration" below.
 
 ---
 

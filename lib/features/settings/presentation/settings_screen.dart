@@ -7,111 +7,106 @@ import '../../sync/presentation/sync_section.dart';
 import '../../../core/notifications/notification_providers.dart';
 import '../providers/settings_providers.dart';
 
-class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key});
+/// The settings content, without a screen around it.
+///
+/// History and Settings share one tab, so this is a body the tab can drop in
+/// beside the timeline rather than a screen of its own.
+class SettingsBody extends ConsumerWidget {
+  const SettingsBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final prefs = ref.watch(preferencesProvider).value;
 
-    return SafeArea(
-      bottom: false,
-      child: RiseIn(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-          children: [
-            Text('Settings', style: RitualText.tabTitle),
-            const SizedBox(height: 14),
-            const RitualDivider(),
-            const SizedBox(height: 20),
-
-            Eyebrow('You'),
-            const SizedBox(height: 10),
-            _NameField(
-              value: prefs?.userName ?? '',
-              onSubmit: (name) =>
-                  ref.read(preferencesProvider.notifier).setUserName(name),
-            ),
-            const SizedBox(height: 24),
-
-            Eyebrow('Daily content'),
-            const SizedBox(height: 6),
-            _Toggle(
-              label: 'Dark jokes on Saturdays',
-              description: 'Off swaps them for an ordinary joke.',
-              value: prefs?.allowDarkJokes ?? true,
-              onChanged: (v) =>
-                  ref.read(preferencesProvider.notifier).setAllowDarkJokes(v),
-            ),
-            const SizedBox(height: 24),
-
-            Eyebrow('Notifications'),
-            const SizedBox(height: 6),
-            _Toggle(
-              label: 'Daily reminders',
-              description:
-                  'Happy New Day at midnight, and reminders for todos you '
-                  'give a due date.',
-              value: prefs?.dailyReminders ?? false,
-              onChanged: (v) async {
-                final granted = await setRemindersEnabled(ref, v);
-                if (granted || !context.mounted) return;
-
-                // The OS said no, so the switch must not sit there claiming
-                // reminders are on.
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Notifications are blocked for Ritual. Turn them on in '
-                      'your system settings first.',
-                    ),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-
-            const SyncSection(),
-            const SizedBox(height: 24),
-
-            Eyebrow('About'),
-            const SizedBox(height: 10),
-            RitualCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Ritual v0.1.0', style: RitualText.bodySmall),
-                  const SizedBox(height: 14),
-                  Eyebrow('Live sources', size: 10, letterSpacing: 0.08),
-                  const SizedBox(height: 8),
-                  ..._sources.map(
-                    (source) => Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Text(
-                        '· $source',
-                        style: outfit(
-                            size: 12, color: RitualColors.textTertiary),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Eyebrow('Your name'),
+        const SizedBox(height: 10),
+        _NameField(
+          value: prefs?.userName ?? '',
+          onSubmit: (name) =>
+              ref.read(preferencesProvider.notifier).setUserName(name),
         ),
-      ),
+        const SizedBox(height: 24),
+
+        Eyebrow('Daily content'),
+        const SizedBox(height: 6),
+        _Toggle(
+          label: 'Dark jokes on Saturdays',
+          description: 'Off swaps them for an ordinary joke.',
+          value: prefs?.allowDarkJokes ?? true,
+          onChanged: (v) =>
+              ref.read(preferencesProvider.notifier).setAllowDarkJokes(v),
+        ),
+        const SizedBox(height: 24),
+
+        Eyebrow('Notifications'),
+        const SizedBox(height: 6),
+        _Toggle(
+          label: 'Daily reminders',
+          description:
+              'Happy New Day at midnight, and reminders for todos you '
+              'give a due date.',
+          value: prefs?.dailyReminders ?? false,
+          onChanged: (v) async {
+            final granted = await setRemindersEnabled(ref, v);
+            if (granted || !context.mounted) return;
+
+            // The OS said no, so the switch must not sit there claiming
+            // reminders are on.
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  'Notifications are blocked for Ritual. Turn them on in '
+                  'your system settings first.',
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 24),
+
+        const SyncSection(),
+        const SizedBox(height: 24),
+
+        Eyebrow('About'),
+        const SizedBox(height: 10),
+        RitualCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Ritual v0.1.0', style: RitualText.bodySmall),
+              const SizedBox(height: 14),
+              Eyebrow('Live sources', size: 10, letterSpacing: 0.08),
+              const SizedBox(height: 8),
+              ..._sources.map(
+                (source) => Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: Text(
+                    '· $source',
+                    style: outfit(size: 12, color: RitualColors.textTertiary),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   static const _sources = [
     'OpenTDB — trivia, and the first CAT Quant tier',
     'PokéAPI — Pokémon of the day',
-    'Wikipedia — Japan of the day',
+    'Wikipedia — place of the day, worldwide',
     'Cataas · Cat Facts — cats',
     'dog.ceo — dogs',
+    'RandomFox · random-d.uk · bunnies.io — the rest of the menagerie',
     'JokeAPI — jokes',
     'Useless Facts — weird facts',
     'math.js — verifies every generated CAT answer',
+    'wger — the open exercise database behind gym suggestions',
     'NYT Wordle — opened in your browser, never scraped',
   ];
 }
@@ -127,8 +122,9 @@ class _NameField extends StatefulWidget {
 }
 
 class _NameFieldState extends State<_NameField> {
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.value);
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.value,
+  );
 
   @override
   void didUpdateWidget(_NameField oldWidget) {
@@ -151,9 +147,9 @@ class _NameFieldState extends State<_NameField> {
   @override
   Widget build(BuildContext context) {
     OutlineInputBorder border(Color c) => OutlineInputBorder(
-          borderRadius: BorderRadius.circular(RitualShape.inputRadius),
-          borderSide: BorderSide(color: c, width: 1.5),
-        );
+      borderRadius: BorderRadius.circular(RitualShape.inputRadius),
+      borderSide: BorderSide(color: c, width: 1.5),
+    );
 
     return TextField(
       controller: _controller,
@@ -170,8 +166,10 @@ class _NameFieldState extends State<_NameField> {
         labelStyle: outfit(size: 12, color: RitualColors.textTertiary),
         filled: true,
         fillColor: RitualColors.surface,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 14,
+        ),
         border: border(RitualColors.borderStrong),
         enabledBorder: border(RitualColors.borderStrong),
         focusedBorder: border(RitualColors.accent),
@@ -210,9 +208,10 @@ class _Toggle extends StatelessWidget {
                 children: [
                   Text(label, style: outfit(size: 14)),
                   const SizedBox(height: 2),
-                  Text(description,
-                      style: outfit(
-                          size: 12, color: RitualColors.textTertiary)),
+                  Text(
+                    description,
+                    style: outfit(size: 12, color: RitualColors.textTertiary),
+                  ),
                 ],
               ),
             ),

@@ -57,7 +57,12 @@ class ErrorCard extends StatelessWidget {
 
 /// Placeholder shown while a card's content is in flight.
 class LoadingCard extends StatelessWidget {
-  const LoadingCard({super.key, required this.title, this.accent, this.lines = 2});
+  const LoadingCard({
+    super.key,
+    required this.title,
+    this.accent,
+    this.lines = 2,
+  });
 
   final String title;
   final Color? accent;
